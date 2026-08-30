@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SocrateAIDualScaleVerificationCertificate",
+  "type": "object",
+  "required": [
+    "certificate_id",
+    "timestamp",
+    "solver_version",
+    "epistemic_tier",
+    "status",
+    "claims_verified",
+    "negative_controls",
+    "audit_metrics"
+  ],
+  "properties": {
+    "certificate_id": {
+      "type": "string",
+      "pattern": "^CERT-DS-[A-Fa-f0-9]{8}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "solver_version": {
+      "type": "string"
+    },
+    "epistemic_tier": {
+      "type": "string",
+      "enum": ["TIER_A_ESTABLISHED_MATH", "TIER_B_EXACT_RATIONAL", "TIER_C_NUMERICAL_SIMULATION"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["PASSED", "FAILED", "AUDIT_REJECTED"]
+    },
+    "claims_verified": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "negative_controls": {
+      "type": "object",
+      "properties": {
+        "nc_ds_01_singularity": { "type": "boolean" },
+        "nc_ds_02_asymmetry": { "type": "boolean" },
+        "nc_ds_04_energy_leak": { "type": "boolean" }
+      },
+      "required": ["nc_ds_01_singularity", "nc_ds_02_asymmetry", "nc_ds_04_energy_leak"]
+    },
+    "audit_metrics": {
+      "type": "object",
+      "properties": {
+        "samples_tested": { "type": "integer" },
+        "exact_max_divergence": { "type": "number" },
+        "inviscid_energy_drift": { "type": "string" }
+      },
+      "required": ["samples_tested"]
+    }
+  }
+}

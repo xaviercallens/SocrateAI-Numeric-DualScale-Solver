@@ -1,0 +1,23 @@
+{
+  "certificate_id": "CERT-DS-B676DFE0",
+  "timestamp": "2026-08-30T07:30:00.124146+00:00",
+  "solver_version": "0.1.0",
+  "epistemic_tier": "TIER_B_EXACT_RATIONAL",
+  "status": "PASSED",
+  "claims_verified": [
+    "CLM-DS-01",
+    "CLM-DS-02",
+    "CLM-DS-03",
+    "CLM-DS-04"
+  ],
+  "negative_controls": {
+    "nc_ds_01_singularity": true,
+    "nc_ds_02_asymmetry": true,
+    "nc_ds_04_energy_leak": true
+  },
+  "audit_metrics": {
+    "samples_tested": 11,
+    "exact_max_divergence": 0.0,
+    "inviscid_energy_drift": "0/1"
+  }
+}

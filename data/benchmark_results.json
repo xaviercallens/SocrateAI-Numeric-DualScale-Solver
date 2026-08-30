@@ -1,0 +1,15 @@
+{
+  "cascade_benchmark": {
+    "standard_final_energy": 0.6240465816545203,
+    "standard_peak_enstrophy": 89.28253464424436,
+    "dualscale_final_energy": 0.6203418232966335,
+    "dualscale_peak_enstrophy": 69.0575670630623,
+    "plot": "figures/dyadic_cascade_benchmark.png"
+  },
+  "taylor_green_benchmark": {
+    "initial_energy": 0.25,
+    "final_energy": 0.24898207797299624,
+    "max_divergence": 5.058560943842134e-29,
+    "plot": "figures/taylor_green_benchmark.png"
+  }
+}

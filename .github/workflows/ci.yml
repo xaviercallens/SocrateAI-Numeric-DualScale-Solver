@@ -1,0 +1,42 @@
+name: CI Verification Protocol
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[dev]"
+
+    - name: Run Ruff Linting
+      run: |
+        ruff check .
+
+    - name: Execute Two-Gate Verification Protocol
+      run: |
+        chmod +x scripts/verify.sh
+        ./scripts/verify.sh
+
+    - name: Run Benchmark Pipeline
+      run: |
+        python scripts/run_benchmarks.py

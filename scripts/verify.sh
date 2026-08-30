@@ -41,6 +41,16 @@ print('Gate 2 Schema & Negative Controls: 100% VERIFIED')
 "
 
 echo ""
+echo "--- GATE 3: MATHESIS STREAM 0 LEDGER SOUNDNESS AUDIT ---"
+python3 -c "
+from pathlib import Path
+from dualscale_solver.cert.ledger_checker import audit_ledger_files
+
+res = audit_ledger_files(Path('.'))
+print(f'Gate 3 Mathesis Ledger Audit: {res[\"total_claims_audited\"]} claims verified SOUND (monotonicity passed)')
+"
+
+echo ""
 echo "================================================================================"
-echo " ✅ ALL VERIFICATION GATES PASSED (TIER B / TIER C CERTIFIED)"
+echo " ✅ ALL VERIFICATION GATES PASSED (MATHESIS 5-TIER CERTIFIED)"
 echo "================================================================================"

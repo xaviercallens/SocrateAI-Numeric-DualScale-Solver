@@ -3,6 +3,9 @@
 //! High-performance numerical solvers, integrating factor RK4 (ETD-RK4),
 //! and adaptive time-stepping for multiscale PDEs.
 
+pub mod cvode_dyadic;
+
+pub use cvode_dyadic::{CvodeCascadeResult, CvodeDyadicCascade};
 use leanflow_core::dualscale_dissipation_rate;
 use serde::{Deserialize, Serialize};
 

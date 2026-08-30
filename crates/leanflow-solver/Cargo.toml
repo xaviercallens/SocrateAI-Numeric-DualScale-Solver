@@ -8,6 +8,9 @@ description = "High-performance time integrators and DualScale Navier-Stokes sol
 
 [dependencies]
 leanflow-core = { path = "../leanflow-core" }
+cvode = { path = "/home/xavkal/xdev/rusty-SUNDIALS/crates/cvode" }
+nvector = { path = "/home/xavkal/xdev/rusty-SUNDIALS/crates/nvector" }
+sundials-core = { path = "/home/xavkal/xdev/rusty-SUNDIALS/crates/sundials-core" }
 num-complex = { workspace = true }
 num-traits = { workspace = true }
 ndarray = { workspace = true }

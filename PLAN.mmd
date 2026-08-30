@@ -1,0 +1,56 @@
+graph TD
+    %% Global Architecture
+    subgraph Layers["LeanFlow / Dual-Scale Solver Multi-Layer Architecture"]
+        L1["Layer 1: Mathematical Foundations (Lean 4)"]
+        L2["Layer 2: High-Performance Numerical Solvers (Rust / Python)"]
+        L3["Layer 3: Neuro-Symbolic AI Preconditioners (RunuX AI Runtime)"]
+        L4["Layer 4: Real-Time & Embedded Deployment (RunuX Mini-Kernel)"]
+    end
+
+    %% Lean 4 Modules
+    subgraph LeanModules["Lean 4 Mathematical Specs"]
+        M1["galerkin.lean (Triadic Transfers & Invariants)"]
+        M2["leray.lean (Leray Projector Idempotence)"]
+        M3["frustration.lean (Triadic Frustration Index D(M))"]
+        M4["prodi_serrin.lean (Regularity Criteria)"]
+        M5["hypothesis_U.lean (Enstrophy Bounds)"]
+    end
+    L1 --> LeanModules
+
+    %% Rust & Python Solvers
+    subgraph SolverCore["Numerical Engines"]
+        S1["dualscale_solver (Python Exact & Spectral Solver)"]
+        S2["leanflow-core (Mesh, Fields, Complex Tensors)"]
+        S3["leanflow-solver (BDF 1-5 / Adams-Moulton via rusty-SUNDIALS)"]
+        S4["leanflow-linear (GMRES, FGMRES, BiCGSTAB)"]
+    end
+    L2 --> SolverCore
+
+    %% AI Preconditioners
+    subgraph AIPrecond["Neuro-Symbolic AI Acceleration"]
+        P1["P1: Spectral Fourier Gate (41.8x Speedup)"]
+        P2["P2: MixedPrecision FGMRES (61.1x Speedup)"]
+        P3["P3: FP8 TensorCore AMG (130.8x Speedup)"]
+        P4["SymBrain v4 (Adaptive Mesh & Timestep Router)"]
+    end
+    L3 --> AIPrecond
+
+    %% Deployment Backends
+    subgraph DeployBackends["Deployment Targets"]
+        D1["GCP Bare Metal c3-metal-85 (Cloud HPC CFD)"]
+        D2["SpacemiT K1 RISC-V (RVV Vector Compute)"]
+        D3["Raspberry Pi ARM & STM32 (Embedded Real-Time Control)"]
+    end
+    L4 --> DeployBackends
+
+    %% 3-Year Strategic Roadmap Phases
+    subgraph Roadmap["3-Year Phased Execution Roadmap"]
+        PH0["Phase 0 (M1-M3): Scaffolding & Specifications"]
+        PH1["Phase 1 (M3-M12): Lean 4 Formalization & arXiv Preprint"]
+        PH2["Phase 2 (M12-M18): Rust Solver & rusty-SUNDIALS Integration"]
+        PH3["Phase 3 (M18-M24): AI Preconditioners (P1-P3) & LeanFlow Pro"]
+        PH4["Phase 4 (M24-M30): Embedded Deployment & LeanFlow Enterprise"]
+        PH5["Phase 5 (M30-M36): Industrial Validation & Profitability"]
+        
+        PH0 --> PH1 --> PH2 --> PH3 --> PH4 --> PH5
+    end

@@ -1,0 +1,14 @@
+[package]
+name = "leanflow-ai"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Neuro-symbolic AI preconditioners and adaptive mesh controller for LeanFlow"
+
+[dependencies]
+leanflow-core = { path = "../leanflow-core" }
+leanflow-solver = { path = "../leanflow-solver" }
+num-complex = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }

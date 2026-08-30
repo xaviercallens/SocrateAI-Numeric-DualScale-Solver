@@ -1,0 +1,23 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/leanflow-core",
+    "crates/leanflow-solver",
+    "crates/leanflow-ai",
+]
+
+[workspace.package]
+version = "0.1.0"
+authors = ["Xavier Callens <xavier.callens@socrate.ai>"]
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/xaviercallens/SocrateAI-Numeric-DualScale-Solver"
+homepage = "https://github.com/xaviercallens/SocrateAI-Numeric-DualScale-Solver"
+
+[workspace.dependencies]
+num-complex = "0.4"
+num-traits = "0.2"
+ndarray = "0.15"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+rayon = "1.8"

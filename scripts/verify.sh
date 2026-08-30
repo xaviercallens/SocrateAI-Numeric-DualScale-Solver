@@ -13,7 +13,11 @@ export PYTHONPATH="src:${PYTHONPATH:-}"
 echo ""
 echo "--- GATE 1: UNIT & EXACT RATIONAL INVARIANT SUITE ---"
 echo "Executing pytest across all exact and numerical test modules..."
-pytest -v tests/
+python3 -m pytest -p no:zarr -v
+
+echo ""
+echo "Executing Rust cargo tests across workspace (leanflow-core, leanflow-solver, leanflow-ai)..."
+cargo test --workspace --quiet
 
 echo ""
 echo "--- GATE 2: AUDIT CERTIFICATE GENERATION & SCHEMA AUDIT ---"

@@ -1,0 +1,16 @@
+[package]
+name = "leanflow-solver"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "High-performance time integrators and DualScale Navier-Stokes solvers"
+
+[dependencies]
+leanflow-core = { path = "../leanflow-core" }
+num-complex = { workspace = true }
+num-traits = { workspace = true }
+ndarray = { workspace = true }
+rayon = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }

@@ -54,6 +54,14 @@ coverage.xml
 *~
 .DS_Store
 
+# Rust & Lean
+target/
+Cargo.lock
+.lake/
+*.olean
+*.ilean
+*.c
+
 # Certificates and Output Artifacts
 data/output/
 figures/*.png

@@ -61,6 +61,10 @@ class RunuxRuntimeBridge:
             },
         }
 
+    def get_summary(self) -> Dict[str, Any]:
+        """Alias for inspect_capabilities."""
+        return self.inspect_capabilities()
+
     def allocate_spectral_buffer(self, shape: tuple, dtype: np.dtype = np.complex128) -> np.ndarray:
         """
         Allocate an aligned zero-copy buffer for spectral operations.

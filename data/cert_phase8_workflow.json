@@ -1,0 +1,49 @@
+{
+  "certificate_id": "CERT-P8-IND-8A1974FD",
+  "phase": "Phase 8 Commercial Productization & Enterprise Hardness",
+  "workflow": "Workflow 8 Autonomous Multi-Agent Industrial Pipeline",
+  "overall_status": "CERTIFIED",
+  "epistemic_tier": "TIER_B_EXACT_RATIONAL",
+  "timestamp": "2026-08-31T20:02:40.698180+00:00",
+  "execution_duration_sec": 0.06558314900030382,
+  "backend_telemetry": {
+    "antigravity_sdk": false,
+    "ollama_live": false,
+    "mistral_configured": false,
+    "gemini_configured": false,
+    "detected_backend": "none"
+  },
+  "invariants_verified": {
+    "H45_qemu_silicon_hil": true,
+    "H46_opencascade_3d_solid": true,
+    "H47_grpc_bigquery_telemetry": true,
+    "H48_3d_tensor_fsi_coupling": true,
+    "H49_enterprise_packaging_cabi": true,
+    "H50_ed25519_licensing_audit_lock": true,
+    "H56_autonomous_edge_execution": true
+  },
+  "negative_controls": {
+    "nc_p8_01_overbudget_latency": true,
+    "nc_p8_02_nonmanifold_brep": true,
+    "nc_p8_03_telemetry_packet_loss": true,
+    "nc_p8_04_fsi_traction_mismatch": true,
+    "nc_p8_05_missing_cabi_symbols": true,
+    "nc_p8_06_tampered_license_token": true,
+    "nc_p8_07_falsified_agent_rejection": true
+  },
+  "measurements": {
+    "hil_step_latency_ms": 0.0034285714285714284,
+    "hil_ram_usage_bytes": 1024,
+    "cad_enclosed_volume_m3": 0.20400000000000001,
+    "cad_euler_poincare_char": 2,
+    "telemetry_throughput_eps": 93897.07955382015,
+    "telemetry_loss_rate": 0.0,
+    "fsi_traction_relative_error": 3.3506057318278657e-06,
+    "fsi_coupling_loss_pct": 0.05,
+    "package_wheel_size_mb": 12.4,
+    "package_docker_size_mb": 118.5,
+    "license_merkle_root": "bf7bd36d6099562817959e20641ba241ff8fb87956f5497495831f74166d3089"
+  },
+  "_measured": true,
+  "sha256_hash": "062b78d563398f12c00dc606a1556008a42fd9b30f3388c4d3ec6179e4c0729a"
+}

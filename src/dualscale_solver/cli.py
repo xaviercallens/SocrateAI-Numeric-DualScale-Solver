@@ -81,6 +81,79 @@ def cmd_spectral(args: argparse.Namespace) -> int:
     return 0
 
 
+from dualscale_solver.agents.phase8_workflow_orchestrator import run_phase8_pipeline
+import json
+
+
+def cmd_workflow8(args: argparse.Namespace) -> int:
+    """Run Phase 8 Autonomous Industrial Productization Pipeline (Workflow 8)."""
+    print("================================================================================")
+    print(" SocrateAI LeanFlow: Phase 8 Industrial Workflow 8 Autonomous Pipeline")
+    print("================================================================================")
+    cert = run_phase8_pipeline()
+    print(f" Certificate ID : {cert['certificate_id']}")
+    print(f" Overall Status : {cert['overall_status']}")
+    print(f" Epistemic Tier : {cert['epistemic_tier']}")
+    print(f" SHA-256 Hash   : {cert['sha256_hash']}")
+    print(f" Invariants     : {len(cert['invariants_verified'])} Verified")
+    print(f" Negative Ctrls : {len(cert['negative_controls'])} Rejections Verified")
+    
+    if args.output:
+        out_path = Path(args.output)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(out_path, "w", encoding="utf-8") as f:
+            json.dump(cert, f, indent=2)
+        print(f" Certificate saved to: {out_path.resolve()}")
+        
+    return 0 if cert["overall_status"] == "CERTIFIED" else 1
+
+
+from dualscale_solver.agents.phase9_workflow_orchestrator import run_phase9_pipeline
+
+def cmd_workflow9(args: argparse.Namespace) -> int:
+    """Run Phase 9 Autonomic Resilience & Recursive Optimization Pipeline (Workflow 9)."""
+    print("================================================================================")
+    print(" SocrateAI LeanFlow: Phase 9 Autonomic Resilience & Recursive Optimization")
+    print("================================================================================")
+    cert = run_phase9_pipeline()
+    print(f" Certificate ID : {cert['certificate_id']}")
+    print(f" Overall Status : {cert['overall_status']}")
+    print(f" SHA-256 Hash   : {cert['sha256_hash']}")
+    print(f" Invariants     : {len(cert['invariants_verified'])} Verified")
+    print(f" Negative Ctrls : {len(cert['negative_controls'])} Rejections Verified")
+    
+    if args.output:
+        out_path = Path(args.output)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(out_path, "w", encoding="utf-8") as f:
+            json.dump(cert, f, indent=2)
+        print(f" Certificate saved to: {out_path.resolve()}")
+        
+    return 0 if cert["overall_status"] == "CERTIFIED" else 1
+
+from dualscale_solver.agents.phase10_workflow_orchestrator import run_phase10_pipeline
+
+def cmd_workflow10(args: argparse.Namespace) -> int:
+    """Run Phase 10 Enterprise AI, Real-Time Edge & OpenFOAM Supremacy (Workflow 10)."""
+    print("================================================================================")
+    print(" SocrateAI LeanFlow: Phase 10 Enterprise AI & OpenFOAM Supremacy")
+    print("================================================================================")
+    cert = run_phase10_pipeline()
+    print(f" Certificate ID : {cert['certificate_id']}")
+    print(f" Overall Status : {cert['overall_status']}")
+    print(f" SHA-256 Hash   : {cert['sha256_hash']}")
+    print(f" Invariants     : {len(cert['invariants_verified'])} Verified")
+    print(f" Negative Ctrls : {len(cert['negative_controls'])} Rejections Verified")
+    
+    if args.output:
+        out_path = Path(args.output)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(out_path, "w", encoding="utf-8") as f:
+            json.dump(cert, f, indent=2)
+        print(f" Certificate saved to: {out_path.resolve()}")
+        
+    return 0 if cert["overall_status"] == "CERTIFIED" else 1
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         prog="dualscale-solver",
@@ -92,6 +165,21 @@ def main() -> None:
     p_verify = subparsers.add_parser("verify", help="Run exact Tier B verification & produce certificate")
     p_verify.add_argument("--output", "-o", type=str, default="data/verification_cert.json", help="Path to output certificate")
     p_verify.set_defaults(func=cmd_verify)
+
+    # Subcommand: workflow8
+    p_wf8 = subparsers.add_parser("workflow8", help="Run Phase 8 Autonomous Industrial Productization Pipeline (Workflow 8)")
+    p_wf8.add_argument("--output", "-o", type=str, default="data/cert_phase8_workflow.json", help="Path to output certificate")
+    p_wf8.set_defaults(func=cmd_workflow8)
+
+    # Subcommand: workflow9
+    p_wf9 = subparsers.add_parser("workflow9", help="Run Phase 9 Autonomic Resilience & Recursive Optimization")
+    p_wf9.add_argument("--output", "-o", type=str, default="data/cert_phase9_workflow.json", help="Path to output certificate")
+    p_wf9.set_defaults(func=cmd_workflow9)
+
+    # Subcommand: workflow10
+    p_wf10 = subparsers.add_parser("workflow10", help="Run Phase 10 Enterprise AI, Real-Time Edge & OpenFOAM Supremacy")
+    p_wf10.add_argument("--output", "-o", type=str, default="data/cert_phase10_workflow.json", help="Path to output certificate")
+    p_wf10.set_defaults(func=cmd_workflow10)
 
     # Subcommand: dyadic
     p_dyadic = subparsers.add_parser("dyadic", help="Run dyadic shell cascade simulation")
@@ -121,3 +209,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

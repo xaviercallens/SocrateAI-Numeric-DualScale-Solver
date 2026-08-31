@@ -1,8 +1,9 @@
 # HARDNESS.md — Program-Wide Scientific Hardness & Epistemic Charter
-**Version:** 4.0 — Phase 6 Extended (2026-08-31)
+**Version:** 5.0 — Phase 8/9 Productization & Fleet Autonomy (2026-08-31)
 **Program:** SocrateAI Dual-Scale & LeanFlow Multiscale Navier–Stokes Program  
 **Status:** MANDATORY & NON-NEGOTIABLE INVARIANTS  
-**Scope:** All mathematical proofs, exact verifiers, numerical solvers, AI preconditioners, embedded kernels, **agent workflow outputs**, Phase 5 production / JHTDB validation pipelines, and **Phase 6 agentic runtime orchestration**.  
+**Scope:** All mathematical proofs, exact verifiers, numerical solvers, AI preconditioners, embedded kernels, **agent workflow outputs**, Phase 5 production / JHTDB validation pipelines, Phase 6 agentic runtime orchestration, **Phase 7 industrial multi-physics**, **Phase 8 enterprise productization & bare-metal HIL**, and **Phase 9 global fleet autonomy & sovereign airworthiness**.  
+**Changelog v5.0:** Added H51 (Byzantine Fault-Tolerant Fleet Consensus Gate), H52 (Autonomous Piezo-Morphing Wing Closed-Loop Gate), H53 (Direct CNC CAM G-Code Synthesis Gate), H54 (Sovereign FAA/EASA DO-178C Level A Airworthiness Gate), H55 (Hyperscale Multi-Cloud Kubernetes Auto-Scaling SLO Gate). Extended Phase 9 Agent Hardness Contracts. Added LL-33–LL-36.  
 **Changelog v4.0:** Added H26 (Agent Persona Integrity Gate), H27 (SDK Availability Hard Prerequisite). Tightened H24 with `negative_control_nc_ds11()` mandatory implementation. Added LL-19–LL-20.  
 **Changelog v3.0:** Added H17 (JHTDB Spectral Fidelity Gate), H18 (Production SLA Gate), H19 (Frustration Monotonicity Gate). Added LL-14–LL-16 from Phase 5 gap analysis. Added Gates 5 & 6.  
 **Changelog v2.0:** Added H11 (No Synthetic Results), H12 (Real Benchmark Mandate), H13 (Agent Code Review Gate). Strengthened H6 tolerance to `1e-13`. Added Lesson Learned annotations.
@@ -323,4 +324,215 @@ The Phase 6 hardness certificate (`CERT-P6-WF-*`) **must not carry `overall_stat
 1. **Fallback Behavior**: A pipeline running without `google-antigravity` installed must yield `overall_status: SCAFFOLDING_ONLY`. This is a valid scaffolding artifact, not a scientific certificate.
 2. **SHA-256 Integrity**: The certificate hash must be computed over the actual pipeline results JSON dict (serialized deterministically), never over a constant byte string like `b"phase6"`.
 3. **Installation Requirement**: `google-antigravity` must appear in `requirements.txt` (TSK-66) so that CI environments can achieve `CERTIFIED` status.
+
+---
+
+## Phase 6b & 6c Industrial PoC Invariants (H28–H34)
+
+### `H28` : Backend Liveness Pre-flight Gate
+Automated detection of live LLM backends (Gemini API, Mistral API, Ollama) before initiating multi-turn chat interactions.
+
+### `H29` : Bioreactor Mass Transfer Gate
+Measured volumetric mass transfer coefficient $k_L a \ge 100.0\,\text{s}^{-1}$ and dissolved oxygen yield multiplier $\ge 2.5\times$ (target $> 3.0\times$). Negative control: `NC-IND-01`.
+
+### `H30` : Transonic Buffet Suppression Gate
+Dynamic enstrophy damping over supercritical airfoils achieving shock oscillation variance reduction $\ge 35\%$ (target $> 40\%$). Negative control: `NC-IND-02`.
+
+### `H31` : Embedded Edge Budget Gate
+Static memory footprint $\le 64\,\text{KB}$ RAM and deterministic per-step latency $\le 1.0\,\text{ms}$. Negative control: `NC-IND-03`.
+
+### `H32` : Industrial Multi-Backend Parity
+Multi-agent workflow parity across verified LLM backends. Negative control: `NC-IND-04`.
+
+### `H33` : Secure Vault & Telemetry Parity
+Strict credential isolation and remote telemetry streaming. Negative control: `NC-IND-05`.
+
+### `H34` : Distributed JHTDB Scaling Gate
+Pipeline turbulent drag reduction $\ge 10\%$ scaling across distributed multi-node arrays ($nodes \ge 2$). Negative control: `NC-IND-06`.
+
+---
+
+## Phase 7 Federated Autonomous Industrial Invariants (H35–H40)
+
+### `H35` : Multi-Physics FSI Aeroelastic Flutter Suppression Gate (Tier B)
+Coupled 2-DOF aeroelastic pitch-plunge wing section with transonic shock-boundary layer interaction. LeanFlow dual-scale enstrophy damping must achieve:
+- **Measured Variance Reduction**: $\ge 45\%$ reduction in flutter energy variance $(h^2 + \alpha^2)$.
+- **Epistemic Negative Control**: `NC-P7-01` — falsified divergent flutter or variance reduction $< 45\%$ is deterministically rejected.
+
+### `H36` : Biopharmaceutical Coupled Metabolic Kinetics Gate (Tier B)
+Coupled non-linear reaction-diffusion system integrating oxygen transfer, substrate consumption, and biomass growth:
+- **Oxygen Transfer Rate**: $k_L a \ge 115.0\,\text{s}^{-1}$.
+- **Biomass Yield Multiplier**: $\ge 3.0\times$ vs standard laminar sparging.
+- **Epistemic Negative Control**: `NC-P7-02` — sub-threshold $k_L a < 115.0\,\text{s}^{-1}$ or yield $< 3.0\times$ is deterministically rejected.
+
+### `H37` : Generative Inverse Design Frustration Reduction Gate (Tier B)
+AI-driven inverse geometry optimization loop over aerodynamic/impeller camber topologies:
+- **Frustration Reduction**: $\ge 20\%$ reduction in Triadic Frustration Index $\mathcal{D}(M)$.
+- **Drag Coefficient Reduction**: $\ge 8.0\%$ reduction in $C_d$ in $\le 10$ optimization iterations.
+- **Epistemic Negative Control**: `NC-P7-03` — stagnant or increasing $\mathcal{D}(M)$ is deterministically rejected.
+
+### `H38` : Hierarchical Edge-to-Cloud Swarm Synchronization Gate (Tier B)
+Split-scale execution across cloud macroscopic continuous solvers ($N=256^2$) and edge microcontroller swarms (16 ARM Cortex-M4 nodes):
+- **Deterministic Edge Latency**: Single-step execution time $\le 1.0\,\text{ms}$ on ARM Cortex-M4.
+- **Swarm Scaling Efficiency**: $\ge 85\%$ parallel aggregation scaling efficiency.
+- **Epistemic Negative Control**: `NC-P7-04` — edge latency $> 1.0\,\text{ms}$ or scaling $< 85\%$ is deterministically rejected.
+
+### `H39` : Holographic Scale Regularization & Attractor Boundedness Gate (Tier A / B)
+The Holographic dual-scale operator $R_{\text{eff}}(R) = R + \alpha'/R$ and enstrophy attractor $Z^*$:
+- **Universal Lower Bound**: $R_{\text{eff}}(R) \ge 2\sqrt{\alpha'}$ verified for all $R > 0$.
+- **Enstrophy Boundedness**: Peak enstrophy bounded by $Z^* = (1 - \nu\alpha') / (\nu \alpha'^2)$.
+- **Epistemic Negative Control**: `NC-P7-05` — $R_{\text{eff}} < 2\sqrt{\alpha'}$ or enstrophy blowup is deterministically rejected.
+
+### `H40` : Automated Regulatory Compliance Audit Trail Gate (Tier T0 / B)
+Automated generation of FDA 21 CFR Part 11 and EASA/FAA DO-178C Level A verification packages:
+- **Cryptographic Traceability**: 64-character SHA-256 hash linking Lean 4 zero-sorry modules (`Galerkin.lean`, `Leray.lean`, `Frustration.lean`), test results, and timestamped certificates.
+- **Epistemic Negative Control**: `NC-P7-06` — incomplete proof matrices (`sorry > 0`) or broken hashes are deterministically rejected.
+
+
+## Phase 7 Production Roadmap Invariants (H41–H44)
+
+### `H41` : ARM Cortex-M4 HIL Cycle-Budget Gate (Tier B)
+Static cycle-accurate timing analysis of the LeanFlow N=4×4 Leray projection micro-kernel on ARM Cortex-M4 @ 168 MHz:
+- **Latency Bound**: Single-step execution time $\le 1.0\,\text{ms}$ (Cortex-M4 instruction-cycle table, DDIO r0p1).
+- **Cycle Scope**: Includes FPU VMUL/VADD, LDR/STR, branch overhead for a 4×4 grid micro-kernel.
+- **Epistemic Negative Control**: `NC-P7-07` — falsified over-budget cycle count (latency $> 1.0\,\text{ms}$ at 168 MHz) is deterministically rejected.
+
+### `H42` : CAD / STEP AP203 Topology Export Gate (Tier B)
+After generative inverse design (H37), the frustration-minimized airfoil/blade camber profile must be exportable to a valid STEP AP203 (ISO 10303-21) file:
+- **Valid STEP Structure**: `ISO-10303-21` header, `END-ISO-10303-21;` footer, $\ge 5$ entities.
+- **B-Spline Encoding**: Camber-line encoded as `B_SPLINE_CURVE_WITH_KNOTS` with `CARTESIAN_POINT` control points.
+- **SHA-256 Traceability**: 64-character hash linking the STEP file to the generating optimization run.
+- **Epistemic Negative Control**: `NC-P7-08` — malformed STEP file (missing footer or B-spline entity) is deterministically rejected.
+
+### `H43` : Live Multi-Cloud Telemetry Stream Integrity Gate (Tier B)
+The `EdgeCloudSwarmAgent` telemetry stream must satisfy:
+- **Schema Completeness**: All events carry `event_id`, `timestamp_ns`, `source_node`, `metric_name`, `metric_value`, `unit`, `sequence_number`.
+- **Monotonic Ordering**: `timestamp_ns` strictly monotonically increasing across the stream.
+- **Zero Event Loss**: `events_emitted == events_attempted` (no dropped events).
+- **Rolling SHA-256 Integrity Hash**: End-to-end stream hash computed and verified.
+- **Epistemic Negative Control**: `NC-P7-09` — out-of-order timestamps or missing schema fields are deterministically rejected.
+
+### `H44` : 3D Volume Mesh FSI Co-Simulation Coupling Gate (Tier B)
+Structured hexahedral $16^3$ mesh fluid-structure interaction co-simulation:
+- **Interface Velocity Continuity**: No-slip boundary condition enforced at fluid-solid interface.
+- **H44b Sub-Invariant**: `pre_enforcement_velocity_mismatch > 1e-8` (coupling is physically non-trivial).
+- **Enstrophy Transfer**: Dimensionless coupling coefficient $|\eta| = |\Delta\Omega / M_b| \ge 1e-6$ (active coupling verified, sign-agnostic).
+- **FSI Coupling Loss**: $< 5\%$ structural kinetic energy loss per step cycle.
+- **Epistemic Negative Control**: `NC-P7-10` — interface velocity discontinuity $> 0.1$ without no-slip enforcement is deterministically rejected.
+
+---
+
+## Phase 8 Productization & Industrialization Invariants (H45–H50)
+
+### `H45` : Real Silicon QEMU / Physical HIL Benchmark Gate (Tier B / Physical)
+Automated bare-metal execution of `leanflow-embedded` on QEMU ARM Cortex-M4 and SpacemiT K1 RISC-V targets:
+- **Latency Bound**: Single-step execution time $\le 1.0\,\text{ms}$ at target frequency.
+- **Memory Footprint**: Static stack/BSS RAM $\le 64\,\text{KB}$; zero dynamic heap allocations (`malloc_calls == 0`).
+- **Epistemic Negative Control**: `NC-P8-01` — execution latency $> 1.0\,\text{ms}$ or heap allocation detected is deterministically rejected.
+
+### `H46` : Multi-CAD OpenCASCADE B-Rep Solid Topology Gate (Tier B)
+Conversion of frustration-minimized 2D camber geometries into watertight 3D B-Rep solids (STEP AP214 / IGES 5.3 / STL):
+- **Watertight Solid**: Valid Euler-Poincaré topological characteristic $V - E + F = 2(1 - g)$.
+- **Manufacturing Readiness**: Zero self-intersecting faces; continuous surface curvature for 5-axis CNC milling toolpath export.
+- **SHA-256 Integrity**: 64-character hash linking CAD artifact directly to the generative optimization ledger.
+- **Epistemic Negative Control**: `NC-P8-02` — non-manifold edge or negative volume is deterministically rejected.
+
+### `H47` : Production Cloud-Native gRPC & BigQuery Stream Ingestion Gate (Tier B / Infrastructure)
+High-throughput asynchronous streaming of simulation metrics to Google Cloud BigQuery and Grafana Cloud:
+- **Throughput & Latency**: Ingestion throughput $\ge 10,000\,\text{events/s}$ with end-to-end delivery latency $< 50\,\text{ms}$.
+- **Zero Loss & Monotonicity**: Zero dropped events (`loss_rate == 0.0`); strictly monotonic `timestamp_ns` and contiguous `sequence_number`.
+- **Rolling SHA-256 Digest**: Block-level stream integrity digest verified against BigQuery audit table.
+- **Epistemic Negative Control**: `NC-P8-03` — dropped events $> 0$ or schema mismatch is deterministically rejected.
+
+### `H48` : High-Order 3D FSI Bi-Directional Stress-Strain Tensor Coupling Gate (Tier B / MultiPhysics)
+Fully coupled 3D Navier-Stokes and non-linear Saint-Venant Kirchhoff elasticity tensor on $32^3$ hexahedral mesh:
+- **Interface Traction Balance**: Fluid normal stress matches structural boundary stress $\|\sigma_f \cdot n - \sigma_s \cdot n\|_2 / \|\sigma_f \cdot n\|_2 < 10^{-4}$.
+- **Kinematic Continuity**: $\|u_f - \dot{d}_s\|_\infty < 10^{-6}$ post-projection.
+- **Coupling Loss**: Energy conservation error $< 2.0\%$ over 100 complete aeroelastic cycles.
+- **Epistemic Negative Control**: `NC-P8-04` — uncoupled stress jump $> 10^{-3}$ or energy divergence is deterministically rejected.
+
+### `H49` : Commercial Enterprise Packaging & Zero-Dependency C-ABI Gate (Tier T0 / B)
+Universal distribution packages for frictionless industrial deployment:
+- **Universal Python Wheel**: `pip install leanflow` binary wheel with pre-compiled SIMD AVX-512 / NEON extensions for Linux (x86_64, aarch64) and macOS (Apple Silicon).
+- **C-ABI Shared Library**: `libleanflow.so` / `libleanflow.dylib` / `leanflow.dll` with ANSI C99 / C++17 header `leanflow.h`.
+- **Docker Appliance**: Production OCI container image (`leanflow:latest`) with compressed footprint $< 150\,\text{MB}$.
+- **Epistemic Negative Control**: `NC-P8-05` — missing C-ABI symbol or container image size $> 250\,\text{MB}$ is deterministically rejected.
+
+### `H50` : Cryptographic License Protection & Tamper-Proof Audit Lock (Tier T0 / Security)
+Dual-licensing enforcement with tamper-proof epistemic audit locking:
+- **Ed25519 License Verification**: Cryptographically signed license token unlocking Enterprise features (HPC acceleration, custom FSI hooks).
+- **Immutable Ledger Seal**: Audit certificates (Tier A/B/L/C/X) sealed with Ed25519 signature and SHA-256 merkle roots preventing downgrade or tampering.
+- **Epistemic Negative Control**: `NC-P8-06` — expired, unsigned, or tampered license token is deterministically rejected.
+
+---
+
+## Phase 9 Global Fleet Autonomy & Sovereign Airworthiness Invariants (H51–H55)
+
+### `H51` : Byzantine Fault-Tolerant Fleet Consensus Gate (Tier B / Distributed)
+Global synchronization of ≥1,000 physical edge nodes (aircraft flight computers, turbomachinery PLCs) using a Byzantine Fault-Tolerant (BFT) consensus protocol:
+- **Consensus Latency**: End-to-end global consensus latency $\le 50\,\text{ms}$ across geographically distributed nodes.
+- **Fault Tolerance**: System remains operational with up to $f = \lfloor (N-1)/3 \rfloor$ Byzantine (arbitrarily failing) nodes at any time.
+- **Enstrophy-Coherent State**: All live nodes must converge on the same enstrophy attractor $Z^*$ reading within $\pm 1\%$ relative tolerance.
+- **Cryptographic Ordering**: Every consensus round sealed with Ed25519-signed vector clock preventing replay attacks.
+- **Epistemic Negative Control**: `NC-P9-01` — consensus with $> f$ faulty nodes, latency $> 50\,\text{ms}$, or unsigned round is deterministically rejected.
+
+### `H52` : Autonomous Piezo-Morphing Wing Closed-Loop Control Gate (Tier B / Physical)
+Real-time closed-loop active aeroelastic control of piezo-morphing camber surfaces mitigating buffet oscillations at Mach 0.88:
+- **Flutter Suppression**: Measured peak wing-root bending moment variance reduced $\ge 60\%$ within 3 oscillation cycles under real atmospheric gust turbulence.
+- **Actuation Latency**: End-to-end sensor → solver → actuator latency $\le 2\,\text{ms}$ at 168 MHz.
+- **Stability Margin**: Minimum flutter speed margin $V_F \ge 1.2 \times V_{\text{design}}$ under all certified gust load cases.
+- **Epistemic Negative Control**: `NC-P9-02` — open-loop baseline (no actuation) or actuation latency $> 5\,\text{ms}$ fails to suppress flutter by $\ge 60\%$ and is deterministically rejected.
+
+### `H53` : Direct 5-Axis CNC CAM G-Code Synthesis Gate (Tier T1 / Manufacturing)
+One-click conversion of dual-scale frustration-minimized flow solutions directly into certified 5-axis CNC machining G-code:
+- **Surface Finish**: Computed Ra roughness $\le 0.8\,\mu\text{m}$ (ISO 1302 N6) guaranteed by toolpath cusp height analysis.
+- **Machining Time**: G-code estimated cycle time within $\pm 5\%$ of operator-targeted cycle time for the given spindle speed and feed rate.
+- **CAM Traceability**: G-code SHA-256 hash linked to the generating STEP AP214 entity and dual-scale optimization run in the audit ledger.
+- **ISO-Compliance**: G-code conforms to RS-274D (ISO 6983-1) and passes a dry-run syntax validation against a reference CNC post-processor.
+- **Epistemic Negative Control**: `NC-P9-03` — G-code with Ra $> 1.6\,\mu\text{m}$, cycle time deviation $> 10\%$, or broken SHA-256 link is deterministically rejected.
+
+### `H54` : Sovereign FAA/EASA DO-178C Level A Airworthiness Certification Gate (Tier A / Regulatory)
+End-to-end formal mathematical certification of flight-control software under FAA AC 20-115D / EASA AMC 20-115D:
+- **Zero-Sorry Lean 4 Proof Coverage**: 100% of safety-critical control laws machine-checked in Lean 4 with zero `sorry` and output only `[propext, Classical.choice, Quot.sound]`.
+- **MC/DC Coverage**: Modified Condition/Decision Coverage (MC/DC) ≥ 100% over all structural and boundary-condition branches.
+- **Traceability Matrix**: Every requirement in the PSAC (Plan for Software Aspects of Certification) linked to at least one Lean 4 theorem and one test case.
+- **DER Review**: Formal DER (Designated Engineering Representative) review record sealing the certification artifact with a timestamped Ed25519 signature.
+- **Epistemic Negative Control**: `NC-P9-04` — any `sorry` in a safety-critical module, MC/DC gap, or broken traceability link is deterministically rejected and blocks certification.
+
+### `H55` : Hyperscale Multi-Cloud Kubernetes SaaS Auto-Scaling SLO Gate (Tier T0 / Infrastructure)
+Cloud-native auto-scaling of the LeanFlow SaaS tier serving global fleet digital twin workloads:
+- **Scale-Out SLO**: Kubernetes HPA scales from 1 to 100 replica pods within $\le 90\,\text{s}$ under a step 100× load increase.
+- **P99 Request Latency**: API gateway P99 latency $\le 200\,\text{ms}$ at steady-state with $\ge 10,000$ concurrent simulation RPC streams.
+- **Cost Efficiency**: Spot/preemptible node fraction $\ge 60\%$ of total fleet, keeping cost-per-simulation-hour below the contracted SLA unit price.
+- **Zero-Downtime Rollout**: Rolling updates with `maxUnavailable=0` and `maxSurge=1` must complete with zero failed health-check probes recorded.
+- **Epistemic Negative Control**: `NC-P9-05` — scale-out exceeding 90 s, P99 latency $> 500\,\text{ms}$, or any failed rolling-update health probe is deterministically rejected.
+
+### `H56` : Autonomous Low-Tier Edge Execution (Tier T0/T1 / Execution)
+Autonomous execution of the workflow must be capable of running 100% offline via local Low-Tier SLMs (e.g. Ollama, Gemma 2, Mistral, Qwen Coder) without any reliance on frontier cloud models.
+- **Zero Cloud API Cost / Telemetry**: No payload containing simulation metrics, CAD geometries, or confidential intellectual property leaves the edge node.
+- **Constrained Decoding**: Output generated by local SLMs must strictly conform to JSON schemas with guaranteed rejection of `HALLUCINATED`, `SIMULATED`, or prose-only output.
+- **Deterministic Check**: The orchestrator pipeline detects a valid local edge model configuration and completes the gating cycle autonomously without HTTP calls outside `localhost`.
+- **Epistemic Negative Control**: `NC-P8-07` — any attempt to route an execution step to a missing cloud model or unverified backend API results in an immediate `SCAFFOLDING_ONLY` downgrade.
+
+---
+
+## Phase 9 Agent Hardness Contracts (Extended)
+
+The following output contracts extend the AGENTS.md v3.0 table for Phase 9 agents:
+
+| Agent | Must Return (key fields) | Forbidden Outputs |
+|-------|--------------------------|-------------------|
+| `fleet_consensus_agent` | `{"status": "CONVERGED\|REJECTED", "node_count": N, "consensus_latency_ms": N, "faulty_nodes_tolerated": N, "enstrophy_coherence_pct": N, "_measured": true}` | Simulated consensus without real network calls; missing `faulty_nodes_tolerated` |
+| `morphing_wing_controller` | `{"status": "STABILIZED\|FAILED", "flutter_variance_reduction_pct": N, "actuation_latency_ms": N, "stability_margin_ratio": N, "_measured": true}` | Open-loop baseline reported as closed-loop; missing `actuation_latency_ms` |
+| `cam_synthesis_agent` | `{"status": "EXPORTED\|REJECTED", "gcode_path": "...", "ra_roughness_um": N, "cycle_time_s": N, "sha256_hash": "...", "_measured": true}` | G-code without toolpath cusp height analysis; missing `sha256_hash` |
+| `airworthiness_certifier` | `{"status": "CERTIFIED\|REJECTED", "sorry_count": 0, "mcdc_coverage_pct": 100.0, "traceability_gaps": 0, "der_signature": "...", "_measured": true}` | Any `sorry_count > 0`; missing `traceability_gaps` field |
+| `saas_autoscale_agent` | `{"status": "SLO_MET\|VIOLATED", "scale_out_s": N, "p99_latency_ms": N, "spot_fraction_pct": N, "rollout_failures": 0, "_measured": true}` | Synthetically estimated latency; missing `rollout_failures` field |
+
+### Phase 9 Escalation Triggers (additions to AGENTS.md §Escalation Triggers)
+
+1. Fleet consensus fails with $\le f$ faulty nodes (Byzantine tolerance violated).
+2. Closed-loop flutter suppression fails to reach 60% variance reduction within 3 cycles.
+3. G-code SHA-256 traceability link is broken at any point in the CAM synthesis chain.
+4. A `sorry` is detected in any safety-critical Lean 4 module under DO-178C Level A review.
+5. SaaS auto-scaling P99 latency exceeds 500 ms during a certified load test.
 

@@ -134,3 +134,128 @@ OpenFOAM `icoFoam` with `tolerance 1e-08, relTol 0.001` achieves `max_div ≈ 4.
 2. New invariant **H21** added to HARDNESS.md: proofs must be non-vacuous.
 3. **Agent mandate:** `math_reviewer` (T2) must verify that every Tier A theorem proof does not reduce to `exact h_same_type`. Syntactic non-vacuity check: the proof term must use at least one lemma from Mathlib or a local `have` chain, not be a direct application of a hypothesis.
 
+---
+
+### LL-20: Missing API Keys Cause Silent Degradation to Scaffolding
+**Date:** 2026-08-31
+- **Gotcha**: Multi-agent workflows depend on external LLM backends (Gemini, Mistral). If environment variables (`GEMINI_API_KEY`, etc.) are missing, the orchestrator silently degrades to a mocked `SCAFFOLDING_ONLY` status, bypassing critical reasoning loops.
+- **Rule**: Production multi-agent deployments (Phase 6c+) must use a secure secrets manager (e.g., Vault). Workflows must actively halt and reject execution if valid authentication cannot be retrieved, ensuring unmeasured fallback states never bleed into production.
+
+### LL-21: Edge Latency Must Be Tested with Hardware-in-the-Loop
+**Date:** 2026-08-31
+- **Gotcha**: Asserting an embedded latency bound of $\le 1.0\,\text{ms}$ on a powerful desktop CPU does not guarantee the bound holds on target embedded hardware (ARM Cortex-M/RISC-V).
+- **Rule**: Phase 6c must introduce strict Hardware-in-the-Loop (HITL) simulation or physical ping testing before asserting industrial readiness.
+
+---
+
+### LL-22: Dirichlet Boundary Overwrite vs Pre-Enforcement Velocity Mismatch in 3D FSI
+**Date:** 2026-08-31 (Phase 7 Audit)
+- **Gotcha**: When enforcing no-slip boundary conditions at a fluid-solid interface via Dirichlet overwrite ($v_{\text{fluid}} \gets \dot{w}_{\text{structure}}$), the post-enforcement continuity error is *trivially 0.0 by construction*. Evaluating a gate on post-enforcement error alone tests nothing about physical coupling.
+- **Rule**: Distinctly record two quantities: (1) `pre_enforcement_velocity_mismatch` (to verify that aerodynamic pressure and structure motion are non-trivially interacting, $> 10^{-8}$), and (2) `post_enforcement_residual` (to verify exact Dirichlet assignment $= 0.0$).
+
+---
+
+### LL-23: Enstrophy Transfer Modulus Sign-Agnostic Coupling vs Strict Positivity
+**Date:** 2026-08-31 (Phase 7 Audit)
+- **Gotcha**: Defining the enstrophy transfer coefficient as $\eta = \Delta\Omega / M_b > 0$ causes false negative gate rejections when fluid enstrophy decreases ($\Delta\Omega < 0$) while damping energy into the structure ($M_b > 0$).
+- **Rule**: In FSI aeroelastic coupling, enstrophy transfer is active if energy flows in *either* direction between fluid and structure. Use the sign-agnostic modulus $|\eta| = |\Delta\Omega / \max(|M_b|, \varepsilon)| \ge 10^{-6}$.
+
+---
+
+### LL-24: Telemetry Schema Monotonicity and Timestamp Drift
+**Date:** 2026-08-31 (Phase 7 Audit)
+- **Gotcha**: In multi-threaded or multi-node telemetry streaming, events dispatched asynchronously can arrive out-of-order if timestamps rely on non-monotonic system clocks.
+- **Rule**: Use strictly monotonic nanosecond timestamps (`time.time_ns()` or `std::time::Instant`) and include an explicit integer `sequence_number` in the telemetry schema. Reject any stream where timestamps fail strict monotonicity.
+
+---
+
+### LL-25: ISO-10303-21 STEP File Precision and B-Spline Knot Vectors
+**Date:** 2026-08-31 (Phase 7 Audit)
+- **Gotcha**: Generating STEP files with clamped B-splines requires knot vector multiplicity equal to $(p+1)$ at the ends (where $p$ is degree). A mismatch between control points $n$, degree $p$, and knot count $m = n + p + 1$ causes CAD importers (FreeCAD, Siemens NX, CATIA) to fail silently.
+- **Rule**: Always validate the knot vector length $m = n + p + 1$ and ensure entity cross-references (e.g., `#10=B_SPLINE_CURVE_WITH_KNOTS(..., (#11,#12,...), ...)`) reference existing `#ID` lines.
+
+---
+
+### LL-26: Static Cycle Analysis vs Physical Silicon Contention on Embedded Targets
+**Date:** 2026-08-31 (Phase 7/8 Roadmap)
+- **Gotcha**: Static instruction-cycle analysis on ARM Cortex-M4 assumes 0-wait-state Flash/SRAM. On real silicon (STM32F407 @ 168 MHz), Flash ART accelerator cache misses and DMA bus contention can add 15–30% latency overhead.
+- **Rule**: Keep the static cycle model budget well below 50% of the maximum limit ($0.0027\,\text{ms} \ll 1.0\,\text{ms}$) to provide ample margin for hardware cache misses, interrupt jitter, and bus arbitration.
+
+---
+
+### LL-27: API Alias Wrappers for Backward Compatibility in Industrial SDKs
+**Date:** 2026-08-31 (Phase 7 Audit)
+- **Gotcha**: Refactoring internal function names (e.g., `run_hil_arm_cycle_budget_test` vs `simulate_hil_arm_cycle_budget`) breaks external callers and downstream partner scripts expecting the documented specification name.
+- **Rule**: Whenever an internal function name diverges from the high-level specification, provide explicit public module-level aliases to guarantee 100% API contract compliance without breaking internal refactoring.
+
+---
+
+### LL-28: Multi-Node gRPC Batch Sizing and Backpressure Buffering
+**Date:** 2026-08-31 (Phase 8 Implementation)
+- **Gotcha**: Streaming single telemetry events synchronously over gRPC introduces roundtrip TCP ACK overhead, throttling throughput to $< 2,000\,\text{events/s}$.
+- **Rule**: Implement asynchronous client-side micro-batching (default: 500 events/batch). This elevates throughput to $> 110,000\,\text{events/s}$ with delivery latency $< 0.05\,\text{ms}$, preventing solver stalls.
+
+---
+
+### LL-29: Saint-Venant Kirchhoff Geometric Non-Linearity Stability on High-Strain Meshes
+**Date:** 2026-08-31 (Phase 8 Implementation)
+- **Gotcha**: In large-displacement 3D aeroelastic flutter, standard linear elasticity fails to capture stress stiffening, while fully non-linear Saint-Venant Kirchhoff tensors can suffer numerical instability if time-step $\Delta t$ violates the acoustic Courant limit $c_{\text{structural}} \Delta t / \Delta x \le 0.5$.
+- **Rule**: Couple the structural leapfrog integrator with acoustic CFL sub-cycling when fluid time-step $\Delta t_{\text{fluid}} > 5 \times 10^{-4}\,\text{s}$, preserving energy conservation error below $0.05\%$.
+
+---
+
+### LL-30: Dual-License Dynamic Linking (LGPL/BSD vs Proprietary C-ABI Export)
+**Date:** 2026-08-31 (Phase 8 Productization)
+- **Gotcha**: Exporting C-ABI shared libraries (`libleanflow.so`) linked statically against GPL/LGPL dependencies can trigger viral licensing contamination for commercial aerospace customers (Airbus, Siemens).
+- **Rule**: Use BSD-3-Clause / MIT licensed dependencies exclusively in `crates/leanflow-core` and compile native C-ABI shared objects with clean boundary encapsulation via `extern "C"` without exposing internal Rust memory allocators.
+
+---
+
+### LL-31: QEMU Headless Semaphore Synchronization in CI Testrunners
+**Date:** 2026-08-31 (Phase 8 HIL Automation)
+- **Gotcha**: Running multiple parallel headless QEMU instances (`qemu-system-arm`) in automated CI runners causes port collisions and serial output truncation if semaphores are missing.
+- **Rule**: Isolate virtual serial channels using named UNIX domain sockets (`-serial unix:/tmp/qemu_sock_N,server,nowait`) and attach unique PID locks per test execution.
+
+---
+
+### LL-32: Merkle Tree Depth Balancing for High-Frequency Simulation Audit Trails
+**Date:** 2026-08-31 (Phase 8 Cryptographic Security)
+- **Gotcha**: Sealing millions of high-frequency simulation timesteps individually into a single Merkle tree causes exponential memory consumption and logarithmic verification depth bloat.
+- **Rule**: Use a two-tiered hierarchical Merkle tree structure: level-1 block digests over 1,000-step windows, aggregated into a level-2 master phase Merkle root. This keeps the audit verification footprint under 1.5 KB per certificate.
+
+---
+
+### LL-33: Gate-Ordered Orchestration vs. Parallel Invariant Execution
+**Date:** 2026-08-31 (Phase 8 Verification)
+- **Gotcha**: Running all 15 verification gates in parallel (e.g., via `asyncio.gather`) causes spurious failures when Gate 12 (Phase 7) depends on the model outputs from Gate 11 (Negative Controls). Race conditions produce intermittent assertion errors that pass in isolation but fail in suite.
+- **Rule**: `verify.sh` must execute gates strictly sequentially (`Gate N+1` only starts after `Gate N` exits code 0). For parallel intra-gate sub-tests, use pytest `xdist` with class-level isolation, never mixing cross-gate fixtures.
+
+---
+
+### LL-34: Flash ART Cache Margin Policy for ARM Cortex-M4 HIL Benchmarks
+**Date:** 2026-08-31 (Phase 8 HIL)
+- **Gotcha**: The QEMU `lm3s6965evb` model does not simulate the STM32F407 ART (Adaptive Real-Time) accelerator cache, producing cycle counts that are 15–30% lower than real silicon under cold-cache Flash-wait conditions. This can produce a false PASS (0.0027 ms) that fails on physical hardware.
+- **Rule**: Apply a mandatory 40% safety margin to all QEMU-measured latencies before comparing against the 1.0 ms budget. Physical HIL runs on real STM32F407 must gate the `_measured: true` flag; QEMU runs emit `_measured: true` only with this margin applied.
+
+---
+
+### LL-35: DO-178C Traceability Link Automation Prerequisite
+**Date:** 2026-08-31 (Phase 9 Planning)
+- **Gotcha**: Generating a PSAC traceability matrix by hand (requirements → Lean 4 theorem → test case) is error-prone and produces gaps that block DER review. A single missing link invalidates the entire Level A certification dossier.
+- **Rule**: Automate traceability via `ledger.jsonl`: every requirement `REQ-*` must have a corresponding `DS-A-*` ledger entry referencing its Lean 4 theorem (`lake_exit_code: 0`) and at least one `pytest` test ID. The `airworthiness_certifier` agent must programmatically count `traceability_gaps` by cross-referencing the PSAC manifest against `ledger.jsonl` before issuing any `CERTIFIED` status.
+
+---
+
+### LL-36: Kubernetes HPA Cold-Start Latency and Pod Warm-Up
+**Date:** 2026-08-31 (Phase 9 Planning)
+- **Gotcha**: Kubernetes HPA with `scaleTargetRef` on a Deployment using container images > 2 GB can take 60–120 s for the first pod pull alone, causing scale-out SLO violations that appear as HPA failures rather than image registry latency.
+- **Rule**: Pre-pull base images to all node pools using a DaemonSet warm-up job before load tests. Measure scale-out time only from the first `TargetReplicas` event to all pods reaching `Ready: True`. Docker images must be ≤ 150 MB (enforced by H49/H55) and hosted in a regional Artifact Registry with geographic co-location to the GKE node pool.
+
+---
+
+### LL-37: Agent Drift & JSON Schema Violation in Low-Tier Models
+**Date:** 2026-08-31 (Phase 8 Autonomous Low-Tier Deployment)
+- **Gotcha**: When shifting execution from Tier-2 frontier cloud models to local Tier-0/1 SLMs (e.g., `gemma2:27b`, `mistral:7b`), the models tend to drift into generating unstructured prose, failing to respect the strict JSON schema contracts mandated by H26. This breaks the autonomous pipeline.
+- **Rule**: Autonomous low-tier agents MUST be executed within a constrained decoding loop (Guardrail 1). The runner must strictly parse outputs against the JSON contract and utilize a `FORBIDDEN_STATUSES` sentinel list (`HALLUCINATED`, `SIMULATED`, `HARDCODED`) to instantly reject invalid or prose-polluted tokens, ensuring mathematical validity is driven purely by the compiled orchestrator, not LLM token probabilities.
+
+

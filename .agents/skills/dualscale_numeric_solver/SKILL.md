@@ -94,3 +94,43 @@ python3 scripts/run_phase5_experimental_protocol.py
 | Spectral Fidelity | H17 | $L^2$ error $< 2\%$, exponent $\in [-1.8, -1.6]$ | NC-DS-09 |
 | Production SLA | H18 | $\ge 1000$ steps/s, uptime $\ge 99.9\%$ | NC-DS-10 |
 | Frustration Monotonicity | H19 | $\mathcal{D}(M)$ non-decreasing for $Re_\lambda > 100$ | Laminar regime exemption |
+
+## 6. Phase 6c Cloud-Production Readiness (H33–H34)
+
+When advancing industrial PoCs to cloud-production (Phase 6c), you must adhere to the following strict operational guidelines:
+
+### 6.1. Secure Vault Integration (H33)
+- **Do NOT** rely on plain environment variables (`GEMINI_API_KEY`) for agentic orchestration.
+- **Rule**: Agents must authenticate via a mock or real `SecretVaultAgent` to retrieve credentials. If keys are missing, the workflow must actively halt and reject the execution, preventing silent fallback to `SCAFFOLDING_ONLY`.
+
+### 6.2. Native Cloud Telemetry (H33)
+- **Do NOT** simply print critical metrics to stdout.
+- **Rule**: Stream real-time edge metrics (e.g., $k_L a$ yields, shock buffet variance, latency bounds) directly to a `CloudTelemetryAgent` (BigQuery/Grafana mock endpoint).
+
+### 6.3. Distributed JHTDB Scaling (H34)
+- **Rule**: Single-node PoCs for pipeline drag reduction must be scaled to use distributed multi-node array models interfacing with the JHTDB API. 
+
+### 6.4. Hardware-in-the-Loop (HITL) Validation
+- **Rule**: Embedded edge bounds ($\le 64\,\text{KB}$ RAM, $\le 1.0\,\text{ms}$ latency) must be validated using simulated physical hardware latency profiles (e.g., ARM Cortex-M4) rather than host CPU measurements.
+
+## 7. Phase 7 & 8 Industrialization & Productization Standards (H41–H50)
+
+### 7.1. HIL Cycle Budget Analysis (H41 / H45)
+- Micro-kernel ($N=4\times4$) must execute in $\le 1.0\,\text{ms}$ (456 cycles @ 168 MHz on STM32F407).
+- Memory footprint bounded to static stack/BSS $\le 64\,\text{KB}$ with zero heap allocation.
+
+### 7.2. Generative CAD & Topology Export (H42 / H46)
+- Airfoil/blade camber lines optimized via frustration minimization must be exported to ISO-10303-21 STEP files.
+- Files must feature valid `ISO-10303-21` header/footer, `B_SPLINE_CURVE_WITH_KNOTS`, and SHA-256 cryptographic traceability.
+
+### 7.3. Live Multi-Cloud Telemetry Streaming (H43 / H47)
+- Telemetry events must be monotonic in timestamp (`timestamp_ns`), schema-complete with `sequence_number`, and verified via a rolling SHA-256 stream digest with zero event loss.
+
+### 7.4. 3D Volume Mesh FSI Co-Simulation (H44 / H44b / H48)
+- Interface velocity continuity must be enforced at the fluid-solid boundary ($y=0$).
+- Record `pre_enforcement_velocity_mismatch` (to guarantee non-trivial coupling $> 10^{-8}$) and `post_enforcement_residual = 0.0`.
+- Verify sign-agnostic enstrophy transfer coefficient $|\eta| = |\Delta\Omega / M_b| \ge 10^{-6}$ and kinetic energy loss $< 5.0\%$.
+
+### 7.5. Industrial Productization (Phase 8 Mandate)
+- Package core solver as a standalone Python Wheel (`leanflow`), native C-ABI shared library (`libleanflow.so`), and lightweight Docker HPC appliance.
+

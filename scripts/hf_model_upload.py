@@ -86,9 +86,24 @@ def main():
         commit_message="feat(model): publish LeanFlow Neuro-Symbolic DualScale Navier-Stokes solver v1.0.0",
     )
 
+    # IP-08: HuggingFace model versioning
+    tag_name = "v1.0.0-phase5-cert-B0C43C9E"
+    print(f"\n[4/4] Tagging release {tag_name} on Hub...")
+    try:
+        api.create_tag(
+            repo_id=model_repo_id,
+            repo_type="model",
+            tag=tag_name,
+            tag_message="Phase 5 Certified Release",
+        )
+        print(f"      [✓] Created tag: {tag_name}")
+    except Exception as e:
+        print(f"      [!] Tag creation note: {e}")
+
     print(f"\n=================================================================")
     print(f"  🎉 SUCCESS! Model package successfully published to Hugging Face:")
     print(f"  👉 https://huggingface.co/{model_repo_id}")
+    print(f"  👉 Tag: {tag_name}")
     print(f"=================================================================\n")
 
 

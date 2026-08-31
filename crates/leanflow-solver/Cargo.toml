@@ -6,6 +6,9 @@ authors.workspace = true
 license.workspace = true
 description = "High-performance time integrators and DualScale Navier-Stokes solvers"
 
+[lib]
+crate-type = ["cdylib", "rlib"]
+
 [dependencies]
 leanflow-core = { path = "../leanflow-core" }
 cvode = { path = "/home/xavkal/xdev/rusty-SUNDIALS/crates/cvode" }

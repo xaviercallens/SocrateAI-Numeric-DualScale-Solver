@@ -83,3 +83,91 @@ class RustySundialsBridge:
             "methods": report.methods,
             "nvector_backends": report.nvector_backends,
         }
+
+# FFI structs for C-ABI
+import ctypes
+import numpy as np
+
+class FfiCvodeResult(ctypes.Structure):
+    _fields_ = [
+        ("time_ptr", ctypes.POINTER(ctypes.c_double)),
+        ("time_len", ctypes.c_size_t),
+        ("energy_ptr", ctypes.POINTER(ctypes.c_double)),
+        ("energy_len", ctypes.c_size_t),
+        ("enstrophy_ptr", ctypes.POINTER(ctypes.c_double)),
+        ("enstrophy_len", ctypes.c_size_t),
+        ("final_state_ptr", ctypes.POINTER(ctypes.c_double)),
+        ("final_state_len", ctypes.c_size_t),
+        ("num_steps", ctypes.c_size_t),
+        ("num_rhs_evals", ctypes.c_size_t),
+        ("handle", ctypes.c_void_p),
+    ]
+
+def native_cvode_integrate(
+    n_shells: int,
+    nu: float,
+    alpha_prime: Optional[float],
+    use_bdf: bool,
+    rtol: float,
+    atol: float,
+    u0: np.ndarray,
+    t_final: float,
+    n_steps: int
+) -> Dict[str, Any]:
+    """Native FFI bridge to rusty-SUNDIALS CVODE integration."""
+    repo_root = Path(__file__).parent.parent.parent.parent
+    lib_path = repo_root / "target" / "release" / "libleanflow_solver.so"
+    
+    if not lib_path.exists():
+        raise RuntimeError(f"Native solver lib not found at {lib_path}. Run `cargo build --release`.")
+        
+    lib = ctypes.CDLL(str(lib_path))
+    
+    lib.solve_cvode_dyadic.argtypes = [
+        ctypes.c_size_t, ctypes.c_double, ctypes.c_double,
+        ctypes.c_bool, ctypes.c_double, ctypes.c_double,
+        ctypes.POINTER(ctypes.c_double), ctypes.c_size_t,
+        ctypes.c_double, ctypes.c_size_t,
+        ctypes.POINTER(FfiCvodeResult)
+    ]
+    lib.solve_cvode_dyadic.restype = ctypes.c_int
+    
+    lib.free_cvode_result.argtypes = [ctypes.c_void_p]
+    lib.free_cvode_result.restype = None
+    
+    out_result = FfiCvodeResult()
+    u0_data = np.ascontiguousarray(u0, dtype=np.float64)
+    u0_ptr = u0_data.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
+    
+    alpha_val = alpha_prime if alpha_prime is not None else -1.0
+    
+    res_code = lib.solve_cvode_dyadic(
+        n_shells, nu, alpha_val, use_bdf, rtol, atol,
+        u0_ptr, u0_data.size, t_final, n_steps,
+        ctypes.byref(out_result)
+    )
+    
+    if res_code != 0:
+        raise RuntimeError(f"rusty-SUNDIALS CVODE integration failed with code {res_code}")
+        
+    # Copy data out
+    time_arr = np.ctypeslib.as_array(out_result.time_ptr, shape=(out_result.time_len,)).copy()
+    energy_arr = np.ctypeslib.as_array(out_result.energy_ptr, shape=(out_result.energy_len,)).copy()
+    enstrophy_arr = np.ctypeslib.as_array(out_result.enstrophy_ptr, shape=(out_result.enstrophy_len,)).copy()
+    final_state_arr = np.ctypeslib.as_array(out_result.final_state_ptr, shape=(out_result.final_state_len,)).copy()
+    
+    num_steps_out = out_result.num_steps
+    num_rhs_evals = out_result.num_rhs_evals
+    
+    # Free Rust memory
+    lib.free_cvode_result(out_result.handle)
+    
+    return {
+        "times": time_arr,
+        "energy": energy_arr,
+        "enstrophy": enstrophy_arr,
+        "final_state": final_state_arr,
+        "num_steps": num_steps_out,
+        "num_rhs_evals": num_rhs_evals,
+    }
+

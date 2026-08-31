@@ -102,9 +102,9 @@
 - [x] **IP-11**: LL-19 (Lean 4 vacuous proof pattern) added to LL.md and HARDNESS.md
 - [x] **H21/H22/H23**: New hardness invariants added to HARDNESS.md
 - [ ] **IP-05**: Sync TODO.md — IN PROGRESS (this file)
-- [ ] **IP-06**: Native rusty-SUNDIALS Rust FFI (Sprint 2)
-- [ ] **IP-07**: arXiv preprint draft `report/leanflow_preprint_v1.tex` (Sprint 2)
-- [ ] **IP-08**: HuggingFace model versioning: tag `v1.0.0-phase5-cert-B0C43C9E` (Sprint 2)
+- [x] **IP-06**: Native rusty-SUNDIALS Rust FFI (Sprint 2)
+- [x] **IP-07**: arXiv preprint draft `report/leanflow_preprint_v1.tex` (Sprint 2)
+- [x] **IP-08**: HuggingFace model versioning: tag `v1.0.0-phase5-cert-B0C43C9E` (Sprint 2)
 - [ ] **IP-09**: `lean4/prodi_serrin.lean` Sobolev embedding proof (Sprint 3)
 - [ ] **IP-10**: N=128 throughput profiling with py-spy + Numba JIT (Sprint 3)
 

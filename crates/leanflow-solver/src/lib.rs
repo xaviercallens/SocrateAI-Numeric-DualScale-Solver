@@ -141,3 +141,89 @@ mod tests {
         assert!(e1 > 0.0);
     }
 }
+
+pub mod ffi {
+    use super::cvode_dyadic::{CvodeDyadicCascade, CvodeCascadeResult};
+    use std::ffi::c_void;
+    use std::slice;
+    use std::panic::catch_unwind;
+
+    #[repr(C)]
+    pub struct FfiCvodeResult {
+        pub time_ptr: *const f64,
+        pub time_len: usize,
+        pub energy_ptr: *const f64,
+        pub energy_len: usize,
+        pub enstrophy_ptr: *const f64,
+        pub enstrophy_len: usize,
+        pub final_state_ptr: *const f64,
+        pub final_state_len: usize,
+        pub num_steps: usize,
+        pub num_rhs_evals: usize,
+        // Opaque pointer to keep Rust vectors alive
+        pub handle: *mut c_void, 
+    }
+
+    #[no_mangle]
+    pub extern "C" fn solve_cvode_dyadic(
+        n_shells: usize,
+        nu: f64,
+        alpha_prime: f64, // pass < 0 to mean None
+        use_bdf: bool,
+        rtol: f64,
+        atol: f64,
+        u0_ptr: *const f64,
+        u0_len: usize,
+        t_final: f64,
+        n_steps: usize,
+        out_result: *mut FfiCvodeResult,
+    ) -> i32 {
+        let result = catch_unwind(|| {
+            assert!(!u0_ptr.is_null());
+            assert_eq!(n_shells, u0_len);
+
+            let u0 = unsafe { slice::from_raw_parts(u0_ptr, u0_len) };
+            
+            let alpha = if alpha_prime < 0.0 { None } else { Some(alpha_prime) };
+            
+            let cascade = CvodeDyadicCascade::new(n_shells, nu, alpha, use_bdf, rtol, atol);
+            
+            match cascade.integrate(u0, t_final, n_steps) {
+                Ok(res) => {
+                    let boxed = Box::new(res);
+                    let ptr = Box::into_raw(boxed);
+                    
+                    unsafe {
+                        (*out_result).time_ptr = (*ptr).time.as_ptr();
+                        (*out_result).time_len = (*ptr).time.len();
+                        (*out_result).energy_ptr = (*ptr).energy.as_ptr();
+                        (*out_result).energy_len = (*ptr).energy.len();
+                        (*out_result).enstrophy_ptr = (*ptr).enstrophy.as_ptr();
+                        (*out_result).enstrophy_len = (*ptr).enstrophy.len();
+                        (*out_result).final_state_ptr = (*ptr).final_state.as_ptr();
+                        (*out_result).final_state_len = (*ptr).final_state.len();
+                        (*out_result).num_steps = (*ptr).num_steps;
+                        (*out_result).num_rhs_evals = (*ptr).num_rhs_evals;
+                        (*out_result).handle = ptr as *mut c_void;
+                    }
+                    0
+                },
+                Err(_) => -1,
+            }
+        });
+
+        match result {
+            Ok(code) => code,
+            Err(_) => -2,
+        }
+    }
+
+    #[no_mangle]
+    pub extern "C" fn free_cvode_result(handle: *mut c_void) {
+        if !handle.is_null() {
+            unsafe {
+                let _ = Box::from_raw(handle as *mut CvodeCascadeResult);
+            }
+        }
+    }
+}

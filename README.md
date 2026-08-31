@@ -3,7 +3,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Lean 4 Verified](https://img.shields.io/badge/Lean%204-Formally%20Verified-blue)](https://leanprover.github.io/)
 [![JHTDB Validated](https://img.shields.io/badge/JHTDB-Real%20DNS%20Data-green)](https://turbulence.idies.jhu.edu/)
-[![HuggingFace](https://img.shields.io/badge/🤗%20HuggingFace-Benchmark%20Dataset-orange)](https://huggingface.co/datasets/callensxavier/leanflow-jhtdb-benchmark)
+[![HuggingFace Dataset](https://img.shields.io/badge/🤗%20HuggingFace-Benchmark%20Dataset-orange)](https://huggingface.co/datasets/callensxavier/leanflow-jhtdb-benchmark)
+[![HuggingFace Model](https://img.shields.io/badge/🤗%20HuggingFace-Model%20Release-blue)](https://huggingface.co/callensxavier/leanflow-dualscale-pde)
 [![OpenFOAM Benchmarked](https://img.shields.io/badge/OpenFOAM-icoFoam%20Compared-red)](https://www.openfoam.com/)
 
 **LeanFlow** is a formally verified, dual-scale pseudo-spectral solver for the 2D and 3D incompressible Navier-Stokes equations — the first CFD solver class provably correct at the operating-system level.
@@ -24,8 +25,9 @@ Two independent benchmark campaigns on **real Johns Hopkins Turbulence Database 
 | **OOM Divergence Advantage** | **~7 orders of magnitude** | baseline | — |
 | **Speedup vs OpenFOAM** | **2.10×** | 1× | — |
 
-> **Certified:** `CERT-MULTI-03D703DC` (JHTDB REST) + `CERT-HF-2622BEBE` (HuggingFace HDF5)  
-> Full reproducible results: 🤗 [callensxavier/leanflow-jhtdb-benchmark](https://huggingface.co/datasets/callensxavier/leanflow-jhtdb-benchmark)
+> **Certified:** `CERT-MULTI-03D703DC` (JHTDB REST) + `CERT-HF-2622BEBE` (HuggingFace HDF5) + `CERT-P5-WF-B0C43C9E` (Phase 5 Autonomous Audit)  
+> Full reproducible results: 🤗 [Dataset: callensxavier/leanflow-jhtdb-benchmark](https://huggingface.co/datasets/callensxavier/leanflow-jhtdb-benchmark)  
+> Runnable Model Package: 🤗 [Model: callensxavier/leanflow-dualscale-pde](https://huggingface.co/callensxavier/leanflow-dualscale-pde)
 
 ---
 
@@ -33,17 +35,22 @@ Two independent benchmark campaigns on **real Johns Hopkins Turbulence Database 
 
 - **Machine-Precision Divergence Control**: The exact Leray projection in Fourier space achieves divergence bounds **~7 orders of magnitude** tighter than OpenFOAM's iterative PISO solver — on real JHTDB DNS data.
 - **2.10× Faster Than OpenFOAM**: No pressure equation to solve — incompressibility enforced in one FFT pass.
+- **AI-Driven Preprocessing & Meshing**: Automated Kolmogorov dissipation scale resolution ($k_{\max} \eta \ge 1.5$), boundary condition projection, and stiffness-adaptive preconditioners (P0–P3).
 - **Formally Verified in Lean 4**: Critical mathematical properties (frustration monotonicity, Galilean invariance, energy/enstrophy cascades) are formally proven — not just tested.
 - **AI-Native via Runux AI Runtime**: Designed for bare-metal execution with PyO3 Rust bindings, HAL Arena allocators, and AVX-512 SIMD FFT streaming.
 - **Open & Reproducible**: All benchmarks use real DNS data; SHA-256 certified audit trail; one-command reproduction.
 
 ---
 
-## 🤗 HuggingFace Benchmark Dataset
+## 🤗 HuggingFace Model & Dataset Releases
 
-All experimental results are published openly on HuggingFace:
+1. **Model Hub Release**:  
+   > **🔗 https://huggingface.co/callensxavier/leanflow-dualscale-pde**  
+   Includes self-contained inference pipeline (`pipeline.py`), DualScale PDE configuration (`config.json`), SymBrain v4 router rules (`symbrain_router.json`), and certified calibration weights.
 
-> **🔗 https://huggingface.co/datasets/callensxavier/leanflow-jhtdb-benchmark**
+2. **Benchmark Dataset**:  
+   > **🔗 https://huggingface.co/datasets/callensxavier/leanflow-jhtdb-benchmark**  
+   Includes 25 certified runs across REST and HDF5 DNS cutouts with OpenFOAM and FDM baselines.
 
 The dataset includes:
 - `data/hf_benchmark.json` — 15 certified runs (3 solvers × 5 timepoints) on JHTDB HDF5 256³ DNS

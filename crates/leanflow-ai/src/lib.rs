@@ -1,16 +1,27 @@
 //! # LeanFlow AI
 //!
-//! Neuro-symbolic AI preconditioners and adaptive mesh router.
-//! Preconditioners:
+//! Neuro-symbolic AI preprocessing, preconditioners, and adaptive mesh router.
+//! - P0: AI Preprocessing (mesh generation, boundary conditions, parameter tuning)
 //! - P1: Spectral Fourier Gate (41.8x speedup)
 //! - P2: MixedPrecision FGMRES (61.1x speedup)
 //! - P3: FP8 TensorCore AMG (130.8x speedup)
+//! - SymBrain v4: Adaptive Mesh & Timestep Router
+
+pub mod boundary_conditions;
+pub mod mesh_preprocessing;
+pub mod parameter_tuner;
+
+pub use boundary_conditions::{parse_boundary_condition, BoundaryType, BoundaryVerification};
+pub use mesh_preprocessing::{MeshConfig, NeuroSymbolicMesher};
+pub use parameter_tuner::{ParameterRecommendation, ParameterTuner, RecommendedTimeScheme};
 
 use serde::{Deserialize, Serialize};
 
 /// Preconditioner selection strategy based on problem stiffness and Triadic Frustration D(M).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum PreconditionerType {
+    /// P0: AI-driven Direct Fourier Filter Preconditioner.
+    AIFourierFilter,
     /// P1: Spectral Fourier Gate for high-frequency periodic systems (41.8x target).
     SpectralFourierGate,
     /// P2: Mixed-Precision FGMRES for general CPU workloads (61.1x target).

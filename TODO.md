@@ -13,6 +13,7 @@
 - [x] Implement Runux AI Runtime & Rust Linux Mini-Kernel detection bridge (`runux_bridge.py`).
 - [x] Establish 3-Gate verification protocol in `scripts/verify.sh` (21/21 tests passing).
 - [x] Create Antigravity specialized agent personas and science skills in `.agents/`.
+- [x] Publish certified HuggingFace JHTDB Benchmark comparing LeanFlow vs OpenFOAM (7 OOM better divergence, 2.10x faster).
 
 ---
 
@@ -70,7 +71,10 @@
 
 ---
 
-## 🏭 Phase 5: Industrial Validation & Research Publication (Months 30–36)
-- [ ] Conduct industrial bioreactor fluidic control experiments ($k_L a = 115.89/\text{s}$, $3.14\times$ yield).
-- [ ] Conduct aerodynamic wing simulation drag reduction benchmarks (5–10% drag reduction).
+## 🏭 Phase 5: AI Preprocessing & Industrial Validation (Months 30–36)
+- [ ] Implement AI-driven dynamic mesh resolution based on initial enstrophy estimates.
+- [ ] Implement LLM-based boundary condition parser mapping natural language to exact mathematical constraints.
+- [ ] Integrate `runux-ai-runtime` for zero-shot fluidic parameter tuning and hyperparameter optimization.
+- [ ] Conduct industrial bioreactor fluidic control experiments ($k_L a = 115.89/\text{s}$, $3.14\times$ yield) with AI-tuned initial configurations.
+- [ ] Conduct aerodynamic wing simulation validation against real empirical datasets (e.g., JHTDB) to ensure physical viability.
 - [ ] Finalize mathematical proof of Asymptotic Frustration Conjecture and submit to top-tier mathematics journal.

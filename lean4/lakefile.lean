@@ -7,6 +7,16 @@ package «dualscale_solver» where
 require mathlib from git
   "https://github.com/leanprover-community/mathlib4.git"
 
+-- W3 Fix: Register all four modules so `lake build` kernel-checks them
 @[default_target]
 lean_lib «DualScale» where
-  -- Library configuration options
+  -- Main dual-scale geometry & Navier-Stokes cascade (Tier A certified)
+
+lean_lib «Galerkin» where
+  -- Triadic energy transfers & antisymmetry (Tier A certified)
+
+lean_lib «Leray» where
+  -- Leray-Helmholtz projector idempotence (Tier A certified)
+
+lean_lib «Frustration» where
+  -- Triadic Frustration Index D(M) phase cancellation bounds (Tier A certified)

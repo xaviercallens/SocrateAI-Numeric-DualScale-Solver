@@ -97,7 +97,7 @@ class DyadicShellSolver:
             u2 = E_half * curr_u + 0.5 * actual_dt * E_half * k1
             k2 = self.non_linear_rhs(t + 0.5 * actual_dt, u2)
             
-            u3 = E_half * curr_u + 0.5 * actual_dt * k2
+            u3 = E_half * curr_u + 0.5 * actual_dt * E_half * k2  # W1 Fix: E_half on k2 (Cox-Matthews ETD-RK4)
             k3 = self.non_linear_rhs(t + 0.5 * actual_dt, u3)
             
             u4 = E_full * curr_u + actual_dt * E_half * k3
@@ -120,3 +120,20 @@ class DyadicShellSolver:
             "alpha_prime": self.alpha_prime,
             "nu": self.nu,
         }
+
+
+def compute_triadic_frustration_index(
+    solver: DyadicShellSolver,
+    u_state: np.ndarray,
+    t: float = 0.0,
+) -> float:
+    """
+    Compute Triadic Frustration Index: D(M) = sum(|T_n|) / |sum(T_n)|.
+    Measures phase cancellation and asymptotic frustration across triadic transfers.
+    """
+    T = solver.non_linear_rhs(t, u_state)
+    numerator = float(np.sum(np.abs(T)))
+    denominator = float(abs(np.sum(T)))
+    if denominator < 1e-15:
+        return 1000.0  # Perfect cancellation
+    return float(numerator / denominator)

@@ -16,7 +16,7 @@ graph TD
     C --> D[Phase 2: Rust Solver Core & rusty-SUNDIALS Integration]
     D --> E[Phase 3: Neuro-Symbolic AI Preconditioners P1-P3]
     E --> F[Phase 4: Real-Time & Embedded Deployment]
-    F --> G[Phase 5: Industrial Validation & Commercial Launch]
+    F --> G[Phase 5: AI Preprocessing & Industrial Validation]
 ```
 
 ---
@@ -32,6 +32,7 @@ graph TD
 | `TSK-04` | Certificate Pipeline | Implement `cert/certificate_generator.py` & `cert/ledger_checker.py` (Mathesis Gate 3) | T0 | ✅ Complete |
 | `TSK-05` | Verification Suite | Implement 21-test suite in `tests/` with 100% pass rate on `scripts/verify.sh` | T0 | ✅ Complete |
 | `TSK-06` | Native Runtime Bridge | Implement `runtimes/runux_bridge.py` interfacing `runux-ai-runtime` and `rust-linux-mini-kernel` | T0 | ✅ Complete |
+| `TSK-07` | Benchmark Supremacy | Publish HuggingFace JHTDB benchmark (~7 OOM divergence gain, 2.10x speedup vs OpenFOAM) | T0 | ✅ Complete |
 
 ### Phase 1: Lean 4 Mathematical Formalization (Months 3–12) 🔄
 | Task ID | Component | Description | Tier | Status |
@@ -67,12 +68,13 @@ graph TD
 | `TSK-43` | Microcontroller Port | Deploy lightweight embedded solver to STM32 and Raspberry Pi ARM | T1 | Scheduled |
 | `TSK-44` | LeanFlow Enterprise | Launch dual-licensing model for enterprise on-premise deployments | T0 | Scheduled |
 
-### Phase 5: Industrial Validation & Production (Months 30–36) 🔄
+### Phase 5: AI Preprocessing & Industrial Validation (Months 30–36) 🔄
 | Task ID | Component | Description | Tier | Status |
 |---|---|---|---|---|
-| `TSK-51` | Bioreactor Control | Validate real-time feedback loop achieving $k_L a = 115.89/\text{s}$ ($3.14\times$ yield) | T1 | Scheduled |
-| `TSK-52` | Aerospace CFD | Validate boundary-layer turbulence drag reduction (5–10%) on aircraft wings | T1 | Scheduled |
-| `TSK-53` | Asymptotic Frustration | Complete mathematical proof of Asymptotic Frustration Conjecture in top journal | T2 | Scheduled |
+| `TSK-51` | Neuro-Symbolic Meshing | AI-driven dynamic mesh resolution based on initial enstrophy estimates | T1 | Scheduled |
+| `TSK-52` | BC Inference | LLM-based boundary condition parsing and mapping to exact mathematical constraints | T1 | Scheduled |
+| `TSK-53` | Parameter Tuning | Integrate `runux-ai-runtime` for zero-shot fluidic parameter optimization | T1 | Scheduled |
+| `TSK-54` | Industrial Validation | Validate bioreactor/aerospace simulations using AI-tuned initial configurations against real empirical datasets | T1 | Scheduled |
 
 ---
 
@@ -81,7 +83,7 @@ graph TD
 A task is marked **DONE** only when:
 1. Source code compiles with zero warnings under `ruff` (Python) and `cargo clippy -- -D warnings` (Rust).
 2. All mathematical claims are entered into `ledger.jsonl` and `LEDGER.md` with valid supports and zero tier inversions.
-3. Unit tests and negative controls pass 100% under `./scripts/verify.sh` (Gates 1, 2, and 3).
+3. Unit tests, negative controls, and **real benchmark mandates** (no synthetics) pass 100% under `./scripts/verify.sh`.
 4. Full documentation and API docstrings are written and committed.
 
 ---

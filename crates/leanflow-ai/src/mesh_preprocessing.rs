@@ -1,0 +1,108 @@
+//! # Mesh Preprocessing Module
+//!
+//! AI-driven hydrodynamic grid resolution and Kolmogorov scale estimation.
+
+use serde::{Deserialize, Serialize};
+
+/// Hydrodynamic mesh configuration recommendation.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct MeshConfig {
+    pub recommended_n: usize,
+    pub domain_length: f64,
+    pub dx: f64,
+    pub k_max: f64,
+    pub eta_kolmogorov: f64,
+    pub k_max_eta: f64,
+    pub alpha_prime: f64,
+    pub kinetic_energy: f64,
+    pub enstrophy: f64,
+    pub dissipation_rate: f64,
+}
+
+/// Neuro-Symbolic Mesher in pure Rust.
+#[derive(Debug, Clone)]
+pub struct NeuroSymbolicMesher {
+    pub domain_length: f64,
+    pub min_grid_n: usize,
+    pub max_grid_n: usize,
+}
+
+impl Default for NeuroSymbolicMesher {
+    fn default() -> Self {
+        Self {
+            domain_length: 2.0 * std::f64::consts::PI,
+            min_grid_n: 16,
+            max_grid_n: 1024,
+        }
+    }
+}
+
+impl NeuroSymbolicMesher {
+    pub fn new(domain_length: f64, min_grid_n: usize, max_grid_n: usize) -> Self {
+        Self {
+            domain_length,
+            min_grid_n,
+            max_grid_n,
+        }
+    }
+
+    /// Estimate required resolution N from kinetic energy and enstrophy.
+    pub fn estimate_from_invariants(
+        &self,
+        kinetic_energy: f64,
+        enstrophy: f64,
+        nu: f64,
+    ) -> MeshConfig {
+        let e_safe = kinetic_energy.max(1e-12);
+        let omega_safe = enstrophy.max(1e-12);
+
+        // Dissipation rate epsilon = 2 * nu * Omega
+        let epsilon = 2.0 * nu * omega_safe;
+
+        // Kolmogorov length scale eta = (nu^3 / epsilon)^(1/4)
+        let eta_kolmogorov = (nu.powi(3) / epsilon).powf(0.25);
+
+        // Required resolution condition: k_max * eta >= 1.5
+        // Under Orszag 2/3 dealiasing: k_max = N / 3 (for domain 2*pi)
+        let k_factor = self.domain_length / (2.0 * std::f64::consts::PI);
+        let n_required_raw = (4.5 / eta_kolmogorov) * k_factor;
+
+        // Snap to next power of 2
+        let power = (n_required_raw.max(self.min_grid_n as f64)).log2().ceil() as u32;
+        let recommended_n = (2usize.pow(power)).clamp(self.min_grid_n, self.max_grid_n);
+
+        let dx = self.domain_length / (recommended_n as f64);
+        let k_max = ((recommended_n as f64) / 3.0) / k_factor;
+        let k_max_eta = k_max * eta_kolmogorov;
+        let alpha_prime = (dx * dx).min(1.0);
+
+        MeshConfig {
+            recommended_n,
+            domain_length: self.domain_length,
+            dx,
+            k_max,
+            eta_kolmogorov,
+            k_max_eta,
+            alpha_prime,
+            kinetic_energy: e_safe,
+            enstrophy: omega_safe,
+            dissipation_rate: epsilon,
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_mesher_kolmogorov_resolution() {
+        let mesher = NeuroSymbolicMesher::default();
+        // High enstrophy turbulence: Omega = 1000.0, nu = 1e-3
+        let config = mesher.estimate_from_invariants(1.0, 1000.0, 1e-3);
+
+        assert!(config.recommended_n >= 32);
+        assert!(config.k_max_eta >= 1.0);
+        assert!(config.alpha_prime > 0.0);
+    }
+}

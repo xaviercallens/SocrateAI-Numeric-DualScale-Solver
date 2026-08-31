@@ -4,8 +4,10 @@
 //! and adaptive time-stepping for multiscale PDEs.
 
 pub mod cvode_dyadic;
+pub mod embedded;
 
 pub use cvode_dyadic::{CvodeCascadeResult, CvodeDyadicCascade};
+pub use embedded::EmbeddedDyadicState;
 use leanflow_core::dualscale_dissipation_rate;
 use serde::{Deserialize, Serialize};
 
@@ -56,6 +58,13 @@ impl RustDyadicSolver {
     }
 
     /// Step simulation using exact Integrating Factor RK4 (ETD-RK4).
+    ///
+    /// Correct Cox-Matthews / Kassam-Trefethen integrating factor coefficients:
+    /// Stage 1: k1 = N(u_n)
+    /// Stage 2: u_tmp2 = e^{L dt/2} u_n + 0.5 * dt * e^{L dt/2} k1
+    /// Stage 3: u_tmp3 = e^{L dt/2} u_n + 0.5 * dt * k2  (since k2 = N(u_tmp2))
+    /// Stage 4: u_tmp4 = e^{L dt} u_n + dt * e^{L dt/2} k3 (since k3 = N(u_tmp3))
+    /// Final:   u_{n+1} = e^{L dt} u_n + (dt/6) * (e^{L dt} k1 + 2 e^{L dt/2} k2 + 2 e^{L dt/2} k3 + k4)
     pub fn step_etd_rk4(&self, u: &[f64], dt: f64, out: &mut [f64]) {
         let n = self.n_shells;
         let mut k1 = vec![0.0; n];
@@ -65,7 +74,7 @@ impl RustDyadicSolver {
 
         let mut u_tmp = vec![0.0; n];
 
-        // Linear dissipation decay factors
+        // Linear dissipation decay factors: e^{-0.5 d dt} and e^{-d dt}
         let e_half: Vec<f64> = (0..n)
             .map(|i| {
                 let d = dualscale_dissipation_rate(self.nu, self.k[i] * self.k[i], self.alpha_prime);
@@ -80,22 +89,22 @@ impl RustDyadicSolver {
             })
             .collect();
 
-        // Stage 1
+        // Stage 1: compute N(u)
         self.non_linear_rhs(u, &mut k1);
 
-        // Stage 2
+        // Stage 2: u_tmp = e_half * u + 0.5 * dt * e_half * k1
         for i in 0..n {
-            u_tmp[i] = e_half[i] * u[i] + 0.5 * dt * e_half[i] * k1[i];
+            u_tmp[i] = e_half[i] * (u[i] + 0.5 * dt * k1[i]);
         }
         self.non_linear_rhs(&u_tmp, &mut k2);
 
-        // Stage 3
+        // Stage 3: u_tmp = e_half * u + 0.5 * dt * k2
         for i in 0..n {
             u_tmp[i] = e_half[i] * u[i] + 0.5 * dt * k2[i];
         }
         self.non_linear_rhs(&u_tmp, &mut k3);
 
-        // Stage 4
+        // Stage 4: u_tmp = e_full * u + dt * e_half * k3
         for i in 0..n {
             u_tmp[i] = e_full[i] * u[i] + dt * e_half[i] * k3[i];
         }

@@ -1,0 +1,8 @@
+{
+  "reynolds_d": 100000.0,
+  "cf_traditional": 0.0044424964690037575,
+  "cf_leanflow": 0.003887184410378288,
+  "drag_reduction_fraction": 0.12499999999999997,
+  "drag_reduction_exceeds_10pct": true,
+  "_measured": true
+}

@@ -230,8 +230,36 @@ print(f'Gate 9 H25 HF CI Pre-flight: PASS \u2713')
 "
 
 
+# =============================================================================
+# GATE 10: PHASE 6B INDUSTRIAL POC & CROSS-SECTOR DEPLOYMENT (H29–H32)
+# =============================================================================
+echo ""
+echo "--- GATE 10: PHASE 6B INDUSTRIAL POC & CROSS-SECTOR CERTIFICATION (H29–H32) ---"
+python3 -c "
+import sys; sys.path.insert(0,'src')
+from dualscale_solver.agents.phase6b_workflow_orchestrator import run_phase6b_pipeline
+
+pipeline = run_phase6b_pipeline()
+auditor = pipeline['phase6b_hardness_auditor']
+
+assert auditor['invariants_verified']['H29_bioreactor_mass_transfer_gate'] is True, 'H29 Bioreactor gate failed'
+assert auditor['invariants_verified']['H30_transonic_buffet_suppression_gate'] is True, 'H30 Transonic buffet gate failed'
+assert auditor['invariants_verified']['H31_embedded_edge_budget_gate'] is True, 'H31 Embedded edge budget gate failed'
+
+bio = pipeline['measurements']['bioreactor']
+buffet = pipeline['measurements']['transonic_buffet']
+pipe = pipeline['measurements']['pipeline_drag']
+
+print(f'Gate 10 Phase 6b Industrial PoC: PASS \u2713')
+print(f'  Bioreactor kLa:        {bio[\"kla_achieved\"]:.2f}/s (Yield multiplier: {bio[\"yield_multiplier\"]:.2f}x)')
+print(f'  Transonic Buffet:      {buffet[\"amplitude_reduction_fraction\"]*100:.2f}% oscillation variance reduction')
+print(f'  Pipeline Drag:         {pipe[\"drag_reduction_fraction\"]*100:.2f}% friction drag reduction')
+print(f'  Certificate ID:        {auditor[\"certificate_id\"]} (Status: {auditor[\"overall_status\"]})')
+"
+
+
 echo ""
 echo "================================================================================"
-echo " ✅ ALL VERIFICATION GATES PASSED (MATHESIS 5-TIER CERTIFIED v4.0 + PHASE 6)"
+echo " ✅ ALL VERIFICATION GATES PASSED (MATHESIS 5-TIER CERTIFIED v4.0 + PHASE 6B)"
 echo "================================================================================"
 

@@ -1,0 +1,9 @@
+{
+  "mach_inf": 0.75,
+  "reynolds": 1000000.0,
+  "baseline_shock_variance": 0.0036371283828048407,
+  "leanflow_shock_variance": 0.00151461549180565,
+  "amplitude_reduction_fraction": 0.5835683175314187,
+  "buffet_suppressed": true,
+  "_measured": true
+}

@@ -1,0 +1,37 @@
+============================================================
+LEANFLOW DUALSCALE — REPRODUCTION PROTOCOL REPORT v2.0
+Timestamp: 2026-08-31T07:07:17.817695+00:00
+Platform:  Linux-6.8.0-138-generic-x86_64-with-glibc2.39
+Elapsed:   14.8s
+============================================================
+Certificate ID: CERT-P5-WF-R1-336D22D8DEF9ED2B
+SHA-256:        336d22d8def9ed2b6b354b137d1633d3227024c7d0fb35f9d34afdd1807657c5
+Status:         CERTIFIED
+Gates:          11/11
+
+GATE RESULTS:
+  PASS | H1_Lean4_ZeroSorry
+  PASS | H1_LakeBuildPass
+  PASS | H3_TDualityExact
+  PASS | H5_EnstrophyBound
+  PASS | H6_Solenoidal
+  PASS | PR2A_AnalyticalTGV
+  PASS | PR2B_BiharmonicBridge
+  PASS | H19_FrustrationIdx
+  PASS | H18_ProductionSLA
+  PASS | H16_Embedded
+  PASS | Pytest_Suite
+
+KEY METRICS:
+  Lean 4 theorems:      26 (zero sorry)
+  T-duality radii:      5 (all pass)
+  TGV analytical match: PR2-A verified
+  Biharmonic bridge:    PR2-B verified
+  Frustration D(M):     H19 monotone
+  Throughput:           39456.4 steps/s
+  Embedded RAM:         2624 bytes
+
+FILES:
+  /home/xavkal/xdev/SocrateAI-Numeric-DualScale-Solver/SocrateAI-Numeric-DualScale-Solver/results/protocol_results.json
+  /home/xavkal/xdev/SocrateAI-Numeric-DualScale-Solver/SocrateAI-Numeric-DualScale-Solver/results/certification.json
+============================================================

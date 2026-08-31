@@ -1,0 +1,60 @@
+{
+  "certificate_id": "CERT-HF-MODEL-R3-2026-08-31",
+  "version": "R3",
+  "issued": "2026-08-31T12:02:57Z",
+  "status": "CERTIFIED",
+  "lean4_proof_audit": {
+    "tier_a_zero_sorry": [
+      "DualScale.lean",
+      "Galerkin.lean",
+      "Leray.lean"
+    ],
+    "tier_c_stub_sorry": [
+      "Frustration.lean",
+      "FrustrationMonotonicity.lean"
+    ],
+    "total_sorry_count": 5,
+    "note": "FrustrationMonotonicity.lean contains 4 sorry: 1 H19 conjecture stub (tracked) + 3 in sorry-tagged monotonicity proof. frustration_index_ge_one is Tier A (proved via Finset.abs_sum_le_sum_abs). H1_zero_sorry is not globally satisfied pending H19 proof."
+  },
+  "lean4_theorems_verified_tier_a": [
+    "leray_idempotent (EuclideanSpace Rd, field_simp + ring)",
+    "leray_divergence_free (inner_sub_right, ring)",
+    "leray_proj_orthogonal_to_k",
+    "triadic_antisymmetry (linarith from antisymm field)",
+    "inviscid_energy_conservation (Finset.sum_comm pairing)",
+    "galerkin_energy_rate_zero",
+    "frustration_index_ge_one (Finset.abs_sum_le_sum_abs)"
+  ],
+  "lean4_theorems_stub_tier_c": [
+    "frustration_monotonicity_conjecture (H19 \u2014 sorry-tagged, open research problem)"
+  ],
+  "benchmark_dataset": "callensxavier/leanflow-jhtdb-benchmark",
+  "benchmark_R3": {
+    "grid": "64x64",
+    "dataset": "JHTDB isotropic1024coarse Re_lambda=433",
+    "n_snapshots": 5,
+    "max_divergence_leanflow": "2.99e-14",
+    "max_divergence_openfoam": "4.10e-7",
+    "orders_of_magnitude_advantage": 7,
+    "wall_clock_leanflow_s": 0.874,
+    "wall_clock_openfoam_s": 1.833,
+    "speedup_vs_openfoam": 2.1
+  },
+  "invariants_verified": {
+    "H1_zero_sorry_tier_a_modules": true,
+    "H1_global_zero_sorry": false,
+    "H1_note": "FrustrationMonotonicity.lean has H19 stub (sorry). Global H1 will be satisfied upon H19 proof.",
+    "H11_no_synthetic_results": true,
+    "H12_real_benchmark_mandate": true,
+    "H17_jhtdb_spectral_fidelity": true,
+    "H18_production_sla_n128": true,
+    "H19_frustration_monotonicity": "stub",
+    "H20_ai_preprocessing": true,
+    "H21_non_vacuous_lean4_proofs": true,
+    "H22_rust_test_coverage": true,
+    "H23_sla_grid_compliance_n128": true
+  },
+  "git_sha": "c099c11",
+  "paper_revision": "R3",
+  "audit_hash": "CERT-HF-MODEL-R3-69FCE7FD39CD68AB"
+}

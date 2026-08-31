@@ -1,0 +1,7 @@
+{
+  "kolmogorov_constant_C_K": 1.5,
+  "bottleneck_scaling_beta": 5.2,
+  "shell_cascade_ratio_lambda": 2.0,
+  "triadic_transfer_antisymmetry_tolerance": 1e-15,
+  "timestamp_utc": "2026-08-31 11:10:08 UTC"
+}

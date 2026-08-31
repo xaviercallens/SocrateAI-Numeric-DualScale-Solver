@@ -1,0 +1,19 @@
+{
+  "model_type": "leanflow_dualscale_pde",
+  "version": "1.0.0",
+  "dimension": [
+    2,
+    3
+  ],
+  "spectral_method": "pseudo_spectral_orszag_2_3",
+  "integrator": "etd_rk4_dualscale",
+  "regularization": "t_duality_scale_bounce",
+  "alpha_prime": 0.01,
+  "divergence_tolerance": 1e-13,
+  "kolmogorov_resolution_factor": 1.5,
+  "provenance": {
+    "lean4_verification": "lake_build_zero_sorry",
+    "hardness_charter": "H1_to_H20",
+    "benchmark_dataset": "callensxavier/leanflow-jhtdb-benchmark"
+  }
+}

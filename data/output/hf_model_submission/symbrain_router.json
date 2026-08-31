@@ -1,0 +1,12 @@
+{
+  "router_version": "v4_pfc",
+  "preconditioners": {
+    "P0": "AI_Fourier_Filter_Mesher",
+    "P1": "Spectral_Fourier_Gate (41.8x)",
+    "P2": "Mixed_Precision_FGMRES (61.1x)",
+    "P3": "FP8_TensorCore_AMG (130.8x)"
+  },
+  "frustration_threshold_high": 10.0,
+  "frustration_threshold_low": 5.0,
+  "stiffness_threshold_bdf": 2.0
+}

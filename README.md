@@ -6,6 +6,8 @@
 [![HuggingFace Dataset](https://img.shields.io/badge/🤗%20HuggingFace-Benchmark%20Dataset-orange)](https://huggingface.co/datasets/callensxavier/leanflow-jhtdb-benchmark)
 [![HuggingFace Model](https://img.shields.io/badge/🤗%20HuggingFace-Model%20Release-blue)](https://huggingface.co/callensxavier/leanflow-dualscale-pde)
 [![OpenFOAM Benchmarked](https://img.shields.io/badge/OpenFOAM-icoFoam%20Compared-red)](https://www.openfoam.com/)
+[![Scientific Paper](https://img.shields.io/badge/Paper-Scientific%20Report%20R3.1-purple)](report/leanflow_scientific_report_R3.1.pdf)
+
 
 **LeanFlow** is a formally verified, dual-scale pseudo-spectral solver for the 2D and 3D incompressible Navier-Stokes equations — the first CFD solver class provably correct at the operating-system level.
 

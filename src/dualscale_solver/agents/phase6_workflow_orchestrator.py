@@ -82,14 +82,24 @@ def _probe_gemini(api_key: str) -> bool:
     return True
 
 
+def _probe_mistral(api_key: str) -> bool:
+    """
+    H28: Verify MISTRAL_API_KEY is non-empty.
+    """
+    return bool(api_key) and len(api_key) > 10 and api_key != "YOUR_API_KEY"
+
+
 def _detect_live_backend() -> str:
     """
-    H28: Returns the backend to use: 'gemini', 'ollama', or 'none'.
-    Probes in priority order: GEMINI_API_KEY → Ollama.
+    H28: Returns the backend to use: 'gemini', 'mistral', 'ollama', or 'none'.
+    Probes in priority order: GEMINI_API_KEY → MISTRAL_API_KEY → Ollama.
     """
-    api_key = os.environ.get("GEMINI_API_KEY", "")
-    if _probe_gemini(api_key):
+    gemini_key = os.environ.get("GEMINI_API_KEY", "")
+    if _probe_gemini(gemini_key):
         return "gemini"
+    mistral_key = os.environ.get("MISTRAL_API_KEY", "")
+    if _probe_mistral(mistral_key):
+        return "mistral"
     if _probe_ollama():
         return "ollama"
     return "none"
@@ -135,6 +145,19 @@ def get_agent_config(backend: str | None = None):
             ),
             subagents=_build_subagents(),
         )
+    elif backend == "mistral":
+        print(f"[H28] Backend: Mistral API (MISTRAL_API_KEY present)")
+        api_key = os.environ["MISTRAL_API_KEY"]
+        return LocalOpenAIAgentConfig(
+            model="mistral-large-latest",
+            base_url="https://api.mistral.ai/v1",
+            api_key=api_key,
+            capabilities=types.CapabilitiesConfig(
+                enable_subagents=True,
+                max_subagent_depth=2,
+            ),
+            subagents=_build_subagents(),
+        )
     elif backend == "ollama":
         print(f"[H28] Backend: Ollama local ({OLLAMA_BASE_URL}, model={OLLAMA_MODEL})")
         return LocalOpenAIAgentConfig(
@@ -145,7 +168,7 @@ def get_agent_config(backend: str | None = None):
     else:
         raise BackendUnavailableError(
             f"[H28] No live backend found. "
-            f"Set GEMINI_API_KEY or start Ollama with model '{OLLAMA_MODEL}'. "
+            f"Set GEMINI_API_KEY, MISTRAL_API_KEY, or start Ollama with model '{OLLAMA_MODEL}'. "
             f"Ollama probe URL: {OLLAMA_BASE_URL}/api/tags"
         )
 

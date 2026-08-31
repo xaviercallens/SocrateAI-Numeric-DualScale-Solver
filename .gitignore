@@ -68,3 +68,15 @@ figures/*.png
 !figures/.gitkeep
 logs/
 *.log
+
+# ─── Credentials & Tokens (NEVER commit) ───────────────────────────────────
+*.token
+*token*.md
+*Token*.md
+.env
+.env.*
+secrets/
+*_credentials*
+*.hf_token
+HF_TOKEN
+JHTDB_AUTH_TOKEN

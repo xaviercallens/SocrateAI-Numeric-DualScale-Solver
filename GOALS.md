@@ -27,26 +27,36 @@ graph TD
     G4 --> G5[Goal 5: Industrial Bioreactor & Aerospace Production]
 ```
 
-### 🎯 Goal 0 : Foundations & Mathematical Scaffolding (Months 0–3) — STATUS: COMPLETED ✅
+### 🎯 Goal 0 : Foundations & Mathematical Scaffolding (Months 0–3) — STATUS: COMPLETED ✅ (Post-Audit Hardened)
 - **Deliverables**:
   - [x] Adopt 10-point Scientific Hardness Charter ([`HARDNESS.md`](file:///home/xavkal/xdev/SocrateAI-Numeric-DualScale-Solver/SocrateAI-Numeric-DualScale-Solver/HARDNESS.md)).
+  - [x] **Upgrade to 13-point Hardness Charter v2.0** (H11: No Synthetic Results, H12: Real Benchmark Mandate, H13: Agent Code Review Gate).
   - [x] Implement Tier B exact rational arithmetic over $\mathbb{Q}$ with negative controls.
   - [x] Implement 2D/3D pseudo-spectral solver and dyadic shell cascade (ETD-RK4).
+  - [x] **Fix ETD-RK4 stage 3 integrating factor bug** (W1 — LL-08: missing `E_half` on `k2`).
+  - [x] **Fix Leray projection order in RK4** (W2 — LL-09: projection only at final step).
+  - [x] **Register all Lean 4 modules in lakefile.lean** (W3 — LL-01: `Galerkin`, `Leray`, `Frustration`).
   - [x] Integrate Mathesis Stream 0 transitive ledger soundness audit (`ledger_checker.py`).
   - [x] Integrate runtime bridges to `runux-ai-runtime`, `rust-linux-mini-kernel`, and `rusty-SUNDIALS`.
   - [x] Materialize local benchmark datasets for Taylor-Green Vortex ($Re=1600$) and JHTDB HIT ($Re_\lambda \approx 433$).
-  - [x] Enforce 3-Gate automated verification protocol ([`scripts/verify.sh`](file:///home/xavkal/xdev/SocrateAI-Numeric-DualScale-Solver/SocrateAI-Numeric-DualScale-Solver/scripts/verify.sh)).
+  - [x] **Enforce 5-Gate automated verification protocol** v2.0 ([`scripts/verify.sh`](file:///home/xavkal/xdev/SocrateAI-Numeric-DualScale-Solver/SocrateAI-Numeric-DualScale-Solver/scripts/verify.sh)) — Gate 0 (Lean 4), Gate 4 (Benchmark Integrity).
+  - [x] **Replace all synthetic results with real measurements** (LL-03, LL-04, LL-06, LL-07): D(M) from trajectory, CG iterations from `scipy.sparse.linalg.cg`, divergence per-step via callback.
+  - [x] **Establish Lessons Learned Register** (10 entries, LL-01 to LL-10) in HARDNESS.md.
+  - [x] **Upgrade all agent skills to v2.0** with forbidden patterns and real measurement mandates.
 
 ### 🎯 Goal 1 : Formal Lean 4 Kernel Proofs & Theory Paper (Months 3–12) — STATUS: IN PROGRESS 🔄
 - **Assigned Agents**: `math_reviewer`, `formal_verifier`
+- **Agent Mandate (H1/LL-01)**: The `math_reviewer` agent must call `lake build` programmatically and assert exit code 0 before reporting any module as Tier A certified.
 - **Deliverables**:
+  - [x] Register all `.lean` files in `lakefile.lean` so `lake build` kernel-checks them.
   - [ ] Port and verify 27 theorems in [`lean4/DualScale.lean`](file:///home/xavkal/xdev/SocrateAI-Numeric-DualScale-Solver/SocrateAI-Numeric-DualScale-Solver/lean4/DualScale.lean) with Mathlib4.
-  - [ ] Formalize `galerkin.lean` (triadic energy transfers and antisymmetry).
-  - [ ] Formalize `leray.lean` (divergence-free projector idempotence $\mathcal{P}^2 = \mathcal{P}$).
-  - [ ] Formalize `frustration.lean` (Triadic Frustration Index $\mathcal{D}(M)$ phase cancellation bounds).
+  - [ ] Verify `Galerkin.lean` (triadic energy transfers and antisymmetry) — `lake build` confirmed.
+  - [ ] Verify `Leray.lean` (divergence-free projector idempotence $\mathcal{P}^2 = \mathcal{P}$) — `lake build` confirmed.
+  - [ ] Verify `Frustration.lean` (Triadic Frustration Index $\mathcal{D}(M)$ phase cancellation bounds) — `lake build` confirmed.
   - [ ] Prove uniform enstrophy bound $\Omega(t) \le 1/\alpha'$ implying Prodi-Serrin regularity (`prodi_serrin.lean`).
   - [ ] Submit foundational arXiv preprint on Dual-Scale Multiscale Navier–Stokes Regularization.
   - [ ] Submit grant applications (ANR, ERC Starting Grant, Sloan Foundation).
+
 
 ### 🎯 Goal 2 : High-Performance Rust Engine (`leanflow-solver`) (Months 12–18)
 - **Assigned Agents**: `dev_engineer`, `rust_systems_engineer`

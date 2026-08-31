@@ -1,8 +1,9 @@
 # HARDNESS.md — Program-Wide Scientific Hardness & Epistemic Charter
-**Version:** 3.0 — Phase 5 Extended (2026-08-31)
+**Version:** 4.0 — Phase 6 Extended (2026-08-31)
 **Program:** SocrateAI Dual-Scale & LeanFlow Multiscale Navier–Stokes Program  
 **Status:** MANDATORY & NON-NEGOTIABLE INVARIANTS  
-**Scope:** All mathematical proofs, exact verifiers, numerical solvers, AI preconditioners, embedded kernels, **agent workflow outputs**, and **Phase 5 production / JHTDB validation pipelines**.  
+**Scope:** All mathematical proofs, exact verifiers, numerical solvers, AI preconditioners, embedded kernels, **agent workflow outputs**, Phase 5 production / JHTDB validation pipelines, and **Phase 6 agentic runtime orchestration**.  
+**Changelog v4.0:** Added H26 (Agent Persona Integrity Gate), H27 (SDK Availability Hard Prerequisite). Tightened H24 with `negative_control_nc_ds11()` mandatory implementation. Added LL-19–LL-20.  
 **Changelog v3.0:** Added H17 (JHTDB Spectral Fidelity Gate), H18 (Production SLA Gate), H19 (Frustration Monotonicity Gate). Added LL-14–LL-16 from Phase 5 gap analysis. Added Gates 5 & 6.  
 **Changelog v2.0:** Added H11 (No Synthetic Results), H12 (Real Benchmark Mandate), H13 (Agent Code Review Gate). Strengthened H6 tolerance to `1e-13`. Added Lesson Learned annotations.
 
@@ -241,6 +242,8 @@ The AI Preprocessing module (`dualscale_solver.ai` / `crates/leanflow-ai`) must 
 | **Gate 5** | JHTDB Spectral Fidelity (H17) | $L^2$ relative error $< 2\%$; Kolmogorov exponent $\in [-1.8, -1.6]$ | v3.0 |
 | **Gate 6** | Production SLA & NaN Safety (H18) | $\ge 1000$ steps/s; uptime $\ge 99.9\%$; NaN guard fires on `NC-DS-10` | v3.0 |
 | **Gate 7** | AI Preprocessing & Solenoidality (H20) | $k_{\max}\eta \ge 1.0$; $\max\|\nabla\cdot u\| < 10^{-12}$; CFL stable $\Delta t$ | v3.0 |
+| **Gate 8** | Agentic Runtime Intercept (H24) | Monitor intercepts `NC-DS-11` stiffness spike; stabilizes enstrophy within 50 steps | v4.0 |
+| **Gate 9** | Continuous HF CI (H25) | CI automation strictly conditioned on Gates 0-8 passing; isolated `HF_TOKEN` | v4.0 |
 
 ---
 
@@ -268,6 +271,8 @@ The AI Preprocessing module (`dualscale_solver.ai` / `crates/leanflow-ai`) must 
 | LL-16 | P5 Gap | Frustration monotonicity failed for coarsely-initialized states with $M=4$; $\mathcal{D}(4) > \mathcal{D}(8)$ | H19 | Require minimum 50-step spinup with $\nu > 0$ before computing $\mathcal{D}(M)$ for H19 check |
 | LL-17 | P5 AI Pre | Under-resolved grids in AI mesher caused aliased dissipation and blowup | H20 | Enforce strict Kolmogorov resolution inequality $k_{\max} \eta \ge 1.5$ before meshing |
 | LL-18 | P5 HF Pub | Hugging Face credentials risked exposure in git tracking | H11, H13 | Isolate token loading to `HF_TOKEN` environment variable; zero credentials in git |
+| LL-19 | P6 Audit | Phase 6 orchestrator issued `CERTIFIED` when SDK absent and all agents `SIMULATED` | H10, H11, H26, H27 | Add `FORBIDDEN_STATUSES` check; introduce `SCAFFOLDING_ONLY` status; block `CERTIFIED` |
+| LL-20 | P6 Audit | SHA-256 hash computed over `b"phase6"` constant — identical across all runs | H10, H13 | Hash over real pipeline results dict (`json.dumps(payload, sort_keys=True)`) |
 
 
 ---
@@ -291,4 +296,31 @@ Every Rust crate in the workspace (`leanflow-core`, `leanflow-solver`, `leanflow
 Hardness gates referencing a minimum grid resolution (e.g., H18: N≥128²) must be exercised **at or above** that exact resolution in `verify.sh`. A gate test run at a smaller grid is a failing gate even if it passes. The grid size used must be logged in the gate output.
 
 **Gate:** `verify.sh` Gate 5 must log `Grid: N=128 (H18 compliant)` or higher.
+
+---
+
+## Phase 6 Agentic Invariant Additions v4.0
+
+### `H24` : Phase 6 Agentic Runtime Intercept Gate (Tier B)
+The Phase 6 `agentic_runtime_monitor` must autonomously steer failing numerical states to stability:
+1. **Dynamic Parameter Intervention**: If the solver's local stiffness $\sigma > 100$ or enstrophy rate of change exceeds threshold, the agent must issue a parameter update (e.g., scheme $\rightarrow$ BDF, $\Delta t \rightarrow \Delta t/2$) within 1 timestep.
+2. **Negative Control**: `NC-DS-11` — deliberate injection of a stiffness spike via abrupt physical viscosity drop (100× drop in ν). The `negative_control_nc_ds11()` function in `production_sla_monitor.py` must pass (σ detected > 100; stabilized within 50 steps; no NaN triggered). The gate is **wired to real measured code**, not prose assertion.
+3. **Stiffness Formula**: σ = (u_max · Δx) / ν — the diffusive Péclet-like indicator. When ν drops by 100×, σ rises by 100×.
+
+### `H25` : Phase 6 Continuous HuggingFace CI Gate (Tier T0)
+1. **Automated Publishing**: The HF model card and benchmark update must trigger autonomously on `main` branch pushes.
+2. **Strict Conditioning**: The HF API call is only permitted if Gates 0 through 8 successfully pass in the CI environment.
+3. **Zero Token Leakage**: The push must use the `HF_TOKEN` environment variable and explicitly reject any configuration storing the token in source tracking.
+
+### `H26` : Agent Persona Integrity Gate (Phase 6 — NEW)
+All agent tool outputs for Phase 6 must be **structured JSON** matching the workflow schema defined in `antigravity-agent-personas/SKILL.md`.
+1. **No Prose Commands**: An agent response that is pure text without a `status`, `_measured`, and relevant structured fields must be **rejected** by the orchestrator before reaching the hardness auditor.
+2. **Forbidden Status Values**: The orchestrator must treat `{"SIMULATED", "MOCKED_NO_SDK", "SCAFFOLDING_ONLY", "SDK_ERROR"}` as gate failures, not as valid measurements.
+3. **Enforcement**: The hardness auditor's H13 inspection block must programmatically check all four agent status fields before issuing any certificate.
+
+### `H27` : SDK Availability is a Hard Prerequisite (Phase 6 — NEW)
+The Phase 6 hardness certificate (`CERT-P6-WF-*`) **must not carry `overall_status: CERTIFIED`** if any agent's status is `SCAFFOLDING_ONLY`, `SIMULATED`, or `SDK_ERROR`.
+1. **Fallback Behavior**: A pipeline running without `google-antigravity` installed must yield `overall_status: SCAFFOLDING_ONLY`. This is a valid scaffolding artifact, not a scientific certificate.
+2. **SHA-256 Integrity**: The certificate hash must be computed over the actual pipeline results JSON dict (serialized deterministically), never over a constant byte string like `b"phase6"`.
+3. **Installation Requirement**: `google-antigravity` must appear in `requirements.txt` (TSK-66) so that CI environments can achieve `CERTIFIED` status.
 

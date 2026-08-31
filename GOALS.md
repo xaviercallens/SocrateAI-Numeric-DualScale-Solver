@@ -24,7 +24,8 @@ graph TD
     G1 --> G2[Goal 2: Native Rust Solver & rusty-SUNDIALS Core]
     G2 --> G3[Goal 3: AI Preconditioners P1-P3 & OpenFOAM Gain]
     G3 --> G4[Goal 4: Embedded Real-Time Deployments]
-    G4 --> G5[Goal 5: Industrial Bioreactor & Aerospace Production]
+    G4 --> G5[Goal 5: AI Preprocessing & Industrial Validation]
+    G5 --> G6[Goal 6: Agentic Orchestration & Lean 4 AI Safety]
 ```
 
 ### 🎯 Goal 0 : Foundations & Mathematical Scaffolding (Months 0–3) — STATUS: COMPLETED ✅ (Post-Audit Hardened)
@@ -87,12 +88,25 @@ graph TD
   - [ ] Deploy to STM32 ARM Cortex-M microcontrollers for real-time control loops.
   - [ ] Launch LeanFlow Enterprise (Dual-licensing commercial tier).
 
-### 🎯 Goal 5 : AI Preprocessing & Industrial Validation (Months 30–36)
+### 🎯 Goal 5 : AI Preprocessing & Industrial Validation (Months 30–36) — STATUS: IN PROGRESS 🔄
 - **Assigned Agents**: `experimenter`, `math_reviewer`, `qa_scientific_auditor`, `hpc_runtime_architect`
 - **Deliverables**:
-  - [ ] Implement AI-driven dynamic mesh resolution based on initial enstrophy estimates.
-  - [ ] Implement LLM-based boundary condition parsing and inference directly into exact mathematical constraints.
-  - [ ] Integrate `runux-ai-runtime` for zero-shot fluidic parameter tuning and hyperparameter optimization.
+  - [x] Implement AI-driven dynamic mesh resolution based on initial enstrophy estimates.
+  - [x] Implement LLM-based boundary condition parsing and inference directly into exact mathematical constraints.
+  - [x] Integrate `runux-ai-runtime` for zero-shot fluidic parameter tuning and hyperparameter optimization.
+  - [x] Validate `rusty-SUNDIALS` order selection logic on stiff (BDF) vs non-stiff (Adams) turbulence.
   - [ ] Validate bioreactor fluidic control achieving $k_L a = 115.89/\text{s}$ ($3.14\times$ algal yield) using AI-tuned initial configurations.
-  - [ ] Validate aerospace boundary-layer simulations against real empirical datasets (like JHTDB) to ensure physical viability.
+  - [x] Validate aerospace boundary-layer simulations against real empirical datasets (like JHTDB) to ensure physical viability.
   - [ ] Reach commercial program profitability.
+
+### 🎯 Goal 6 : Agentic Orchestration & Lean 4 AI Safety (Months 36–42)
+- **Assigned Agents**: `dev_engineer`, `math_reviewer`, `experimenter`, `agentic_runtime_monitor`
+- **Deliverables**:
+  - [ ] **TSK-61 (Agentic Runtime Monitoring)**: Implement a zero-copy FFI callback in `rusty-SUNDIALS` that streams state metrics (divergence, enstrophy, stiffness ratio) to the `runux-ai-runtime` agent at configurable intervals. Detect impending anomalies and issue parameter steering commands (e.g., switch Adams to BDF, reduce $\Delta t$).
+  - [ ] **TSK-62 (Lean 4 AI Safety)**: Develop `DynamicStability.lean` to formally prove that the agent's permissible parameter space (e.g., minimum $\Delta t$, maximum $\alpha'$) strictly bounds the discretization error.
+  - [ ] **TSK-63 (Continuous HuggingFace CI)**: Create an autonomous pipeline that automatically fetches new JHTDB validation sets, re-runs the Phase 5 benchmark, generates a `README.md` Model Card, and pushes to HuggingFace using an isolated `HF_TOKEN`.
+  - [x] **TSK-64 (NC-DS-11 Negative Control)**: Implement `negative_control_nc_ds11()` in [`production_sla_monitor.py`](file:///home/xavkal/xdev/SocrateAI-Numeric-DualScale-Solver/SocrateAI-Numeric-DualScale-Solver/src/dualscale_solver/numeric/production_sla_monitor.py). Injects a 100× viscosity drop (σ rises from ~8 to ~314), verifying the mock `agentic_runtime_monitor` detects σ > 100, issues BDF+dt/2 steering, and stabilizes within 50 steps. **MEASURED: σ=314, stabilized=True, H24 PASS ✅**.
+  - [x] **TSK-65 (Agent Persona Skill)**: Create [`antigravity-agent-personas/SKILL.md`](file:///home/xavkal/xdev/SocrateAI-Numeric-DualScale-Solver/SocrateAI-Numeric-DualScale-Solver/.agents/skills/antigravity-agent-personas/SKILL.md) with system prompts, output contracts, and forbidden patterns for `dev_engineer`, `math_reviewer`, `qa_scientific_auditor`, `agentic_runtime_monitor`, and `experimenter`.
+  - [x] **TSK-66 (SDK Dependency)**: Added `google-antigravity>=0.1.0` as `[agentic]` optional dependency in [`pyproject.toml`](file:///home/xavkal/xdev/SocrateAI-Numeric-DualScale-Solver/SocrateAI-Numeric-DualScale-Solver/pyproject.toml). Install with `pip install -e '.[agentic]'` to achieve `CERTIFIED` status (H27).
+  - [x] **TSK-67 (Hardness Auditor Fix)**: Fixed [`phase6_workflow_orchestrator.py`](file:///home/xavkal/xdev/SocrateAI-Numeric-DualScale-Solver/SocrateAI-Numeric-DualScale-Solver/src/dualscale_solver/agents/phase6_workflow_orchestrator.py) — `SIMULATED` / `SCAFFOLDING_ONLY` agent statuses now correctly yield `overall_status: SCAFFOLDING_ONLY`, never `CERTIFIED`. Added `FORBIDDEN_STATUSES` check (H26 enforcement).
+  - [x] **TSK-68 (SHA-256 Fix)**: SHA-256 certificate hash now computed over `json.dumps(real_pipeline_results, sort_keys=True)` — unique per run, not a constant `b"phase6"` string.

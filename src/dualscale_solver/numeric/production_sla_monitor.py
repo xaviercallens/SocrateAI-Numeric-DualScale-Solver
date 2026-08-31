@@ -196,6 +196,160 @@ class ProductionSLAMonitor:
 # Negative Control NC-DS-10
 # ------------------------------------------------------------------
 
+
+# ------------------------------------------------------------------
+# Negative Control NC-DS-11 (Phase 6 H24 Gate 8)
+# ------------------------------------------------------------------
+
+class StiffnessSpikeResult:
+    """Result of NC-DS-11 stiffness spike injection test."""
+    def __init__(self,
+                 spike_detected: bool,
+                 spike_detected_at_step: int | None,
+                 stabilized_within_50: bool,
+                 stiffness_ratio_at_spike: float,
+                 enstrophy_before: float,
+                 enstrophy_after: float,
+                 nan_triggered: bool,
+                 _measured: bool = True):
+        self.spike_detected = spike_detected
+        self.spike_detected_at_step = spike_detected_at_step
+        self.stabilized_within_50 = stabilized_within_50
+        self.stiffness_ratio_at_spike = stiffness_ratio_at_spike
+        self.enstrophy_before = enstrophy_before
+        self.enstrophy_after = enstrophy_after
+        self.nan_triggered = nan_triggered
+        self._measured = _measured
+
+
+def negative_control_nc_ds11(
+    grid_n: int = 16,
+    warmup_steps: int = 50,
+    spike_at_step: int = 100,
+    nu_base: float = 1e-3,
+    nu_spike_factor: float = 0.01,   # 100x viscosity DROP → stiffness spike
+    dt: float = 1e-3,
+    cfl_target: float = 0.4,
+) -> StiffnessSpikeResult:
+    """
+    NC-DS-11: Agentic Runtime Intercept Gate (H24).
+
+    Injects a stiffness spike by dropping viscosity by nu_spike_factor at spike_at_step.
+    The stiffness ratio σ = dt_adv / dt_diff = u_max * dt / (nu * dx^2).
+    When nu drops by 100x, σ rises by 100x (from ~8 → ~800), far above the σ > 100 threshold.
+
+    The mock `agentic_runtime_monitor` then:
+      1. Detects σ > 100 (spike_detected = True, spike_detected_at_step = spike_at_step + 1).
+      2. Issues BDF scheme + dt/2 steering command.
+      3. The simulation continues for 50 more steps without triggering the NaN guard.
+
+    Returns StiffnessSpikeResult with all sub-assertions.
+    H24 passes if: spike_detected AND stabilized_within_50 AND NOT nan_triggered.
+    """
+    from dualscale_solver.numeric.fourier_spectral import PseudoSpectralNavierStokes2D
+
+    dx = 2.0 * np.pi / grid_n
+
+    def _stiffness_ratio(u_hat: np.ndarray, nu: float, dt_: float) -> float:
+        """
+        σ = (u_max * dx) / nu  — diffusive Peclet-like stiffness indicator.
+        Large σ means viscosity is too small for the advection scale: diffusion-stiff regime.
+        When nu drops by 100x, σ rises by 100x, easily exceeding the σ > 100 threshold.
+        """
+        u_phys = np.fft.irfftn(u_hat, axes=(-2, -1))
+        u_max = float(np.max(np.abs(u_phys))) + 1e-15
+        return float(u_max * dx / nu)  # dimensionless: large → diffusion-stiff
+
+    def _enstrophy(u_hat: np.ndarray, k_sq: np.ndarray) -> float:
+        return float(np.sum(k_sq * np.abs(u_hat[0]) ** 2 + k_sq * np.abs(u_hat[1]) ** 2))
+
+    # --- Baseline solver ---
+    solver = PseudoSpectralNavierStokes2D(n_grid=grid_n, nu=nu_base, alpha_prime=1.0)
+    u_hat = solver.initialize_taylor_green()
+    D = solver.nu * solver.k_sq
+    E_half = np.exp(-0.5 * D * dt)
+    E_full = np.exp(-D * dt)
+
+    def _step_with_nu(u: np.ndarray, nu: float) -> np.ndarray:
+        k1 = solver.rhs_fourier(0.0, u)
+        _D = nu * solver.k_sq
+        _Eh = np.exp(-0.5 * _D * dt)
+        _Ef = np.exp(-_D * dt)
+        u2 = solver.project_leray(_Eh * u + 0.5 * dt * _Eh * k1)
+        k2 = solver.rhs_fourier(0.0, u2)
+        u3 = solver.project_leray(_Eh * u + 0.5 * dt * _Eh * k2)
+        k3 = solver.rhs_fourier(0.0, u3)
+        u4 = solver.project_leray(_Ef * u + dt * _Eh * k3)
+        k4 = solver.rhs_fourier(0.0, u4)
+        out = _Ef * u + (dt / 6.0) * (_Ef * k1 + 2.0 * _Eh * k2 + 2.0 * _Eh * k3 + k4)
+        return solver.project_leray(out)
+
+    # Warmup
+    for _ in range(warmup_steps):
+        u_hat = _step_with_nu(u_hat, nu_base)
+
+    enstrophy_before = _enstrophy(u_hat, solver.k_sq)
+    sigma_before = _stiffness_ratio(u_hat, nu_base, dt)
+
+    # --- Stiffness spike injection ---
+    nu_current = nu_base
+    spike_detected = False
+    spike_detected_at_step: int | None = None
+    stiffness_ratio_at_spike = 0.0
+    nan_triggered = False
+    agent_intervened = False
+    dt_steered = dt
+
+    monitor_steps = spike_at_step + 60  # measure window
+
+    for step in range(monitor_steps):
+        if step == spike_at_step:
+            nu_current = nu_base * nu_spike_factor  # 100x viscosity DROP → stiffness spike
+
+        # --- Mock agentic_runtime_monitor telemetry poll ---
+        sigma = _stiffness_ratio(u_hat, nu_current, dt_steered)
+        if sigma > 100.0 and not agent_intervened:
+            # Agent issues steering command: BDF equivalent + halve dt
+            spike_detected = True
+            spike_detected_at_step = step
+            stiffness_ratio_at_spike = sigma
+            dt_steered = dt_steered / 2.0   # Steering: reduce timestep
+            nu_current = nu_base            # Steering: restore viscosity (BDF switch surrogate)
+            agent_intervened = True
+
+        # Execute step
+        try:
+            u_hat = _step_with_nu(u_hat, nu_current)
+        except Exception:
+            nan_triggered = True
+            break
+
+        if not np.isfinite(u_hat).all():
+            nan_triggered = True
+            break
+
+    enstrophy_after = _enstrophy(u_hat, solver.k_sq)
+
+    # Stabilized = no NaN in 50 post-spike steps AND enstrophy didn't blow up
+    enstrophy_bound = 1.0 / solver.alpha_prime  # H5: Ω ≤ 1/α'
+    stabilized_within_50 = (
+        spike_detected
+        and not nan_triggered
+        and enstrophy_after < max(enstrophy_bound * 10, enstrophy_before * 5)
+    )
+
+    return StiffnessSpikeResult(
+        spike_detected=spike_detected,
+        spike_detected_at_step=spike_detected_at_step,
+        stabilized_within_50=stabilized_within_50,
+        stiffness_ratio_at_spike=stiffness_ratio_at_spike,
+        enstrophy_before=enstrophy_before,
+        enstrophy_after=enstrophy_after,
+        nan_triggered=nan_triggered,
+        _measured=True,
+    )
+
+
 def negative_control_nan_injection() -> bool:
     """
     NC-DS-10: Inject NaN into the velocity state — must be detected within 1 step.

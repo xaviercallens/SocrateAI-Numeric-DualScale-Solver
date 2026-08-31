@@ -2,13 +2,14 @@
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath, amssymb, mathrsfs}
 \usepackage{graphicx}
+\usepackage{microtype}
 \usepackage{hyperref}
 \usepackage{booktabs}
 \usepackage{geometry}
 \geometry{margin=1in}
 
 \title{LeanFlow: A Formally Verified Dual-Scale Pseudo-Spectral Navier-Stokes Solver\\[0.5em]
-\large Revision 3 --- Incorporating Benchmark Corrections and Mathematical Clarifications}
+\large Revision 3.1 --- Typographic and Cross-Reference Corrections}
 \author{Xavier Callens (SocrateAI Numeric Lab) \and Antigravity AI Science}
 \date{August 2026}
 
@@ -63,7 +64,7 @@ factor $(1 + \alpha'\,|k|^{2})$ in the dissipation operator. The biharmonic term
 $\alpha'\,|k|^{4}$ provides the \emph{dual-scale ultraviolet regularization} that mathematically
 bounds enstrophy: by boosting dissipation quadratically at high wavenumbers, it regularizes
 the enstrophy cascade at small scales without distorting the resolved inertial range.
-When $\alpha' = 0$, Eq.~\eqref{eq:leanflow_ns} reduces to the standard spectral
+When $\alpha' = 0$, Eq.~(3) reduces to the standard spectral
 Navier-Stokes formulation.
 
 For subgrid scales, we implement the Katz-Pavlov\'{i}c dyadic shell model to represent energy
@@ -81,7 +82,7 @@ merely re-state a hypothesis (Hardness Invariant H21).
     \item \textbf{Leray idempotence} (\texttt{leray\_idempotent}): the Fourier-space projector
           $\mathcal{P}(k)\,u = u - (\langle k, u\rangle / \|k\|^2)\,k$ satisfies
           $\mathcal{P}(\mathcal{P}(u)) = \mathcal{P}(u)$ for all $k \neq 0$. Proved over
-          \texttt{EuclideanSpace\,$\mathbb{R}$\,(Fin\,$d$)} via \texttt{field\_simp + ring}.
+          \texttt{EuclideanSpace}~$\mathbb{R}$~\texttt{(Fin}~$d$\texttt{)} via \texttt{field\_simp + ring}.
     \item \textbf{Transversality} (\texttt{leray\_divergence\_free}): $\langle k,
           \mathcal{P}(k)\,u\rangle = 0$ for all $k \neq 0$.
     \item \textbf{Triadic antisymmetry} (\texttt{triadic\_antisymmetry}): energy transfer
@@ -108,7 +109,7 @@ Because a 2D geometric slice of a 3D turbulent field inherently violates 2D cont
 ($\partial_x u_x + \partial_y u_y = -\partial_z u_z \neq 0$),
 the raw JHTDB slice is mathematically projected onto the 2D solenoidal manifold via the
 Leray operator at $t=0$ to establish a strictly divergence-free initial condition.
-This projection is encoded in Eq.~\eqref{eq:leanflow_ns} and formally certified by the
+This projection is encoded in Eq.~(3) and formally certified by the
 \texttt{leray\_divergence\_free} theorem.
 
 \paragraph{Solver parameters.}
@@ -119,12 +120,12 @@ was configured at tolerance $10^{-8}$ / relTol $10^{-3}$, representing its empir
 divergence floor.
 
 \section{Results and Comparison}
-Table~\ref{tab:results} reports the benchmark results averaged over the five independent
+Table~1 reports the benchmark results averaged over the five independent
 JHTDB temporal snapshots.
 
 \begin{table}[ht]
     \centering
-    \begin{tabular}{lccc}
+    \begin{tabular}{lp{3.2cm}p{2.8cm}p{3cm}}
         \toprule
         \textbf{Metric}
             & \textbf{OpenFOAM (icoFoam)}

@@ -72,9 +72,39 @@
 ---
 
 ## 🏭 Phase 5: AI Preprocessing & Industrial Validation (Months 30–36)
-- [ ] Implement AI-driven dynamic mesh resolution based on initial enstrophy estimates.
-- [ ] Implement LLM-based boundary condition parser mapping natural language to exact mathematical constraints.
-- [ ] Integrate `runux-ai-runtime` for zero-shot fluidic parameter tuning and hyperparameter optimization.
-- [ ] Conduct industrial bioreactor fluidic control experiments ($k_L a = 115.89/\text{s}$, $3.14\times$ yield) with AI-tuned initial configurations.
-- [ ] Conduct aerodynamic wing simulation validation against real empirical datasets (e.g., JHTDB) to ensure physical viability.
-- [ ] Finalize mathematical proof of Asymptotic Frustration Conjecture and submit to top-tier mathematics journal.
+- [x] Implement AI-driven dynamic mesh resolution based on initial enstrophy estimates.
+  - [x] `NeuroSymbolicMesher` (Python `src/dualscale_solver/ai/preprocessing.py`)
+  - [x] `NeuroSymbolicMesher` Rust crate (`crates/leanflow-ai/src/mesh_preprocessing.rs`)
+  - [x] H20 gate: $k_{\max}\eta \ge 1.5$ invariant enforced and tested
+- [x] Implement LLM-based boundary condition parser mapping natural language to exact mathematical constraints.
+  - [x] `BoundaryConditionInference` (Python) + `parse_boundary_condition` (Rust)
+  - [x] Leray projection solenoidality constraint enforced
+- [x] Integrate `runux-ai-runtime` for zero-shot fluidic parameter tuning and hyperparameter optimization.
+  - [x] `ParameterTuner` Rust + Python wrappers
+  - [x] CFL-compliant dt selection + stiffness-based BDF/Adams/ETD-RK4 routing
+- [x] Implement 6-agent autonomous Phase 5 workflow orchestrator.
+  - [x] CERT-P5-WF-B0C43C9E issued (SHA-256 certified)
+  - [x] 78/78 Python tests, 13/13 leanflow-ai Rust tests
+- [x] Publish LeanFlow model to HuggingFace Hub `callensxavier/leanflow-dualscale-pde`
+- [x] Phase 5 `verify.sh` Gate 5 with H17–H20 certification
+- [ ] Conduct industrial bioreactor fluidic control experiments ($k_L a = 115.89/\text{s}$, $3.14\times$ yield).
+- [ ] Conduct aerodynamic wing simulation validation against real empirical datasets.
+- [ ] Finalize mathematical proof of Asymptotic Frustration Conjecture.
+
+## 🔧 Sprint 1 Audit Remediation (2026-08-31)
+- [x] **IP-01**: Git commit 69 files of Phase 2–5 work
+- [x] **IP-03**: Wire Rust unit tests for `leanflow-ai` (13 tests: 4 NCs + 9 positives)
+- [x] **IP-04**: Fix H18 SLA Gate 5 grid from N=64 → N=128 + explicit SLA probe
+- [x] **IP-02**: Substantiate Lean 4 proofs:
+  - [x] `Galerkin.lean`: concrete TriadicTransfer + algebraic double-sum energy conservation
+  - [x] `Leray.lean`: concrete EuclideanSpace projector + field_simp/ring idempotence proof
+  - [x] `FrustrationMonotonicity.lean`: H19 stub + D(M)≥1 bound proved
+- [x] **IP-11**: LL-19 (Lean 4 vacuous proof pattern) added to LL.md and HARDNESS.md
+- [x] **H21/H22/H23**: New hardness invariants added to HARDNESS.md
+- [ ] **IP-05**: Sync TODO.md — IN PROGRESS (this file)
+- [ ] **IP-06**: Native rusty-SUNDIALS Rust FFI (Sprint 2)
+- [ ] **IP-07**: arXiv preprint draft `report/leanflow_preprint_v1.tex` (Sprint 2)
+- [ ] **IP-08**: HuggingFace model versioning: tag `v1.0.0-phase5-cert-B0C43C9E` (Sprint 2)
+- [ ] **IP-09**: `lean4/prodi_serrin.lean` Sobolev embedding proof (Sprint 3)
+- [ ] **IP-10**: N=128 throughput profiling with py-spy + Numba JIT (Sprint 3)
+

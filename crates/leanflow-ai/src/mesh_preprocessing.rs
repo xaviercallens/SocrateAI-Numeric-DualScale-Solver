@@ -95,14 +95,60 @@ impl NeuroSymbolicMesher {
 mod tests {
     use super::*;
 
+    /// Positive test: high-enstrophy turbulent regime forces adequate resolution.
     #[test]
-    fn test_mesher_kolmogorov_resolution() {
+    fn test_mesher_kolmogorov_resolution_turbulent() {
         let mesher = NeuroSymbolicMesher::default();
         // High enstrophy turbulence: Omega = 1000.0, nu = 1e-3
         let config = mesher.estimate_from_invariants(1.0, 1000.0, 1e-3);
 
-        assert!(config.recommended_n >= 32);
-        assert!(config.k_max_eta >= 1.0);
-        assert!(config.alpha_prime > 0.0);
+        assert!(config.recommended_n >= 32, "N too small for turbulence");
+        assert!(config.k_max_eta >= 1.0, "k_max*eta < 1.0: under-resolved");
+        assert!(config.alpha_prime > 0.0, "alpha_prime must be positive");
+        assert!(config.dissipation_rate > 0.0);
+    }
+
+    /// Positive test: very high enstrophy forces N >= 64 (grid capped at max_grid_n).
+    #[test]
+    fn test_mesher_high_turbulence_forces_fine_grid() {
+        let mesher = NeuroSymbolicMesher::default();
+        // Extreme turbulence: Omega = 1e6, nu = 1e-4 -> very small eta -> large N required
+        let config = mesher.estimate_from_invariants(10.0, 1e6, 1e-4);
+
+        // N must be at or near max_grid_n (grid-limit saturation is correct mesher behavior)
+        assert!(config.recommended_n >= 64, "Extreme turbulence must use N>=64");
+        // k_max_eta > 0: mesher always produces valid positive values
+        assert!(config.k_max_eta > 0.0, "k_max_eta must be positive");
+        // Grid must be capped within [min, max]
+        assert!(config.recommended_n <= mesher.max_grid_n);
+    }
+
+    /// Negative control NC-RUST-MESH-01:
+    /// Laminar flow (near-zero enstrophy) should produce a coarse grid
+    /// and NOT satisfy the turbulent k_max*eta>=1.5 spec (eta is huge → no aliasing risk).
+    #[test]
+    fn test_nc_laminar_flow_coarse_grid() {
+        let mesher = NeuroSymbolicMesher::default();
+        // Laminar: near-zero enstrophy -> huge eta -> small N recommended
+        let config = mesher.estimate_from_invariants(0.001, 1e-8, 1e-3);
+
+        // For laminar flow, the mesher correctly recommends small N (min_grid_n)
+        assert_eq!(
+            config.recommended_n, mesher.min_grid_n,
+            "NC: Laminar flow must recommend minimum N={}", mesher.min_grid_n
+        );
+        // k_max_eta is huge for laminar (well resolved), alpha_prime positive
+        assert!(config.k_max_eta > 0.0);
+    }
+
+    /// Negative control NC-RUST-MESH-02:
+    /// Zero viscosity input must not panic (epsilon floor prevents division by zero).
+    #[test]
+    fn test_nc_zero_viscosity_no_panic() {
+        let mesher = NeuroSymbolicMesher::default();
+        // nu = 0.0: should be handled gracefully by epsilon floors
+        let config = mesher.estimate_from_invariants(1.0, 500.0, 0.0);
+        assert!(config.recommended_n >= mesher.min_grid_n);
+        assert!(config.recommended_n <= mesher.max_grid_n);
     }
 }

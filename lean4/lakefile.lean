@@ -13,10 +13,13 @@ lean_lib «DualScale» where
   -- Main dual-scale geometry & Navier-Stokes cascade (Tier A certified)
 
 lean_lib «Galerkin» where
-  -- Triadic energy transfers & antisymmetry (Tier A certified)
+  -- Triadic energy transfers & antisymmetry (Tier A certified, IP-02 algebraic)
 
 lean_lib «Leray» where
-  -- Leray-Helmholtz projector idempotence (Tier A certified)
+  -- Leray-Helmholtz projector: concrete EuclideanSpace definition (Tier A certified, IP-02)
 
 lean_lib «Frustration» where
   -- Triadic Frustration Index D(M) phase cancellation bounds (Tier A certified)
+
+lean_lib «FrustrationMonotonicity» where
+  -- H19 Frustration monotonicity conjecture stub (Tier C → target Tier A)

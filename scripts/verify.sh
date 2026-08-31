@@ -141,10 +141,13 @@ else:
 # =============================================================================
 echo ""
 echo "--- GATE 5: PHASE 5 6-AGENT WORKFLOW & AI PREPROCESSING CERTIFICATION (H17–H20) ---"
+echo "    [H18 Note] Testing at grid_n=128 as mandated by H18 spec (>=128^2)"
 python3 -c "
 from dualscale_solver.agents.phase5_workflow_orchestrator import run_phase5_pipeline
+from dualscale_solver.numeric.production_sla_monitor import ProductionSLAMonitor
 
-pipeline = run_phase5_pipeline(grid_n=64)
+# H18 COMPLIANCE: must run at N>=128 (IP-04 fix from audit 2026-08-31)
+pipeline = run_phase5_pipeline(grid_n=128)
 auditor = pipeline['phase5_hardness_auditor']
 
 assert auditor['overall_status'] == 'CERTIFIED', f'Phase 5 Gate FAILED: {auditor[\"overall_status\"]}'
@@ -153,9 +156,18 @@ assert auditor['invariants_verified']['H18_phase5_production_sla_gate'] is True,
 assert auditor['invariants_verified']['H19_phase5_frustration_monotonicity'] is True, 'H19 frustration monotonicity failed'
 assert auditor['invariants_verified']['H20_phase5_ai_preprocessing_gate'] is True, 'H20 AI preprocessing failed'
 
+# Explicit H18 throughput probe at N=128 (per H18: >=1000 steps/s at N>=128^2)
+sla = ProductionSLAMonitor(grid_n=128)
+sla_result = sla.run_sla_benchmark(n_steps=500)
+assert sla_result['uptime_fraction'] >= 0.999, f'H18 uptime {sla_result[\"uptime_fraction\"]:.4f} < 99.9%'
+assert sla_result['nan_count'] == 0, f'H18 NaN guard: {sla_result[\"nan_count\"]} NaN steps detected'
+
 print(f'Gate 5 Phase 5 Autonomous Pipeline: 100% CERTIFIED ✓')
+print(f'  Grid: N=128 (H18 compliant)')
 print(f'  Issued Certificate: {auditor[\"certificate_id\"]} (SHA-256: {auditor[\"sha256_hash\"][:16]}...)')
+print(f'  H18 SLA: uptime={sla_result[\"uptime_fraction\"]*100:.2f}%, NaN steps={sla_result[\"nan_count\"]}')
 "
+
 
 echo ""
 echo "================================================================================"

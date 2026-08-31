@@ -116,3 +116,21 @@ OpenFOAM `icoFoam` with `tolerance 1e-08, relTol 0.001` achieves `max_div ≈ 4.
 | 6 | Output file format validated? | `head -20 <output_file>` before passing to external tools |
 | 7 | All reported numbers traceable to raw output? | Cross-check every table entry against actual log or JSON output |
 | 8 | Speedup claim qualified by resolution? | State at which N the speedup holds; do not extrapolate from small-N measurements |
+
+---
+
+### LL-19: Lean 4 Tautological Proofs Typecheck But Are Physically Vacuous
+
+**Date:** 2026-08-31 (Audit IP-02)
+
+**Pattern Identified:** A theorem that proves `Q` by returning a hypothesis `h : Q` is a tautology — it typechecks in Lean 4 but contains zero mathematical content. Examples caught in audit:
+- `leray_idempotent (P : ℝ → ℝ) (hP : ∀ v, P(P v) = P v) (v : ℝ) : P(P v) = P v := hP v` — the hypothesis *is* the conclusion.
+- `inviscid_energy_derivative_zero (E_dot : ℝ) (h : E_dot = 0) : E_dot = 0 := h` — trivially circular.
+
+**Why This Is Dangerous:** `lake build` succeeds and produces no error. Theorem names and docstrings imply deep mathematical content. The Hardness Charter's Tier A claim is not violated syntactically — only semantically.
+
+**Remediation:**
+1. Replaced with concrete algebraic definitions in `Galerkin.lean` (TriadicTransfer structure, double-sum cancellation) and `Leray.lean` (EuclideanSpace projector, `field_simp` + `ring`).
+2. New invariant **H21** added to HARDNESS.md: proofs must be non-vacuous.
+3. **Agent mandate:** `math_reviewer` (T2) must verify that every Tier A theorem proof does not reduce to `exact h_same_type`. Syntactic non-vacuity check: the proof term must use at least one lemma from Mathlib or a local `have` chain, not be a direct application of a hypothesis.
+

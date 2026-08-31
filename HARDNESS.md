@@ -269,3 +269,26 @@ The AI Preprocessing module (`dualscale_solver.ai` / `crates/leanflow-ai`) must 
 | LL-17 | P5 AI Pre | Under-resolved grids in AI mesher caused aliased dissipation and blowup | H20 | Enforce strict Kolmogorov resolution inequality $k_{\max} \eta \ge 1.5$ before meshing |
 | LL-18 | P5 HF Pub | Hugging Face credentials risked exposure in git tracking | H11, H13 | Isolate token loading to `HF_TOKEN` environment variable; zero credentials in git |
 
+
+---
+
+## Invariant Additions v3.1 (Audit 2026-08-31)
+
+### H21 — Non-Vacuity of Lean 4 Proofs
+
+Every Lean 4 theorem declared with Tier A status must be **non-trivially constructive**: its proof term must not reduce to `fun h => h` or a direct application of a hypothesis of identical type (a tautology). The `math_reviewer` agent must perform a syntactic non-vacuity check before signing off on any `.lean` file. Violation: a theorem whose proof is `exact h_same_type` or `hP v` where `hP : ∀ v, P(P v) = P v` and the conclusion is `P(P v) = P v`.
+
+**Gate:** `lake build` succeeds AND at least one Mathlib lemma or local `have` derivation appears in every Tier A proof.
+
+### H22 — Rust Test Coverage Gate
+
+Every Rust crate in the workspace (`leanflow-core`, `leanflow-solver`, `leanflow-ai`) must expose ≥2 named unit tests, including at least one positive test and one negative control. `cargo test --workspace` must report zero crates with "0 tests".
+
+**Gate:** `cargo test --workspace` output shows ≥2 test lines per crate.
+
+### H23 — SLA Tests Must Run at Specified Grid Scale
+
+Hardness gates referencing a minimum grid resolution (e.g., H18: N≥128²) must be exercised **at or above** that exact resolution in `verify.sh`. A gate test run at a smaller grid is a failing gate even if it passes. The grid size used must be logged in the gate output.
+
+**Gate:** `verify.sh` Gate 5 must log `Grid: N=128 (H18 compliant)` or higher.
+

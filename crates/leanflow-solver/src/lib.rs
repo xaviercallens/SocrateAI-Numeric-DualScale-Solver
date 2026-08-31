@@ -5,9 +5,11 @@
 
 pub mod cvode_dyadic;
 pub mod embedded;
+pub mod ffi_telemetry;
 
 pub use cvode_dyadic::{CvodeCascadeResult, CvodeDyadicCascade};
 pub use embedded::EmbeddedDyadicState;
+pub use ffi_telemetry::*;
 use leanflow_core::dualscale_dissipation_rate;
 use serde::{Deserialize, Serialize};
 

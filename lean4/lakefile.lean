@@ -23,3 +23,6 @@ lean_lib «Frustration» where
 
 lean_lib «FrustrationMonotonicity» where
   -- H19 Frustration monotonicity conjecture stub (Tier C → target Tier A)
+
+lean_lib «DynamicStability» where
+  -- H24 Agentic runtime parameter bounds (TSK-62, Phase 6 — sorry stub, target Tier A)

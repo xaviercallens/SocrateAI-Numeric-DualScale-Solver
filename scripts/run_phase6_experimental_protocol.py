@@ -23,7 +23,7 @@ from dualscale_solver.agents.phase6_workflow_orchestrator import run_phase6_pipe
 
 def main():
     repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    start_utc = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+    start_utc = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
 
     print("=" * 80)
     print("   SOCRATEAI DUAL-SCALE SOLVER — PHASE 6 AUTONOMOUS MULTI-AGENT EXECUTION")
@@ -84,10 +84,14 @@ def main():
 
     print("=" * 80)
     all_pass = a5["overall_status"] == "CERTIFIED"
+    is_scaffolding = a5["overall_status"] == "SCAFFOLDING_ONLY"
     if all_pass:
-        print("🎉 ALL PHASE 6 GATES (H24, H25) ARE FULLY SATISFIED.")
+        print("🎉 ALL PHASE 6 GATES (H24, H25, H26, H27) ARE FULLY SATISFIED.")
+    elif is_scaffolding:
+        print("⚠️  SCAFFOLDING_ONLY — SDK/model backend not yet live. Not a CI failure.")
+        print("   To reach CERTIFIED: pip install -e '.[agentic]' + set GEMINI_API_KEY or start Ollama.")
     else:
-        print("❌ PHASE 6 CERTIFICATION FAILED. Review invariant violations above.")
+        print("❌ PHASE 6 CERTIFICATION REJECTED. Review invariant violations above.")
     print()
 
     # Save output JSON
@@ -99,7 +103,13 @@ def main():
         json.dump(pipeline, f, indent=2)
     print(f"[✓] Report saved to: {output_path}")
 
-    return 0 if all_pass else 1
+    # Exit codes: 0=CERTIFIED, 2=SCAFFOLDING_ONLY (incomplete, not an error), 1=REJECTED
+    if all_pass:
+        return 0
+    elif is_scaffolding:
+        return 2
+    else:
+        return 1
 
 
 if __name__ == "__main__":

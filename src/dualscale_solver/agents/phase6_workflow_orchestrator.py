@@ -63,9 +63,23 @@ def _probe_ollama() -> bool:
 def _probe_gemini(api_key: str) -> bool:
     """
     H28: Verify GEMINI_API_KEY is non-empty and non-placeholder.
-    A full HTTP check would require the SDK; we do a fast sanity check here.
+    Also detects Antigravity SDK keys (AQ.…) vs standard Gemini REST API keys (AIza…).
+    Antigravity keys (AQ.…) work for the first agent call via the AGY proxy but block
+    subsequent subagent calls to generativelanguage.googleapis.com (403 PERMISSION_DENIED).
+    For full multi-agent pipelines, a standard Gemini API key starting with 'AIza' is required.
     """
-    return bool(api_key) and len(api_key) > 10 and api_key != "YOUR_API_KEY"
+    if not api_key or len(api_key) <= 10 or api_key == "YOUR_API_KEY":
+        return False
+    if api_key.startswith("AQ."):
+        print(
+            "[H28] WARNING: GEMINI_API_KEY looks like an Antigravity SDK key (starts with 'AQ.').\n"
+            "       Antigravity keys block direct calls to generativelanguage.googleapis.com.\n"
+            "       For full multi-agent pipelines, use a standard Gemini API key (starts with 'AIza').\n"
+            "       Get one at: https://aistudio.google.com/app/apikey\n"
+            "       The pipeline will attempt to run but agents 2–4 may receive 403 errors."
+        )
+        return True  # Allow attempt; actual 403s will be caught per-agent
+    return True
 
 
 def _detect_live_backend() -> str:

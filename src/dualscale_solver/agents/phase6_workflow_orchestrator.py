@@ -246,7 +246,7 @@ async def _run_antigravity_pipeline(grid_n: int, backend: str) -> dict[str, Any]
 
     return results
 
-def run_phase6_pipeline(grid_n: int = 64) -> dict[str, Any]:
+def run_phase6_pipeline(grid_n: int = 64, force_backend: str | None = None) -> dict[str, Any]:
     """
     Execute the Phase 6 agentic workflow pipeline.
 
@@ -291,7 +291,7 @@ def run_phase6_pipeline(grid_n: int = 64) -> dict[str, Any]:
         pipeline["qa_scientific_auditor"] = {"status": "SCAFFOLDING_ONLY", "_measured": False}
     else:
         # H28: Probe which backend is live before committing to a chat round-trip
-        backend = _detect_live_backend()
+        backend = force_backend if force_backend else _detect_live_backend()
         pipeline["_backend"] = backend
         print(f"[H28] Pre-flight probe result: backend='{backend}'")
 

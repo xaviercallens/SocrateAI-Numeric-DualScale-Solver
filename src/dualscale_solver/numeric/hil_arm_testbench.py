@@ -129,7 +129,6 @@ def simulate_hil_arm_cycle_budget(n: int = 4) -> Dict[str, Any]:
 
     return {
         "hil_detected": hil_detected,
-        "qemu_availability": hil_detected,
         "cross_compile_available": cross_compile_available,
         "n_grid": kernel["n_grid"],
         "cycles_per_step": kernel["total_cycles"],

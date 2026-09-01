@@ -502,5 +502,55 @@ print(f'  Certificate ID:          {cert[\"certificate_id\"]} (Status: {cert[\"o
 
 echo ""
 echo "================================================================================"
-echo " ✅ ALL VERIFICATION GATES PASSED (MATHESIS 5-TIER CERTIFIED v8.0 — GATES 0–16)"
+echo " GATE 17: PHASE 11 ENTERPRISE HYPERSCALE & CRITICAL SYSTEMS (H62-H65)"
+echo "================================================================================"
+python3 -c "
+import sys
+sys.path.insert(0, 'src')
+
+from dualscale_solver.agents.phase11_workflow_orchestrator import Phase11HyperscaleOrchestrator
+
+orchestrator = Phase11HyperscaleOrchestrator()
+report = orchestrator.execute_workflow()
+cert = report['certificate']
+
+assert cert['invariants_verified']['H62_runux_mpi_hyperscale'], 'H62 Runux MPI Hyperscale Gate FAILED'
+assert cert['invariants_verified']['H63_do178c_aerospace'], 'H63 DO-178C Aerospace Gate FAILED'
+assert cert['invariants_verified']['H64_fda_class_iii_medical'], 'H64 FDA Class III Medical Gate FAILED'
+assert cert['invariants_verified']['H65_edge_swarm_consensus'], 'H65 Edge Swarm Consensus Gate FAILED'
+
+assert cert['overall_status'] == 'CERTIFIED', f'Workflow 11 overall status {cert[\"overall_status\"]} is not CERTIFIED'
+
+print(f'Gate 17 Phase 11 Enterprise Hyperscale: PASS ✓')
+print(f'  Certificate ID:          {cert[\"certificate_id\"]} (Status: {cert[\"overall_status\"]})')
+"
+
+echo ""
+echo "================================================================================"
+echo " GATE 18: PHASE 12 AUTONOMOUS AUTO-RESEARCH LOOP (H66-H70)"
+echo "================================================================================"
+python3 -c "
+import sys
+sys.path.insert(0, 'src')
+
+from dualscale_solver.agents.phase12_workflow_orchestrator import run_phase12_pipeline
+
+report = run_phase12_pipeline()
+cert = report['certificate']
+
+assert cert['problems_converged']['H66_aerospace_scramjet'], 'H66 Aerospace Scramjet Gate FAILED'
+assert cert['problems_converged']['H67_medical_vad_rotor'], 'H67 Medical VAD Rotor Gate FAILED'
+assert cert['problems_converged']['H68_hyperscale_wind_farm'], 'H68 Hyperscale Wind Farm Gate FAILED'
+assert cert['problems_converged']['H69_automotive_btms'], 'H69 Automotive BTMS Gate FAILED'
+assert cert['problems_converged']['H70_nuclear_tokamak'], 'H70 Nuclear Tokamak Gate FAILED'
+
+assert cert['overall_status'] == 'CERTIFIED', f'Workflow 12 overall status {cert[\"overall_status\"]} is not CERTIFIED'
+
+print(f'Gate 18 Phase 12 Autonomous Auto-Research Loop: PASS ✓')
+print(f'  Certificate ID:          {cert[\"certificate_id\"]} (Status: {cert[\"overall_status\"]})')
+"
+
+echo ""
+echo "================================================================================"
+echo " ✅ ALL VERIFICATION GATES PASSED (MATHESIS 5-TIER CERTIFIED v10.0 — GATES 0–18)"
 echo "================================================================================"

@@ -499,7 +499,7 @@ def evaluate_4_performance_gains(results: Dict[str, Any]) -> Dict[str, Any]:
                        and auto.get("heat_transfer_increase_pct", 0) >= 30.0),
         },
         "gain_4_biomedical_safety": {
-            "name": "Biomedical & Safety Damage Reduction Gain",
+            "name": "Surrogate Optimization / Directional Shear Reduction Gain",
             "metric": "VAD Rotor Shear Stress & Hemolysis Index Reduction",
             "measured_value": (f"Shear: {med.get('max_shear_stress_pa', 0)} Pa, "
                                f"Hemolysis -{med.get('hemolysis_index_reduction_pct', 0)}%, "

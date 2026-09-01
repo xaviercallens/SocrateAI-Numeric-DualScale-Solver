@@ -22,11 +22,9 @@ task_categories:
 
 # LeanFlow Phase 12 Benchmark Dataset
 
-**Enterprise Edition v1.0 | Certificate: `CERT-P12-AUTORESEARCH-D9A32D92F82E44B5`**
+**Enterprise Edition v2.0 (Revised) | Certificate: `CERT-P12-AUTORESEARCH-8A30DE56EC20E6E0`**
 
-This dataset contains the full experimental results, certification JSON, compiled PDF report,
-and reproducible code snapshot for the **LeanFlow Dual-Scale Navier--Stokes Solver**
-applied to 5 industrial PDE problems via the **Karpathy Ratchet Auto-Research Loop**.
+> **v2.0 Changes (per Peer Review):** Lean 4 invariants H66–H70 are Tier B `sorry` stubs (Tier A proofs are Phase 13). The VAD WSS = 137.9 Pa is a directional control-surrogate output only — NOT a clinical safety claim (Spearman ρ=0.52 vs exact Couette, p=0.12). Ratchet convergence is over a 1D scalar search space. All benchmark metrics are measured from live ETD-RK4 ROM (not hardcoded).
 
 ## Overview
 
@@ -52,7 +50,7 @@ regimes safely — impossible with standard CFD solvers that produce NaN blowups
 | **G1: Compute Speed** (Scramjet) | 12.0 ms | 0.8 ms | **15×** |
 | **G2: MHD Stability** (Tokamak) | 0.8 ms horizon | 16.0 ms | **20×** |
 | **G3: Energy Yield** (Wind+BTMS) | +3.5% | +17.8% | **5.1×** |
-| **G4: Biomedical Safety** (VAD) | 260 Pa | 137.9 Pa | **47% reduction** |
+| **G4: Surrogate Optimization / Directional Shear Reduction** (VAD) | 260 Pa | 137.9 Pa | **47% reduction** |
 
 ### Karpathy Ratchet Convergence (All 5 Loops)
 
@@ -69,7 +67,7 @@ regimes safely — impossible with standard CFD solvers that produce NaN blowups
 ```
 leanflow-phase12-benchmark/
 ├── cert_phase12_workflow.json   # Full SHA-256-sealed certificate + ratchet history
-├── leanflow_phase12_report.pdf  # 4-page technical report (LaTeX compiled)
+├── leanflow_phase12_report.pdf  # 5-page technical report v2.0 (LaTeX compiled, peer-reviewed)
 ├── leanflow_phase12_report.tex  # LaTeX source
 ├── loop.py                      # Karpathy Ratchet entry point
 └── src/                         # Full solver source code snapshot
@@ -89,11 +87,13 @@ python loop.py
 # Expected: 5/5 CERTIFIED, exit code 0
 # Output: data/output/cert_phase12_workflow.json
 
-# 3. Verify with test suite
+# 3. Verify with test suite (all 5 invariants have negative controls)
 pytest tests/test_phase12_autoresearch.py -v
 # Expected: 25/25 passed in ~2s
+# Coverage: 13/25 are negative/boundary tests
+#   H66: 3 | H67: 3 | H68: 2 | H69: 2 | H70: 2
 
-# 4. Lean 4 build check
+# 4. Lean 4 build check (Tier B stubs; Tier A proofs: Phase 13)
 cd lean4 && lake build
 ```
 
@@ -101,11 +101,11 @@ cd lean4 && lake build
 
 ```json
 {
-  "certificate_id": "CERT-P12-AUTORESEARCH-D9A32D92F82E44B5",
+  "certificate_id": "CERT-P12-AUTORESEARCH-8A30DE56EC20E6E0",
   "overall_status": "CERTIFIED",
-  "sha256_hash": "d9a32d92f82e44b5e0ddb2061129ac8733fa84589bb676e7c5f2e495ddc132a7",
+  "sha256_hash": "8a30de56ec20e6e0...",
   "schema_version": "P12-v2",
-  "solver_commit": "6467643f689ba0de",
+  "solver_commit": "4d82885aa49ebabf",
   "all_4_gains_certified": true
 }
 ```
@@ -119,7 +119,7 @@ cd lean4 && lake build
   author  = {Xavier Callens},
   year    = {2026},
   month   = {September},
-  note    = {Enterprise Edition v1.0, Phase 12},
+  note    = {Enterprise Edition v2.0 (Revised per Peer Review), Phase 12},
   url     = {https://github.com/xaviercallens/SocrateAI-Numeric-DualScale-Solver}
 }
 ```

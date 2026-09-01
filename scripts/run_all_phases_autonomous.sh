@@ -67,11 +67,18 @@ echo ">>> [PHASE 10] Executing Phase 10 Enterprise AI, Real-Time Edge & OpenFOAM
 ./scripts/run_phase10_autonomous.sh
 
 echo ""
-echo ">>> [VERIFICATION GATES] Running Formal 17-Gate Verification Suite (Gates 0-16)..."
+echo ">>> [PHASE 11] Executing Phase 11 Enterprise Hyperscale & Critical Systems..."
+./scripts/run_phase11_autonomous.sh
+
+echo ""
+echo ">>> [PHASE 12] Executing Phase 12 Autonomous Auto-Research Loop..."
+./scripts/run_phase12_autoresearch.sh
+
+echo ""
+echo ">>> [VERIFICATION GATES] Running Formal 19-Gate Verification Suite (Gates 0-18)..."
 ./scripts/verify.sh
 
 echo ""
 echo "================================================================================"
-echo "    🎉 ALL PHASES (1 THROUGH 10) AND GATES (0-16) ARE FULLY CERTIFIED!"
+echo "    🎉 ALL PHASES (1 THROUGH 12) AND GATES (0-18) ARE FULLY CERTIFIED!"
 echo "================================================================================"
-

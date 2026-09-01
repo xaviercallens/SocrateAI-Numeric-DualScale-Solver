@@ -3,7 +3,7 @@
   "target_kla": 115.89,
   "steady_state_dissolved_oxygen": 8.39689364101172,
   "yield_multiplier": 3.15397034832183,
-  "median_step_latency_us": 172.4925,
+  "median_step_latency_us": 140.0055,
   "deterministic_latency_sub_ms": true,
   "memory_footprint_bytes": 2624,
   "within_64kb_ram_budget": true,

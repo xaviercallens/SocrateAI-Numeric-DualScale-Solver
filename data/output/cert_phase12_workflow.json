@@ -1,6 +1,6 @@
 {
   "certificate": {
-    "certificate_id": "CERT-P12-AUTORESEARCH-D9A32D92F82E44B5",
+    "certificate_id": "CERT-P12-AUTORESEARCH-8A30DE56EC20E6E0",
     "overall_status": "CERTIFIED",
     "problems_converged": {
       "H66_aerospace_scramjet": true,
@@ -9,10 +9,10 @@
       "H69_automotive_btms": true,
       "H70_nuclear_tokamak": true
     },
-    "sha256_hash": "d9a32d92f82e44b5e0ddb2061129ac8733fa84589bb676e7c5f2e495ddc132a7",
-    "run_timestamp_utc": 1788287674.3873413,
+    "sha256_hash": "8a30de56ec20e6e07e17655c1acd4155bbdadd87cfdb0d3adeb5250bd1d76250",
+    "run_timestamp_utc": 1788293682.6126823,
     "schema_version": "P12-v2",
-    "solver_commit": "6467643f689ba0de"
+    "solver_commit": "4d82885aa49ebabf"
   },
   "performance_gains": {
     "all_4_gains_certified": true,
@@ -42,7 +42,7 @@
         "passed": true
       },
       "gain_4_biomedical_safety": {
-        "name": "Biomedical & Safety Damage Reduction Gain",
+        "name": "Surrogate Optimization / Directional Shear Reduction Gain",
         "metric": "VAD Rotor Shear Stress & Hemolysis Index Reduction",
         "measured_value": "Shear: 137.892 Pa, Hemolysis -46.965%, Zones: 0",
         "baseline_value": "260 Pa & 2 stagnation zones",
@@ -88,7 +88,7 @@
           "fitness_score": 3.5018,
           "diagnostic": "Enstrophy too high (E=15.2 \u2265 14.5). \u03b1'=1.00 insufficient regularisation. Flow separation bubble persists. Increase spectral_filter_coef.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 3.66,
+          "eval_time_ms": 4.16,
           "best_fitness": 3.5018,
           "verification": {
             "status": "FAILED",
@@ -119,7 +119,7 @@
           "fitness_score": 6.9824,
           "diagnostic": "Dual-scale enstrophy bound held (E=14.3 < 14.5). \u03b1'=1.20 provided sufficient biharmonic dissipation. SBLI prediction horizon extended to 5.6ms. Unstart prevented.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 3.6,
+          "eval_time_ms": 1.76,
           "best_fitness": 6.9824,
           "verification": {
             "status": "CERTIFIED",
@@ -168,7 +168,7 @@
           "fitness_score": 46.9647,
           "diagnostic": "Dual-scale regularisation reduced WSS to 137.9 Pa (< 150 Pa threshold). \u03b1'=1.25, enstrophy=172.5. No stagnation zones detected. Hemolysis reduced by 47.0%.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 3.6,
+          "eval_time_ms": 2.18,
           "best_fitness": 46.9647,
           "verification": {
             "status": "CERTIFIED",
@@ -217,7 +217,7 @@
           "fitness_score": 5.5269,
           "diagnostic": "Insufficient turbine coverage: only 500 turbines (need \u22651000). Increase yaw angle above 5.5\u00b0 to unlock full farm coordination.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 3.97,
+          "eval_time_ms": 1.81,
           "best_fitness": 5.5269,
           "verification": {
             "status": "FAILED",
@@ -248,7 +248,7 @@
           "fitness_score": 17.8452,
           "diagnostic": "Wake steering effective: 1024 turbines at yaw=5.7\u00b0, yield +17.8% (target \u226515%). Enstrophy ratio=1.70, turbine amplification 3\u00d7 applied.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 4.12,
+          "eval_time_ms": 1.93,
           "best_fitness": 17.8452,
           "verification": {
             "status": "CERTIFIED",
@@ -293,7 +293,7 @@
           "fitness_score": 21.8975,
           "diagnostic": "Heat transfer +21.9% below 30% target. Fractal dim=2.5, nu_ratio=1.09. Increase fractal_dim to strengthen enstrophy suppression.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 4.3,
+          "eval_time_ms": 1.73,
           "best_fitness": 21.8975,
           "verification": {
             "status": "FAILED",
@@ -322,7 +322,7 @@
           "fitness_score": 27.1635,
           "diagnostic": "Heat transfer +27.2% below 30% target. Fractal dim=3.0, nu_ratio=1.12. Increase fractal_dim to strengthen enstrophy suppression.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 3.56,
+          "eval_time_ms": 1.82,
           "best_fitness": 27.1635,
           "verification": {
             "status": "FAILED",
@@ -351,7 +351,7 @@
           "fitness_score": 32.1248,
           "diagnostic": "Fractal micro-channel network converged: 7 generations, heat transfer +32.1% (target \u226530%). Pressure drop reduction 22.7%. Enstrophy-driven nu_ratio=1.13 amplifies thermal transport.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 2.4,
+          "eval_time_ms": 1.78,
           "best_fitness": 32.1248,
           "verification": {
             "status": "CERTIFIED",
@@ -401,7 +401,7 @@
           "fitness_score": 16.0,
           "diagnostic": "Holographic bound satisfied (E=0.3 < R_eff\u00b2\u00d7250=500). R_eff=1.414, \u03b1'=0.500. Disruption horizon=16.0ms (target \u226510ms). Plasma \u03b2=0.0600 stable.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 2.12,
+          "eval_time_ms": 2.29,
           "best_fitness": 16.0,
           "verification": {
             "status": "CERTIFIED",
@@ -415,5 +415,5 @@
       ]
     }
   },
-  "wall_time_s": 0.032
+  "wall_time_s": 0.02
 }

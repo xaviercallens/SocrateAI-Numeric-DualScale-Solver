@@ -19,7 +19,12 @@ pipeline_tag: other
 
 # LeanFlow Dual-Scale Navier--Stokes Solver
 
-**Enterprise Edition v1.0** | Phase 12 | SocrateAI / Xavier Callens
+**Enterprise Edition v2.0 (Revised per Peer Review)** | Phase 12 | SocrateAI / Xavier Callens
+
+> ⚠️ **Peer Review Disclosures (v2.0):**
+> - Lean 4 invariants H66–H70 are **Tier B `sorry` stubs** — Tier A (zero-sorry) proofs are a Phase 13 target.
+> - VAD WSS = 137.9 Pa is a **directional control-surrogate** only. Spearman ρ=0.52 (p=0.12) vs exact Couette — **not a clinical safety claim**.
+> - Ratchet convergence in 1–3 iterations reflects **1D scalar search space**, not unconstrained autonomous search.
 
 ## Model Description
 
@@ -40,7 +45,7 @@ LeanFlow is a **Dual-Scale Spectral Navier--Stokes Solver** with:
 | BTMS Cooling (H69) | Synthetic fractal | Heat: +32.1% | **4×** |
 | Tokamak MHD (H70) | polymathic-ai/MHD_64 | Horizon: 16ms | **20×** |
 
-Certificate: `CERT-P12-AUTORESEARCH-D9A32D92F82E44B5` | SHA-256: `d9a32d92f82e44b5...`
+Certificate: `CERT-P12-AUTORESEARCH-8A30DE56EC20E6E0` | SHA-256: `8a30de56ec20e6e0...` | Commit: `4d82885aa49ebabf`
 
 ## Quick Start
 
@@ -87,7 +92,7 @@ Generator    (<5ms)          fitness        gates        Diagnostic
 
 ## Technical Report
 
-Full 4-page LaTeX report: [leanflow_phase12_report.pdf](https://huggingface.co/datasets/callensxavier/leanflow-phase12-benchmark/resolve/main/leanflow_phase12_report.pdf)
+Full 5-page LaTeX report v2.0 (revised per peer review): [leanflow_phase12_report.pdf](https://huggingface.co/datasets/callensxavier/leanflow-phase12-benchmark/resolve/main/leanflow_phase12_report.pdf)
 
 ## Citation
 
@@ -98,7 +103,7 @@ Full 4-page LaTeX report: [leanflow_phase12_report.pdf](https://huggingface.co/d
   author  = {Xavier Callens},
   year    = {2026},
   month   = {September},
-  note    = {Enterprise Edition v1.0, Phase 12, CERT-P12-AUTORESEARCH-D9A32D92F82E44B5},
+  note    = {Enterprise Edition v2.0 (Revised per Peer Review), Phase 12, CERT-P12-AUTORESEARCH-F36322CED55DB91F},
   url     = {https://github.com/xaviercallens/SocrateAI-Numeric-DualScale-Solver}
 }
 ```

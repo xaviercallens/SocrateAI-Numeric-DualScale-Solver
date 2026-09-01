@@ -154,6 +154,36 @@ def cmd_workflow10(args: argparse.Namespace) -> int:
         
     return 0 if cert["overall_status"] == "CERTIFIED" else 1
 
+from dualscale_solver.agents.phase11_workflow_orchestrator import Phase11HyperscaleOrchestrator
+
+def cmd_workflow11(args: argparse.Namespace) -> int:
+    """Run Phase 11 Enterprise Hyperscale & Critical Systems (Workflow 11)."""
+    orchestrator = Phase11HyperscaleOrchestrator()
+    report = orchestrator.execute_workflow()
+    return 0 if report["certificate"]["overall_status"] == "CERTIFIED" else 1
+
+from dualscale_solver.agents.phase12_workflow_orchestrator import run_phase12_pipeline
+
+def cmd_workflow12(args: argparse.Namespace) -> int:
+    """Run Phase 12 Autonomous Auto-Research Loop & Industrial Workflows (Workflow 12)."""
+    print("================================================================================")
+    print(" SocrateAI LeanFlow: Phase 12 Karpathy Auto-Research Loop & Industrial Workflows")
+    print("================================================================================")
+    report = run_phase12_pipeline()
+    cert = report["certificate"]
+    print(f" Certificate ID : {cert['certificate_id']}")
+    print(f" Overall Status : {cert['overall_status']}")
+    print(f" SHA-256 Hash   : {cert['sha256_hash']}")
+    
+    if args.output:
+        out_path = Path(args.output)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(out_path, "w", encoding="utf-8") as f:
+            json.dump(report, f, indent=2)
+        print(f" Certificate saved to: {out_path.resolve()}")
+        
+    return 0 if cert["overall_status"] == "CERTIFIED" else 1
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         prog="dualscale-solver",
@@ -180,6 +210,15 @@ def main() -> None:
     p_wf10 = subparsers.add_parser("workflow10", help="Run Phase 10 Enterprise AI, Real-Time Edge & OpenFOAM Supremacy")
     p_wf10.add_argument("--output", "-o", type=str, default="data/cert_phase10_workflow.json", help="Path to output certificate")
     p_wf10.set_defaults(func=cmd_workflow10)
+
+    # Subcommand: workflow11
+    p_wf11 = subparsers.add_parser("workflow11", help="Run Phase 11 Enterprise Hyperscale & Critical Systems")
+    p_wf11.set_defaults(func=cmd_workflow11)
+
+    # Subcommand: workflow12
+    p_wf12 = subparsers.add_parser("workflow12", help="Run Phase 12 Autonomous Auto-Research Loop & Industrial Workflows")
+    p_wf12.add_argument("--output", "-o", type=str, default="data/cert_phase12_workflow.json", help="Path to output certificate")
+    p_wf12.set_defaults(func=cmd_workflow12)
 
     # Subcommand: dyadic
     p_dyadic = subparsers.add_parser("dyadic", help="Run dyadic shell cascade simulation")

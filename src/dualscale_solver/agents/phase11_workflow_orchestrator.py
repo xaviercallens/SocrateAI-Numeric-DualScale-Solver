@@ -109,12 +109,12 @@ class Phase11HyperscaleOrchestrator:
         
         report = {
             "execution_time_sec": dt,
-            "certificate": cert.dict(),
+            "certificate": cert.model_dump(),
             "agents": {
-                "hyperscale_orchestrator": m1.dict(),
-                "aerospace_auditor": m2.dict(),
-                "medical_auditor": m3.dict(),
-                "swarm_consensus": m4.dict()
+                "hyperscale_orchestrator": m1.model_dump(),
+                "aerospace_auditor": m2.model_dump(),
+                "medical_auditor": m3.model_dump(),
+                "swarm_consensus": m4.model_dump()
             }
         }
         

@@ -123,27 +123,42 @@ def run_grpc_bigquery_telemetry_streaming(n_events: int = 2000) -> Dict[str, Any
 def negative_control_nc_p8_03() -> bool:
     """
     NC-P8-03: Verifies that dropped events, non-monotonic timestamps,
-    or sequence gaps are deterministically rejected by the H47 gate.
+    or sequence gaps are deterministically rejected by the authoritative H47 gate.
     """
+    from dualscale_solver.cert.audit_gate_enforcer import validate_h47_telemetry_gate
+
     streamer = GrpcBigQueryTelemetryStreamer()
     valid_res = streamer.emit_telemetry_batch(n_events=100)
+    valid_res["status"] = "PASSED"
+
+    # Ensure genuine baseline passes
+    if not validate_h47_telemetry_gate(valid_res):
+        return False
 
     # 1. Dropped events / Loss rate violation
     corrupted_loss = dict(valid_res)
     corrupted_loss["loss_rate"] = 0.05  # 5% packet loss injected
-    if corrupted_loss["loss_rate"] == 0.0:
-        return False
+    if validate_h47_telemetry_gate(corrupted_loss):
+        return False  # Failed: gate accepted non-zero loss rate!
 
     # 2. Non-monotonic timestamp violation
     corrupted_ts = dict(valid_res)
     corrupted_ts["is_timestamp_monotonic"] = False
-    if corrupted_ts["is_timestamp_monotonic"]:
-        return False
+    if validate_h47_telemetry_gate(corrupted_ts):
+        return False  # Failed: gate accepted non-monotonic timestamps!
 
     # 3. Discontinuous sequence gap violation
     corrupted_seq = dict(valid_res)
     corrupted_seq["is_sequence_contiguous"] = False
-    if corrupted_seq["is_sequence_contiguous"]:
-        return False
+    if validate_h47_telemetry_gate(corrupted_seq):
+        return False  # Failed: gate accepted sequence gaps!
+
+    # 4. Zero ingested events violation
+    zero_events = dict(valid_res)
+    zero_events["events_ingested"] = 0
+    zero_events["events_attempted"] = 0
+    if validate_h47_telemetry_gate(zero_events):
+        return False  # Failed: gate accepted empty event stream!
 
     return True
+

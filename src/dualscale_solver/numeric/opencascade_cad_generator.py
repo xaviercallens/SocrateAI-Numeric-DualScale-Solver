@@ -158,21 +158,41 @@ def run_opencascade_brep_solid_export(
 def negative_control_nc_p8_02() -> bool:
     """
     NC-P8-02: Verifies that a non-manifold topology, broken Euler characteristic,
-    or negative enclosed volume is deterministically rejected by the H46 gate.
+    negative volume, or low entity count is deterministically rejected by the authoritative H46 gate.
     """
+    from dualscale_solver.cert.audit_gate_enforcer import validate_h46_cad_gate
+
     gen = OpenCascadeBRepGenerator()
     valid_res = gen.generate_airfoil_brep_solid()
+    valid_res["status"] = "PASSED" if valid_res["is_watertight_manifold"] else "FAILED"
+
+    # Ensure genuine baseline passes
+    if not validate_h46_cad_gate(valid_res):
+        return False
 
     # 1. Non-manifold Euler-Poincaré violation (V - E + F != 2)
     corrupted_euler = dict(valid_res)
     corrupted_euler["euler_poincare_characteristic"] = -4  # Non-manifold defect injected
-    if corrupted_euler["euler_poincare_characteristic"] == 2:
-        return False
+    if validate_h46_cad_gate(corrupted_euler):
+        return False  # Failed: gate accepted non-manifold topology!
 
     # 2. Negative volume violation
     negative_vol = dict(valid_res)
     negative_vol["enclosed_volume_m3"] = -0.05
-    if negative_vol["enclosed_volume_m3"] > 0.0:
-        return False
+    if validate_h46_cad_gate(negative_vol):
+        return False  # Failed: gate accepted negative volume!
+
+    # 3. Broken manifold flag
+    broken_manifold = dict(valid_res)
+    broken_manifold["is_watertight_manifold"] = False
+    if validate_h46_cad_gate(broken_manifold):
+        return False  # Failed: gate accepted non-watertight geometry!
+
+    # 4. Zero STEP content violation
+    zero_bytes = dict(valid_res)
+    zero_bytes["step_content_bytes"] = 0
+    if validate_h46_cad_gate(zero_bytes):
+        return False  # Failed: gate accepted empty STEP output!
 
     return True
+

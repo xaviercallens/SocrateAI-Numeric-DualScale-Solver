@@ -104,27 +104,42 @@ def run_qemu_hil_silicon_benchmark(
 
 def negative_control_nc_p8_01() -> bool:
     """
-    NC-P8-01: Verifies that over-budget latency (> 1.0 ms) or dynamic heap allocation
-    is deterministically rejected by the H45 gate.
+    NC-P8-01: Verifies that over-budget latency (> 1.0 ms), dynamic heap allocation,
+    or RAM budget overflow is deterministically rejected by the authoritative H45 gate.
     """
-    # 1. Falsified over-budget cycle count (simulating 10,000,000 cycles -> ~59.5 ms)
-    runner_slow = QemuHilRunner(clock_mhz=168.0)
-    slow_res = runner_slow.profile_micro_kernel()
-    slow_res["latency_ms"] = 59.52  # Inject over-budget latency
-    if slow_res["latency_ms"] <= 1.0:
-        return False  # Failed to detect violation
+    from dualscale_solver.cert.audit_gate_enforcer import validate_h45_hil_gate
 
-    # 2. Dynamic heap allocation violation (malloc_calls > 0)
-    runner_heap = QemuHilRunner()
-    heap_res = runner_heap.profile_micro_kernel()
-    heap_res["malloc_calls"] = 4  # Dynamic allocation injected
-    if heap_res["malloc_calls"] == 0:
-        return False  # Failed to detect violation
+    runner = QemuHilRunner(clock_mhz=168.0)
+    valid_res = runner.profile_micro_kernel()
+    valid_res["status"] = "PASSED" if (valid_res["latency_pass"] and valid_res["memory_pass"]) else "FAILED"
 
-    # 3. Memory overflow violation (> 64 KB)
-    overflow_res = runner_heap.profile_micro_kernel()
-    overflow_res["ram_usage_bytes"] = 131072  # 128 KB
-    if overflow_res["ram_usage_bytes"] <= 65536:
+    # Ensure the genuine baseline passes the gate
+    if not validate_h45_hil_gate(valid_res):
         return False
 
+    # 1. Falsified over-budget cycle count (simulating 10,000,000 cycles -> ~59.5 ms)
+    corrupted_latency = dict(valid_res)
+    corrupted_latency["latency_ms"] = 59.52
+    if validate_h45_hil_gate(corrupted_latency):
+        return False  # Failed: gate allowed over-budget latency!
+
+    # 2. Dynamic heap allocation violation (malloc_calls > 0)
+    corrupted_heap = dict(valid_res)
+    corrupted_heap["malloc_calls"] = 4
+    if validate_h45_hil_gate(corrupted_heap):
+        return False  # Failed: gate allowed dynamic heap allocation!
+
+    # 3. Memory overflow violation (> 64 KB)
+    corrupted_ram = dict(valid_res)
+    corrupted_ram["ram_usage_bytes"] = 131072
+    if validate_h45_hil_gate(corrupted_ram):
+        return False  # Failed: gate allowed RAM overflow!
+
+    # 4. Unmeasured telemetry violation
+    unmeasured = dict(valid_res)
+    unmeasured["_measured"] = False
+    if validate_h45_hil_gate(unmeasured):
+        return False  # Failed: gate allowed unmeasured telemetry!
+
     return True
+

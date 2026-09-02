@@ -26,3 +26,10 @@ lean_lib «FrustrationMonotonicity» where
 
 lean_lib «DynamicStability» where
   -- H24 Agentic runtime parameter bounds (TSK-62, Phase 6 — sorry stub, target Tier A)
+
+lean_lib «Aerospace» where
+  -- Aerospace DO-178C Level A Safety Invariants (Phase 11 PoC)
+
+lean_lib «Medical» where
+  -- Medical FDA Class III Hemodynamics Invariants (Phase 11 PoC)
+

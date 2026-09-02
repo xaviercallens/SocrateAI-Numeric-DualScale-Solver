@@ -129,10 +129,16 @@ def run_cryptographic_licensing_audit_lock() -> Dict[str, Any]:
 
 def negative_control_nc_p8_06() -> bool:
     """
-    NC-P8-06: Verifies that an expired, unsigned, or tampered license token
-    is deterministically rejected by the H50 gate.
+    NC-P8-06: Verifies that an expired, unsigned, or tampered license token,
+    or a falsified Merkle seal, is deterministically rejected by the authoritative H50 gate.
     """
+    from dualscale_solver.cert.audit_gate_enforcer import validate_h50_licensing_gate
+
     gate = EpistemicLicenseGate()
+    valid_res = run_cryptographic_licensing_audit_lock()
+    if not validate_h50_licensing_gate(valid_res):
+        return False
+
     valid_token = gate.issue_enterprise_token()
 
     # 1. Tampered payload violation
@@ -150,6 +156,18 @@ def negative_control_nc_p8_06() -> bool:
     # 3. Expired token violation
     expired_token = gate.issue_enterprise_token(valid_days=-10)
     if gate.verify_token(expired_token):
+        return False
+
+    # 4. Corrupted Merkle Root rejected by H50 gate
+    corrupted_merkle = dict(valid_res)
+    corrupted_merkle["merkle_root"] = "tampered_root_not_64_hex"
+    if validate_h50_licensing_gate(corrupted_merkle):
+        return False
+
+    # 5. Unverified token rejected by H50 gate
+    unverified_res = dict(valid_res)
+    unverified_res["token_verified"] = False
+    if validate_h50_licensing_gate(unverified_res):
         return False
 
     return True

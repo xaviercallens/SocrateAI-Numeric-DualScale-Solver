@@ -128,22 +128,42 @@ def run_enterprise_packaging_verification() -> Dict[str, Any]:
 
 def negative_control_nc_p8_05() -> bool:
     """
-    NC-P8-05: Verifies that missing C-ABI symbols or a bloated container image (> 250 MB)
-    is deterministically rejected by the H49 gate.
+    NC-P8-05: Verifies that missing C-ABI symbols, bloated container image (> 150 MB),
+    or missing C-ABI header is deterministically rejected by the authoritative H49 gate.
     """
+    from dualscale_solver.cert.audit_gate_enforcer import validate_h49_packaging_gate
+
     engine = EnterprisePackagingEngine()
     valid_res = engine.verify_distribution_package()
+    valid_res["status"] = "PASSED" if (valid_res["docker_size_pass"] and valid_res["abi_symbols_pass"]) else "FAILED"
+
+    # Ensure genuine baseline passes
+    if not validate_h49_packaging_gate(valid_res):
+        return False
 
     # 1. Missing C-ABI symbol violation
     corrupted_abi = dict(valid_res)
     corrupted_abi["missing_symbols_count"] = 2
-    if corrupted_abi["missing_symbols_count"] == 0:
-        return False
+    if validate_h49_packaging_gate(corrupted_abi):
+        return False  # Failed: gate accepted missing ABI symbols!
 
-    # 2. Bloated Docker container image violation (> 250 MB)
+    # 2. Bloated Docker container image violation (> 150 MB)
     corrupted_docker = dict(valid_res)
     corrupted_docker["docker_compressed_size_mb"] = 320.0
-    if corrupted_docker["docker_compressed_size_mb"] < 150.0:
-        return False
+    if validate_h49_packaging_gate(corrupted_docker):
+        return False  # Failed: gate accepted oversized Docker image!
+
+    # 3. Missing C-ABI header violation
+    missing_header = dict(valid_res)
+    missing_header["c_header_lines"] = 0
+    if validate_h49_packaging_gate(missing_header):
+        return False  # Failed: gate accepted missing C-ABI header!
+
+    # 4. Unmeasured telemetry violation
+    unmeasured = dict(valid_res)
+    unmeasured["_measured"] = False
+    if validate_h49_packaging_gate(unmeasured):
+        return False  # Failed: gate accepted unmeasured packaging record!
 
     return True
+

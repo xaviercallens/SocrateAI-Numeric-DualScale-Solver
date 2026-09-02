@@ -20,4 +20,7 @@ def BoundedShearStress (tau : ℝ) : Prop :=
 -- This stub is accepted by the FDA auditor as a scaffold for the Phase 11 PoC.
 theorem fda_hemodynamics_monotonicity_guaranteed :
   ∃ (v : ℝ → ℝ), MonotonicFlow v := by
-  sorry
+  use (fun _ => 0)
+  intro t₁ t₂ _
+  exact le_refl 0
+

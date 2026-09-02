@@ -148,28 +148,47 @@ def run_3d_tensor_fsi_simulation(grid_n: int = 32, n_steps: int = 25) -> Dict[st
 
 def negative_control_nc_p8_04() -> bool:
     """
-    NC-P8-04: Verifies that an uncoupled boundary stress jump (> 1e-3)
-    or kinematic velocity discontinuity is deterministically rejected by the H48 gate.
+    NC-P8-04: Verifies that an uncoupled boundary stress jump (> 1e-4),
+    kinematic velocity discontinuity, or coupling energy loss divergence is
+    deterministically rejected by the authoritative H48 gate.
     """
+    from dualscale_solver.cert.audit_gate_enforcer import validate_h48_fsi_gate
+
     coupler = TensorFsi3DCoupler()
     valid_res = coupler.simulate_coupled_fsi_tensor_step(n_steps=5)
+    valid_res["status"] = "PASSED" if (
+        valid_res["traction_balance_verified"]
+        and valid_res["kinematic_continuity_verified"]
+        and valid_res["coupling_loss_verified"]
+    ) else "FAILED"
 
-    # 1. Boundary traction jump violation (> 1e-3)
+    # Ensure genuine baseline passes
+    if not validate_h48_fsi_gate(valid_res):
+        return False
+
+    # 1. Boundary traction jump violation (> 1e-4)
     corrupted_traction = dict(valid_res)
     corrupted_traction["mean_traction_relative_error"] = 0.05  # 5% stress jump injected
-    if corrupted_traction["mean_traction_relative_error"] < 1e-4:
-        return False
+    if validate_h48_fsi_gate(corrupted_traction):
+        return False  # Failed: gate accepted uncoupled stress jump!
 
     # 2. Kinematic discontinuity violation (> 1e-6)
     corrupted_kinematic = dict(valid_res)
     corrupted_kinematic["max_kinematic_residual"] = 0.02
-    if corrupted_kinematic["max_kinematic_residual"] < 1e-6:
-        return False
+    if validate_h48_fsi_gate(corrupted_kinematic):
+        return False  # Failed: gate accepted kinematic velocity discontinuity!
 
     # 3. Energy divergence violation (> 2.0%)
     corrupted_loss = dict(valid_res)
     corrupted_loss["fsi_coupling_loss_pct"] = 8.5
-    if corrupted_loss["fsi_coupling_loss_pct"] < 2.0:
-        return False
+    if validate_h48_fsi_gate(corrupted_loss):
+        return False  # Failed: gate accepted energy divergence!
+
+    # 4. Unmeasured telemetry violation
+    unmeasured = dict(valid_res)
+    unmeasured["_measured"] = False
+    if validate_h48_fsi_gate(unmeasured):
+        return False  # Failed: gate accepted unmeasured FSI state!
 
     return True
+

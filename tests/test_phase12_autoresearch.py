@@ -327,3 +327,18 @@ def test_temperature_breaker_detection():
     assert "STUCK" in result.get("reasoning", "").upper() or "RADICAL" in result.get("reasoning", "").upper(), (
         f"Reasoning should mention stuck/radical but got: {result.get('reasoning', '')}"
     )
+
+
+def test_couette_spearman_sweep_n20():
+    """Verify that the 20-point Couette sweep evaluates with statistically significant rank correlation."""
+    from dualscale_solver.numeric.phase12_autoresearch_problems import couette_spearman_sweep
+
+    res = couette_spearman_sweep(n_points=20)
+    assert res["n_points"] == 20
+    assert len(res["rpms"]) == 20
+    assert len(res["tau_exact"]) == 20
+    assert len(res["tau_rom"]) == 20
+    assert res["spearman_rho"] > 0.90
+    assert res["statistically_significant"] is True
+    assert res["p_value"] < 0.05
+

@@ -647,3 +647,61 @@ def generate_phase12_certificate(
         schema_version="P12-v2",
         solver_commit=commit,
     )
+
+
+def couette_spearman_sweep(n_points: int = 20) -> Dict[str, Any]:
+    """
+    Computes exact Couette Wall Shear Stress (WSS) vs. dual-scale spectral ROM WSS
+    across an n_points RPM sweep (500 to 10,000 RPM) to audit directional rank
+    correlation and statistical significance (Spearman rho and p-value).
+
+    Parameters:
+        n_points (int): Number of RPM points to sweep (default 20).
+
+    Returns:
+        Dict[str, Any] containing:
+            - n_points (int)
+            - rpms (List[float])
+            - tau_exact (List[float])
+            - tau_rom (List[float])
+            - spearman_rho (float)
+            - p_value (float)
+            - statistically_significant (bool): True if p_value < 0.05
+    """
+    import scipy.stats as stats
+
+    R = 0.010       # Inner cylinder radius (m) = 10 mm
+    R_outer = 0.012 # Outer cylinder radius (m) = 12 mm (2 mm gap)
+    mu = 3.5e-3     # Blood dynamic viscosity (Pa·s)
+    C_geom = 2.82   # Geometry calibration constant
+    rpms = np.linspace(500, 10000, n_points)
+
+    tau_exact = []
+    tau_rom = []
+
+    for rpm in rpms:
+        omega = 2.0 * np.pi * rpm / 60.0
+        # Exact Couette solution: tau = mu * (omega * R) / (1 - (R / R_outer)^2)
+        t_ex = mu * (omega * R) / (1.0 - (R / R_outer)**2)
+        tau_exact.append(float(t_ex))
+
+        # Dual-scale ROM scaling with rotational velocity scale u0 = omega * R
+        u0 = omega * R
+        E = _spectral_rom_enstrophy(alpha_prime=0.5, u0_scale=float(u0))
+        t_rom = mu * C_geom * 1000.0 * (E ** 0.5)
+        tau_rom.append(float(t_rom))
+
+    res = stats.spearmanr(tau_exact, tau_rom)
+    rho = float(res.statistic)
+    p_val = float(res.pvalue)
+
+    return {
+        "n_points": int(n_points),
+        "rpms": [round(float(r), 1) for r in rpms],
+        "tau_exact": [round(float(t), 6) for t in tau_exact],
+        "tau_rom": [round(float(t), 3) for t in tau_rom],
+        "spearman_rho": round(rho, 4),
+        "p_value": float(p_val),
+        "statistically_significant": bool(p_val < 0.05),
+    }
+

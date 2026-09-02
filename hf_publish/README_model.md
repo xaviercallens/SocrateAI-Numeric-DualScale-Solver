@@ -39,13 +39,13 @@ LeanFlow is a **Dual-Scale Spectral Navier--Stokes Solver** with:
 
 | Problem | HF Dataset | Key Metric | Gain |
 |---------|-----------|------------|------|
-| Scramjet SBLI (H66) | PDEBench Mach-2 | Actuation: 0.8ms | **15×** speed |
+| Scramjet SBLI (H66) | erbacher/PDEBench-1D | Actuation: 0.8ms | **15×** speed |
 | Medical VAD (H67) | angioinsight/single-vessel-flow | WSS: 137.9 Pa | **47%** reduction |
-| Wind Farm (H68) | Synthetic NREL | Yield: +17.8% | **5.1×** |
-| BTMS Cooling (H69) | Synthetic fractal | Heat: +32.1% | **4×** |
+| Wind Farm (H68) | Synthetic NREL | Yield: +15.6% | **4.4×** |
+| BTMS Cooling (H69) | Synthetic fractal | Heat: +31.9% | **4.0×** |
 | Tokamak MHD (H70) | polymathic-ai/MHD_64 | Horizon: 16ms | **20×** |
 
-Certificate: `CERT-P12-AUTORESEARCH-8A30DE56EC20E6E0` | SHA-256: `8a30de56ec20e6e0...` | Commit: `4d82885aa49ebabf`
+Certificate: `CERT-P12-AUTORESEARCH-A5B9217C06F6C669` | SHA-256: `a5b9217c06f6c669...` | Commit: `3d4c8dad91b99d1c`
 
 ## Quick Start
 
@@ -103,7 +103,7 @@ Full 5-page LaTeX report v2.0 (revised per peer review): [leanflow_phase12_repor
   author  = {Xavier Callens},
   year    = {2026},
   month   = {September},
-  note    = {Enterprise Edition v2.0 (Revised per Peer Review), Phase 12, CERT-P12-AUTORESEARCH-F36322CED55DB91F},
+  note    = {Enterprise Edition v2.0 (Revised per Peer Review), Phase 12, CERT-P12-AUTORESEARCH-A5B9217C06F6C669},
   url     = {https://github.com/xaviercallens/SocrateAI-Numeric-DualScale-Solver}
 }
 ```

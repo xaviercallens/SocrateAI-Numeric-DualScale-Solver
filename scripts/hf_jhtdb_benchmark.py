@@ -42,10 +42,10 @@ from scipy import stats
 
 # ── Environment & paths ────────────────────────────────────────────────────────
 HF_TOKEN = os.environ.get("HF_TOKEN")
-if not HF_TOKEN:
-    print("[FATAL] HF_TOKEN environment variable not set.")
-    print("  Run:  export HF_TOKEN=<your_huggingface_token>")
-    sys.exit(1)
+if HF_TOKEN:
+    print("[✓] Using user-provided HF_TOKEN")
+else:
+    print("[i] HF_TOKEN not set — proceeding with local cache / anonymous access for public HuggingFace datasets")
 
 repo_root = Path(__file__).parent.parent
 sys.path.insert(0, str(repo_root / "src"))
@@ -90,7 +90,11 @@ def _import_h5():
 def download_hf_dataset() -> Path:
     """Download the JHTDB velocity HDF5 from HuggingFace (cached after first download)."""
     hf_hub_download, login = _import_hf()
-    login(token=HF_TOKEN, add_to_git_credential=False)
+    if HF_TOKEN:
+        try:
+            login(token=HF_TOKEN, add_to_git_credential=False)
+        except Exception as e:
+            print(f"[!] Warning during HF login: {e}")
 
     cached = hf_cache / HF_VELOCITY_FILE
     if cached.exists():

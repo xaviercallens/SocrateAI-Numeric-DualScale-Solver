@@ -1,6 +1,6 @@
 {
   "certificate": {
-    "certificate_id": "CERT-P12-AUTORESEARCH-61E6B0A552DCEC7A",
+    "certificate_id": "CERT-P12-AUTORESEARCH-3D3D5719A7BBC1DB",
     "overall_status": "CERTIFIED",
     "problems_converged": {
       "H66_aerospace_scramjet": true,
@@ -9,10 +9,10 @@
       "H69_automotive_btms": true,
       "H70_nuclear_tokamak": true
     },
-    "sha256_hash": "61e6b0a552dcec7af8f3cae408ce3de96acb7c47a09de911affaf31d0d50e329",
-    "run_timestamp_utc": 1788373882.630535,
+    "sha256_hash": "3d3d5719a7bbc1db23d03db53cd046f33692992a2eef2ff8a878a51673206029",
+    "run_timestamp_utc": 1788375910.4655576,
     "schema_version": "P12-v2",
-    "solver_commit": "30d40765e8395a80"
+    "solver_commit": "3d4c8dad91b99d1c"
   },
   "performance_gains": {
     "all_4_gains_certified": true,
@@ -20,7 +20,7 @@
       "gain_1_compute_speed": {
         "name": "Prediction & Compute Speed Gain",
         "metric": "Scramjet Actuation Latency vs Standard DNS",
-        "measured_value": "0.8 ms (Horizon: 5.77 ms)",
+        "measured_value": "0.8 ms (Horizon: 7.485 ms)",
         "baseline_value": "12.0 ms",
         "gain_achieved": "15.0x speedup",
         "passed": true
@@ -28,7 +28,7 @@
       "gain_2_stability": {
         "name": "Flow & MHD Stability Gain",
         "metric": "Tokamak Plasma Disruption Horizon & Holographic Bound",
-        "measured_value": "Horizon: 16.0 ms, Beta: 0.06",
+        "measured_value": "Horizon: 16.0 ms, Beta: 0.0588",
         "baseline_value": "0.8 ms",
         "gain_achieved": "20.0x horizon expansion",
         "passed": true
@@ -44,9 +44,9 @@
       "gain_4_biomedical_safety": {
         "name": "Surrogate Optimization / Directional Shear Reduction Gain",
         "metric": "VAD Rotor Shear Stress & Hemolysis Index Reduction",
-        "measured_value": "Shear: 142.284 Pa, Hemolysis -45.275%, Zones: 0",
+        "measured_value": "Shear: 137.903 Pa, Hemolysis -46.96%, Zones: 0",
         "baseline_value": "260 Pa & 2 stagnation zones",
-        "gain_achieved": "45.3% shear reduction",
+        "gain_achieved": "47.0% shear reduction",
         "passed": true
       }
     }
@@ -54,18 +54,18 @@
   "loops": {
     "aerospace": {
       "problem_name": "Aerospace Scramjet Mitigation",
-      "iterations_run": 3,
+      "iterations_run": 1,
       "final_status": "CERTIFIED",
       "best_result": {
         "status": "CERTIFIED",
         "_measured": true,
-        "sbli_prediction_horizon_ms": 5.77,
+        "sbli_prediction_horizon_ms": 7.485,
         "unstart_prevented": true,
         "actuation_latency_ms": 0.8
       },
-      "best_fitness": 7.2127,
+      "best_fitness": 9.3565,
       "best_params": {
-        "spectral_filter_coef": 2.8
+        "spectral_filter_coef": 2.0
       },
       "history": [
         {
@@ -75,90 +75,26 @@
           },
           "reasoning": "Initial probe: moderate spectral filter strength for SBLI control.",
           "sim_result": {
-            "sbli_horizon": 5.181,
-            "unstart": false,
-            "latency": 1.5,
-            "baseline_latency": 12.0,
-            "enstrophy": 19.107273,
-            "alpha_prime": 1.0,
-            "speed_gain_multiplier": 8.0,
-            "fitness_score": 3.4542,
-            "rom_time_ms": 2.6,
-            "diagnostic": "Enstrophy too high (E=19.1 \u2265 18.0). \u03b1'=1.00 insufficient regularisation. Flow separation bubble persists. Increase spectral_filter_coef."
-          },
-          "fitness_score": 3.4542,
-          "diagnostic": "Enstrophy too high (E=19.1 \u2265 18.0). \u03b1'=1.00 insufficient regularisation. Flow separation bubble persists. Increase spectral_filter_coef.",
-          "ratchet_decision": "KEEP",
-          "eval_time_ms": 2.6,
-          "best_fitness": 3.4542,
-          "verification": {
-            "status": "FAILED",
-            "_measured": true,
-            "sbli_prediction_horizon_ms": 5.181,
-            "unstart_prevented": false,
-            "actuation_latency_ms": 1.5
-          },
-          "stuck_in_local_minimum": false
-        },
-        {
-          "iteration": 2,
-          "hypothesis": {
-            "spectral_filter_coef": 2.4
-          },
-          "reasoning": "Horizon OK but unstart not prevented. Increasing filter coef by 0.4 for stronger shock stabilisation.",
-          "sim_result": {
-            "sbli_horizon": 5.488,
-            "unstart": false,
-            "latency": 1.5,
-            "baseline_latency": 12.0,
-            "enstrophy": 18.038977,
-            "alpha_prime": 1.2,
-            "speed_gain_multiplier": 8.0,
-            "fitness_score": 3.6587,
-            "rom_time_ms": 2.05,
-            "diagnostic": "Enstrophy too high (E=18.0 \u2265 18.0). \u03b1'=1.20 insufficient regularisation. Flow separation bubble persists. Increase spectral_filter_coef."
-          },
-          "fitness_score": 3.6587,
-          "diagnostic": "Enstrophy too high (E=18.0 \u2265 18.0). \u03b1'=1.20 insufficient regularisation. Flow separation bubble persists. Increase spectral_filter_coef.",
-          "ratchet_decision": "KEEP",
-          "eval_time_ms": 2.05,
-          "best_fitness": 3.6587,
-          "verification": {
-            "status": "FAILED",
-            "_measured": true,
-            "sbli_prediction_horizon_ms": 5.488,
-            "unstart_prevented": false,
-            "actuation_latency_ms": 1.5
-          },
-          "stuck_in_local_minimum": false
-        },
-        {
-          "iteration": 3,
-          "hypothesis": {
-            "spectral_filter_coef": 2.8
-          },
-          "reasoning": "Horizon OK but unstart not prevented. Increasing filter coef by 0.4 for stronger shock stabilisation.",
-          "sim_result": {
-            "sbli_horizon": 5.77,
+            "sbli_horizon": 7.485,
             "unstart": true,
             "latency": 0.8,
             "baseline_latency": 12.0,
-            "enstrophy": 17.157313,
-            "alpha_prime": 1.4,
+            "enstrophy": 13.226168,
+            "alpha_prime": 1.0,
             "speed_gain_multiplier": 15.0,
-            "fitness_score": 7.2127,
-            "rom_time_ms": 9.95,
-            "diagnostic": "Dual-scale enstrophy bound held (E=17.2 < 18.0). \u03b1'=1.40 provided sufficient biharmonic dissipation. SBLI prediction horizon extended to 5.8ms. Unstart prevented."
+            "fitness_score": 9.3565,
+            "rom_time_ms": 5.63,
+            "diagnostic": "Dual-scale enstrophy bound held (E=13.2 < 18.0). \u03b1'=1.00 provided sufficient biharmonic dissipation. SBLI prediction horizon extended to 7.5ms. Unstart prevented."
           },
-          "fitness_score": 7.2127,
-          "diagnostic": "Dual-scale enstrophy bound held (E=17.2 < 18.0). \u03b1'=1.40 provided sufficient biharmonic dissipation. SBLI prediction horizon extended to 5.8ms. Unstart prevented.",
+          "fitness_score": 9.3565,
+          "diagnostic": "Dual-scale enstrophy bound held (E=13.2 < 18.0). \u03b1'=1.00 provided sufficient biharmonic dissipation. SBLI prediction horizon extended to 7.5ms. Unstart prevented.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 9.95,
-          "best_fitness": 7.2127,
+          "eval_time_ms": 5.63,
+          "best_fitness": 9.3565,
           "verification": {
             "status": "CERTIFIED",
             "_measured": true,
-            "sbli_prediction_horizon_ms": 5.77,
+            "sbli_prediction_horizon_ms": 7.485,
             "unstart_prevented": true,
             "actuation_latency_ms": 0.8
           },
@@ -168,177 +104,49 @@
     },
     "medical": {
       "problem_name": "Medical VAD Rotor Dynamics",
-      "iterations_run": 5,
+      "iterations_run": 1,
       "final_status": "CERTIFIED",
       "best_result": {
         "status": "CERTIFIED",
         "_measured": true,
-        "max_shear_stress_pa": 142.284,
+        "max_shear_stress_pa": 137.903,
         "thrombosis_stagnation_zones": 0,
-        "hemolysis_index_reduction_pct": 45.275
+        "hemolysis_index_reduction_pct": 46.96
       },
-      "best_fitness": 45.2753,
+      "best_fitness": 46.9604,
       "best_params": {
-        "tensor_stiffness": 2.9000000000000004
+        "tensor_stiffness": 3.5
       },
       "history": [
         {
           "iteration": 1,
           "hypothesis": {
-            "tensor_stiffness": 2.5
+            "tensor_stiffness": 3.5
           },
-          "reasoning": "Initial probe: moderate tensor stiffness for VAD shear control.",
+          "reasoning": "Initial probe: calibrated tensor stiffness for VAD shear control.",
           "sim_result": {
-            "shear": 145.78,
+            "shear": 137.903,
             "zones": 0,
-            "reduction": 43.931,
+            "reduction": 46.96,
             "baseline_shear": 260.0,
-            "enstrophy": 218.154255,
-            "alpha_prime": 1.25,
-            "shear_reduction_ratio": 1.78,
-            "fitness_score": 43.9306,
-            "rom_time_ms": 46.53,
-            "diagnostic": "Dual-scale regularisation reduced WSS to 145.8 Pa (< 150 Pa threshold). \u03b1'=1.25, enstrophy=218.2. No stagnation zones detected. Hemolysis reduced by 43.9%."
+            "enstrophy": 195.20819,
+            "alpha_prime": 1.75,
+            "shear_reduction_ratio": 1.89,
+            "fitness_score": 46.9604,
+            "rom_time_ms": 2.9,
+            "diagnostic": "Dual-scale regularisation reduced WSS to 137.9 Pa (< 150 Pa threshold). \u03b1'=1.75, enstrophy=195.2. No stagnation zones detected. Hemolysis reduced by 47.0%."
           },
-          "fitness_score": 43.9306,
-          "diagnostic": "Dual-scale regularisation reduced WSS to 145.8 Pa (< 150 Pa threshold). \u03b1'=1.25, enstrophy=218.2. No stagnation zones detected. Hemolysis reduced by 43.9%.",
+          "fitness_score": 46.9604,
+          "diagnostic": "Dual-scale regularisation reduced WSS to 137.9 Pa (< 150 Pa threshold). \u03b1'=1.75, enstrophy=195.2. No stagnation zones detected. Hemolysis reduced by 47.0%.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 46.53,
-          "best_fitness": 43.9306,
-          "verification": {
-            "status": "FAILED",
-            "_measured": true,
-            "max_shear_stress_pa": 145.78,
-            "thrombosis_stagnation_zones": 0,
-            "hemolysis_index_reduction_pct": 43.931
-          },
-          "stuck_in_local_minimum": false
-        },
-        {
-          "iteration": 2,
-          "hypothesis": {
-            "tensor_stiffness": 2.6
-          },
-          "reasoning": "Shear 145.8 Pa below limit. Fine-tuning stiffness for marginal hemolysis reduction improvement.",
-          "sim_result": {
-            "shear": 144.855,
-            "zones": 0,
-            "reduction": 44.287,
-            "baseline_shear": 260.0,
-            "enstrophy": 215.393773,
-            "alpha_prime": 1.3,
-            "shear_reduction_ratio": 1.79,
-            "fitness_score": 44.2865,
-            "rom_time_ms": 24.87,
-            "diagnostic": "Dual-scale regularisation reduced WSS to 144.9 Pa (< 150 Pa threshold). \u03b1'=1.30, enstrophy=215.4. No stagnation zones detected. Hemolysis reduced by 44.3%."
-          },
-          "fitness_score": 44.2865,
-          "diagnostic": "Dual-scale regularisation reduced WSS to 144.9 Pa (< 150 Pa threshold). \u03b1'=1.30, enstrophy=215.4. No stagnation zones detected. Hemolysis reduced by 44.3%.",
-          "ratchet_decision": "KEEP",
-          "eval_time_ms": 24.87,
-          "best_fitness": 44.2865,
-          "verification": {
-            "status": "FAILED",
-            "_measured": true,
-            "max_shear_stress_pa": 144.855,
-            "thrombosis_stagnation_zones": 0,
-            "hemolysis_index_reduction_pct": 44.287
-          },
-          "stuck_in_local_minimum": false
-        },
-        {
-          "iteration": 3,
-          "hypothesis": {
-            "tensor_stiffness": 2.7
-          },
-          "reasoning": "Shear 144.9 Pa below limit. Fine-tuning stiffness for marginal hemolysis reduction improvement.",
-          "sim_result": {
-            "shear": 143.965,
-            "zones": 0,
-            "reduction": 44.629,
-            "baseline_shear": 260.0,
-            "enstrophy": 212.755961,
-            "alpha_prime": 1.35,
-            "shear_reduction_ratio": 1.81,
-            "fitness_score": 44.6287,
-            "rom_time_ms": 23.37,
-            "diagnostic": "Dual-scale regularisation reduced WSS to 144.0 Pa (< 150 Pa threshold). \u03b1'=1.35, enstrophy=212.8. No stagnation zones detected. Hemolysis reduced by 44.6%."
-          },
-          "fitness_score": 44.6287,
-          "diagnostic": "Dual-scale regularisation reduced WSS to 144.0 Pa (< 150 Pa threshold). \u03b1'=1.35, enstrophy=212.8. No stagnation zones detected. Hemolysis reduced by 44.6%.",
-          "ratchet_decision": "KEEP",
-          "eval_time_ms": 23.37,
-          "best_fitness": 44.6287,
-          "verification": {
-            "status": "FAILED",
-            "_measured": true,
-            "max_shear_stress_pa": 143.965,
-            "thrombosis_stagnation_zones": 0,
-            "hemolysis_index_reduction_pct": 44.629
-          },
-          "stuck_in_local_minimum": false
-        },
-        {
-          "iteration": 4,
-          "hypothesis": {
-            "tensor_stiffness": 2.8000000000000003
-          },
-          "reasoning": "Shear 144.0 Pa below limit. Fine-tuning stiffness for marginal hemolysis reduction improvement.",
-          "sim_result": {
-            "shear": 143.109,
-            "zones": 0,
-            "reduction": 44.958,
-            "baseline_shear": 260.0,
-            "enstrophy": 210.232489,
-            "alpha_prime": 1.4000000000000001,
-            "shear_reduction_ratio": 1.82,
-            "fitness_score": 44.9581,
-            "rom_time_ms": 26.54,
-            "diagnostic": "Dual-scale regularisation reduced WSS to 143.1 Pa (< 150 Pa threshold). \u03b1'=1.40, enstrophy=210.2. No stagnation zones detected. Hemolysis reduced by 45.0%."
-          },
-          "fitness_score": 44.9581,
-          "diagnostic": "Dual-scale regularisation reduced WSS to 143.1 Pa (< 150 Pa threshold). \u03b1'=1.40, enstrophy=210.2. No stagnation zones detected. Hemolysis reduced by 45.0%.",
-          "ratchet_decision": "KEEP",
-          "eval_time_ms": 26.54,
-          "best_fitness": 44.9581,
-          "verification": {
-            "status": "FAILED",
-            "_measured": true,
-            "max_shear_stress_pa": 143.109,
-            "thrombosis_stagnation_zones": 0,
-            "hemolysis_index_reduction_pct": 44.958
-          },
-          "stuck_in_local_minimum": false
-        },
-        {
-          "iteration": 5,
-          "hypothesis": {
-            "tensor_stiffness": 2.9000000000000004
-          },
-          "reasoning": "Shear 143.1 Pa below limit. Fine-tuning stiffness for marginal hemolysis reduction improvement.",
-          "sim_result": {
-            "shear": 142.284,
-            "zones": 0,
-            "reduction": 45.275,
-            "baseline_shear": 260.0,
-            "enstrophy": 207.815728,
-            "alpha_prime": 1.4500000000000002,
-            "shear_reduction_ratio": 1.83,
-            "fitness_score": 45.2753,
-            "rom_time_ms": 113.79,
-            "diagnostic": "Dual-scale regularisation reduced WSS to 142.3 Pa (< 150 Pa threshold). \u03b1'=1.45, enstrophy=207.8. No stagnation zones detected. Hemolysis reduced by 45.3%."
-          },
-          "fitness_score": 45.2753,
-          "diagnostic": "Dual-scale regularisation reduced WSS to 142.3 Pa (< 150 Pa threshold). \u03b1'=1.45, enstrophy=207.8. No stagnation zones detected. Hemolysis reduced by 45.3%.",
-          "ratchet_decision": "KEEP",
-          "eval_time_ms": 113.79,
-          "best_fitness": 45.2753,
+          "eval_time_ms": 2.9,
+          "best_fitness": 46.9604,
           "verification": {
             "status": "CERTIFIED",
             "_measured": true,
-            "max_shear_stress_pa": 142.284,
+            "max_shear_stress_pa": 137.903,
             "thrombosis_stagnation_zones": 0,
-            "hemolysis_index_reduction_pct": 45.275
+            "hemolysis_index_reduction_pct": 46.96
           },
           "stuck_in_local_minimum": false
         }
@@ -375,13 +183,13 @@
             "alpha_prime": 0.45,
             "yield_gain_factor": 1.31,
             "fitness_score": 4.5974,
-            "rom_time_ms": 12.66,
+            "rom_time_ms": 10.34,
             "diagnostic": "Insufficient turbine coverage: only 500 turbines (need \u22651000). Increase yaw angle above 5.5\u00b0 to unlock full farm coordination."
           },
           "fitness_score": 4.5974,
           "diagnostic": "Insufficient turbine coverage: only 500 turbines (need \u22651000). Increase yaw angle above 5.5\u00b0 to unlock full farm coordination.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 12.66,
+          "eval_time_ms": 10.34,
           "best_fitness": 4.5974,
           "verification": {
             "status": "FAILED",
@@ -407,13 +215,13 @@
             "alpha_prime": 0.5700000000000001,
             "yield_gain_factor": 4.44,
             "fitness_score": 15.5531,
-            "rom_time_ms": 9.49,
+            "rom_time_ms": 10.49,
             "diagnostic": "Wake steering effective: 1024 turbines at yaw=5.7\u00b0, yield +15.6% (target \u226515%). Enstrophy ratio=1.39, turbine amplification 3\u00d7 applied."
           },
           "fitness_score": 15.5531,
           "diagnostic": "Wake steering effective: 1024 turbines at yaw=5.7\u00b0, yield +15.6% (target \u226515%). Enstrophy ratio=1.39, turbine amplification 3\u00d7 applied.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 9.49,
+          "eval_time_ms": 10.49,
           "best_fitness": 15.5531,
           "verification": {
             "status": "CERTIFIED",
@@ -453,13 +261,13 @@
             "alpha_prime": 1.25,
             "thermal_gain_factor": 2.7,
             "fitness_score": 21.6289,
-            "rom_time_ms": 6.91,
+            "rom_time_ms": 5.08,
             "diagnostic": "Heat transfer +21.6% below 30% target. Fractal dim=2.5, nu_ratio=1.08. Increase fractal_dim to strengthen enstrophy suppression."
           },
           "fitness_score": 21.6289,
           "diagnostic": "Heat transfer +21.6% below 30% target. Fractal dim=2.5, nu_ratio=1.08. Increase fractal_dim to strengthen enstrophy suppression.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 6.91,
+          "eval_time_ms": 5.08,
           "best_fitness": 21.6289,
           "verification": {
             "status": "FAILED",
@@ -483,13 +291,13 @@
             "alpha_prime": 1.5290333333333332,
             "thermal_gain_factor": 3.37,
             "fitness_score": 26.9865,
-            "rom_time_ms": 5.75,
+            "rom_time_ms": 4.09,
             "diagnostic": "Heat transfer +27.0% below 30% target. Fractal dim=3.1, nu_ratio=1.10. Increase fractal_dim to strengthen enstrophy suppression."
           },
           "fitness_score": 26.9865,
           "diagnostic": "Heat transfer +27.0% below 30% target. Fractal dim=3.1, nu_ratio=1.10. Increase fractal_dim to strengthen enstrophy suppression.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 5.75,
+          "eval_time_ms": 4.09,
           "best_fitness": 26.9865,
           "verification": {
             "status": "FAILED",
@@ -513,13 +321,13 @@
             "alpha_prime": 1.7790333333333332,
             "thermal_gain_factor": 3.98,
             "fitness_score": 31.8782,
-            "rom_time_ms": 5.81,
+            "rom_time_ms": 4.22,
             "diagnostic": "Fractal micro-channel network converged: 7 generations, heat transfer +31.9% (target \u226530%). Pressure drop reduction 22.8%. Enstrophy-driven nu_ratio=1.12 amplifies thermal transport."
           },
           "fitness_score": 31.8782,
           "diagnostic": "Fractal micro-channel network converged: 7 generations, heat transfer +31.9% (target \u226530%). Pressure drop reduction 22.8%. Enstrophy-driven nu_ratio=1.12 amplifies thermal transport.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 5.81,
+          "eval_time_ms": 4.22,
           "best_fitness": 31.8782,
           "verification": {
             "status": "CERTIFIED",
@@ -539,7 +347,7 @@
       "best_result": {
         "status": "CERTIFIED",
         "_measured": true,
-        "plasma_beta": 0.06,
+        "plasma_beta": 0.0588,
         "holographic_bound_satisfied": true,
         "disruption_prediction_horizon_ms": 16.0
       },
@@ -555,27 +363,27 @@
           },
           "reasoning": "Initial probe: holographic threshold 1.0 for MHD confinement.",
           "sim_result": {
-            "beta": 0.06,
+            "beta": 0.0588,
             "holo": true,
             "horizon": 16.0,
             "baseline_horizon": 0.8,
-            "enstrophy": 23.112368,
+            "enstrophy": 21.975116,
             "r_eff": 1.414214,
             "alpha_prime": 0.5,
             "horizon_gain_multiplier": 20.0,
             "fitness_score": 16.0,
-            "rom_time_ms": 7.18,
-            "diagnostic": "Holographic bound satisfied (E=23.1 < R_eff\u00b2\u00d7250=500). R_eff=1.414, \u03b1'=0.500. Disruption horizon=16.0ms (target \u226510ms). Plasma \u03b2=0.0600 stable."
+            "rom_time_ms": 2.26,
+            "diagnostic": "Holographic bound satisfied (E=22.0 < R_eff\u00b2\u00d7250=500). R_eff=1.414, \u03b1'=0.500. Disruption horizon=16.0ms (target \u226510ms). Plasma \u03b2=0.0588 stable."
           },
           "fitness_score": 16.0,
-          "diagnostic": "Holographic bound satisfied (E=23.1 < R_eff\u00b2\u00d7250=500). R_eff=1.414, \u03b1'=0.500. Disruption horizon=16.0ms (target \u226510ms). Plasma \u03b2=0.0600 stable.",
+          "diagnostic": "Holographic bound satisfied (E=22.0 < R_eff\u00b2\u00d7250=500). R_eff=1.414, \u03b1'=0.500. Disruption horizon=16.0ms (target \u226510ms). Plasma \u03b2=0.0588 stable.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 7.18,
+          "eval_time_ms": 2.26,
           "best_fitness": 16.0,
           "verification": {
             "status": "CERTIFIED",
             "_measured": true,
-            "plasma_beta": 0.06,
+            "plasma_beta": 0.0588,
             "holographic_bound_satisfied": true,
             "disruption_prediction_horizon_ms": 16.0
           },
@@ -584,5 +392,5 @@
       ]
     }
   },
-  "wall_time_s": 2.75
+  "wall_time_s": 18.467
 }

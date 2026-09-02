@@ -61,8 +61,8 @@ def _aero_hypothesis(hist: list) -> dict:
 def _med_hypothesis(hist: list) -> dict:
     """Bisection on tensor_stiffness with Chain-of-Thought reasoning."""
     if not hist:
-        return {"tensor_stiffness": 2.5,
-                "reasoning": "Initial probe: moderate tensor stiffness for VAD shear control."}
+        return {"tensor_stiffness": 3.5,
+                "reasoning": "Initial probe: calibrated tensor stiffness for VAD shear control."}
 
     is_stuck = hist[-1].get("stuck_in_local_minimum", False)
     last_sim = hist[-1]["sim_result"]

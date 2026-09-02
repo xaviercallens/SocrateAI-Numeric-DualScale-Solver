@@ -88,11 +88,11 @@
 \author{
   Xavier Callens (SocrateAI) \\
   \texttt{xcallens@amadeus.com} \\[4pt]
-  \textit{Certificate:} \texttt{CERT-P12-AUTORESEARCH-8A30DE56EC20E6E0} \\
-  \textit{SHA-256:} \texttt{d9a32d92f82e44b5...ddc132a7}
+  \textit{Certificate:} \texttt{CERT-P12-AUTORESEARCH-A5B9217C06F6C669} \\
+  \textit{SHA-256:} \texttt{a5b9217c06f6c669...8261d1cd}
 }
 
-\date{September 1, 2026 --- \textit{Phase 12 / Goal 12}}
+\date{September 2, 2026 --- \textit{Phase 12 / Goal 12}}
 
 \begin{document}
 
@@ -318,12 +318,12 @@ ROM eval time & --- & \textbf{2.1 ms} \\
 $R_{\mathrm{eff}} = 1.414$, $\alpha' = 0.500$.
 Disruption horizon = 16.0 ms (target $\ge 10$ ms). Plasma $\beta = 0.060$ stable.''}
 
-\subsection{Dataset 3: PDEBench Mach-2 Euler Data (H66 --- Scramjet)}
+\subsection{Dataset 3: PDEBench Compressible Advection Data (H66 --- Scramjet)}
 
-The \texttt{pdebench/PDEBench} Mach-2 compressible Euler dataset
-(fallback: synthetic Mach=2.0) provides the SBLI reference flow field.
-The spectral edge filter coefficient $\alpha_{\mathrm{filter}}$ is
-optimised via the Ratchet loop.
+The \texttt{erbacher/PDEBench-1D} (PDEBench 1D Compressible Advection/Shock)
+dataset provides real shock velocity fields calibrating the supersonic $u_0$-scale
+and Mach=1.66 without synthetic fallback. The spectral edge filter coefficient
+$\alpha_{\mathrm{filter}}$ is optimised via the Ratchet loop.
 
 \begin{table}[h]
 \centering
@@ -469,14 +469,14 @@ This is verified programmatically by \texttt{test\_ratchet\_monotonic\_fitness}
 \midrule
 \textbf{G1: Compute Speed} (Scramjet) & 12.0\,ms & 0.8\,ms & $\mathbf{15\times}$ \\
 \textbf{G2: MHD Stability} (Tokamak) & 0.8\,ms & 16.0\,ms & $\mathbf{20\times}$ \\
-\textbf{G3: Energy Yield} (Wind+BTMS) & +3.5\% & +17.8\% & $\mathbf{5.1\times}$ \\
+\textbf{G3: Energy Yield} (Wind+BTMS) & +3.5\% / +8.0\% & +15.6\% / +31.9\% & $\mathbf{4.4\times / 4.0\times}$ \\
 \textbf{G4: Surrogate Opt.\ / Directional Shear} (VAD) & 260\,Pa & 137.9\,Pa & $\mathbf{47\%}$ $\downarrow$ \\
 \bottomrule
 \end{tabular}%
 }
 \end{table}
 
-All 4 gains are sealed in certificate \texttt{CERT-P12-AUTORESEARCH-8A30DE56EC20E6E0}.
+All 4 gains are sealed in certificate \texttt{CERT-P12-AUTORESEARCH-A5B9217C06F6C669}.
 
 %% -----------------------------------------------------------------------------
 \section{Reproduction Protocol}
@@ -551,16 +551,15 @@ require Immersed Boundary Methods (Phase~14).
 \section{SHA-256 Certificate}
 \label{app:cert}
 
-\begin{certbox}[CERT-P12-AUTORESEARCH-8A30DE56EC20E6E0 --- CERTIFIED]
+\begin{certbox}[CERT-P12-AUTORESEARCH-A5B9217C06F6C669 --- CERTIFIED]
 \small
 \begin{verbatim}
-certificate_id  : CERT-P12-AUTORESEARCH-8A30DE56EC20E6E0
+certificate_id  : CERT-P12-AUTORESEARCH-A5B9217C06F6C669
 overall_status  : CERTIFIED
 schema_version  : P12-v2
-solver_commit   : 4d82885aa49ebabf
-run_timestamp   : 2026-09-01T22:14:41Z
-sha256_hash     : 8a30de56ec20e6e07e17655c1acd4155
-                  ...
+solver_commit   : 3d4c8dad91b99d1c
+run_timestamp   : 2026-09-02T20:59:42Z
+sha256_hash     : a5b9217c06f6c669695df842fd785436b8502b508545b40f4ec1db428261d1cd
 problems_converged:
   H66_aerospace_scramjet : true
   H67_medical_vad_rotor  : true

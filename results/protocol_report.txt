@@ -1,11 +1,11 @@
 ============================================================
 LEANFLOW DUALSCALE — REPRODUCTION PROTOCOL REPORT v2.0
-Timestamp: 2026-08-31T07:07:17.817695+00:00
+Timestamp: 2026-09-02T18:24:20.108358+00:00
 Platform:  Linux-6.8.0-138-generic-x86_64-with-glibc2.39
-Elapsed:   14.8s
+Elapsed:   38.1s
 ============================================================
-Certificate ID: CERT-P5-WF-R1-336D22D8DEF9ED2B
-SHA-256:        336d22d8def9ed2b6b354b137d1633d3227024c7d0fb35f9d34afdd1807657c5
+Certificate ID: CERT-P5-WF-R1-0335D7B8C55EF049
+SHA-256:        0335d7b8c55ef0490c4103b05575c65c7ae941907897a7740c42729dd74e9d0f
 Status:         CERTIFIED
 Gates:          11/11
 
@@ -28,7 +28,7 @@ KEY METRICS:
   TGV analytical match: PR2-A verified
   Biharmonic bridge:    PR2-B verified
   Frustration D(M):     H19 monotone
-  Throughput:           39456.4 steps/s
+  Throughput:           37184.8 steps/s
   Embedded RAM:         2624 bytes
 
 FILES:

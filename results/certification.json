@@ -1,8 +1,8 @@
 {
-  "cert_id": "CERT-P5-WF-R1-336D22D8DEF9ED2B",
-  "sha256": "336d22d8def9ed2b6b354b137d1633d3227024c7d0fb35f9d34afdd1807657c5",
+  "cert_id": "CERT-P5-WF-R1-0335D7B8C55EF049",
+  "sha256": "0335d7b8c55ef0490c4103b05575c65c7ae941907897a7740c42729dd74e9d0f",
   "protocol_version": "2.0",
-  "timestamp_utc": "2026-08-31T07:07:17.817695+00:00",
+  "timestamp_utc": "2026-09-02T18:24:20.108358+00:00",
   "gates": {
     "H1_Lean4_ZeroSorry": true,
     "H1_LakeBuildPass": true,

@@ -1,6 +1,6 @@
 {
   "certificate": {
-    "certificate_id": "CERT-P12-AUTORESEARCH-D515DF46AB38755A",
+    "certificate_id": "CERT-P12-AUTORESEARCH-61E6B0A552DCEC7A",
     "overall_status": "CERTIFIED",
     "problems_converged": {
       "H66_aerospace_scramjet": true,
@@ -9,10 +9,10 @@
       "H69_automotive_btms": true,
       "H70_nuclear_tokamak": true
     },
-    "sha256_hash": "d515df46ab38755acef2878174397fe3737b62c0af2ad56575fdf98214e19db7",
-    "run_timestamp_utc": 1788371596.9908383,
+    "sha256_hash": "61e6b0a552dcec7af8f3cae408ce3de96acb7c47a09de911affaf31d0d50e329",
+    "run_timestamp_utc": 1788373882.630535,
     "schema_version": "P12-v2",
-    "solver_commit": "4587fc78dbeef9c9"
+    "solver_commit": "30d40765e8395a80"
   },
   "performance_gains": {
     "all_4_gains_certified": true,
@@ -83,12 +83,13 @@
             "alpha_prime": 1.0,
             "speed_gain_multiplier": 8.0,
             "fitness_score": 3.4542,
+            "rom_time_ms": 2.6,
             "diagnostic": "Enstrophy too high (E=19.1 \u2265 18.0). \u03b1'=1.00 insufficient regularisation. Flow separation bubble persists. Increase spectral_filter_coef."
           },
           "fitness_score": 3.4542,
           "diagnostic": "Enstrophy too high (E=19.1 \u2265 18.0). \u03b1'=1.00 insufficient regularisation. Flow separation bubble persists. Increase spectral_filter_coef.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 193.3,
+          "eval_time_ms": 2.6,
           "best_fitness": 3.4542,
           "verification": {
             "status": "FAILED",
@@ -114,12 +115,13 @@
             "alpha_prime": 1.2,
             "speed_gain_multiplier": 8.0,
             "fitness_score": 3.6587,
+            "rom_time_ms": 2.05,
             "diagnostic": "Enstrophy too high (E=18.0 \u2265 18.0). \u03b1'=1.20 insufficient regularisation. Flow separation bubble persists. Increase spectral_filter_coef."
           },
           "fitness_score": 3.6587,
           "diagnostic": "Enstrophy too high (E=18.0 \u2265 18.0). \u03b1'=1.20 insufficient regularisation. Flow separation bubble persists. Increase spectral_filter_coef.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 133.08,
+          "eval_time_ms": 2.05,
           "best_fitness": 3.6587,
           "verification": {
             "status": "FAILED",
@@ -145,12 +147,13 @@
             "alpha_prime": 1.4,
             "speed_gain_multiplier": 15.0,
             "fitness_score": 7.2127,
+            "rom_time_ms": 9.95,
             "diagnostic": "Dual-scale enstrophy bound held (E=17.2 < 18.0). \u03b1'=1.40 provided sufficient biharmonic dissipation. SBLI prediction horizon extended to 5.8ms. Unstart prevented."
           },
           "fitness_score": 7.2127,
           "diagnostic": "Dual-scale enstrophy bound held (E=17.2 < 18.0). \u03b1'=1.40 provided sufficient biharmonic dissipation. SBLI prediction horizon extended to 5.8ms. Unstart prevented.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 120.11,
+          "eval_time_ms": 9.95,
           "best_fitness": 7.2127,
           "verification": {
             "status": "CERTIFIED",
@@ -194,12 +197,13 @@
             "alpha_prime": 1.25,
             "shear_reduction_ratio": 1.78,
             "fitness_score": 43.9306,
+            "rom_time_ms": 46.53,
             "diagnostic": "Dual-scale regularisation reduced WSS to 145.8 Pa (< 150 Pa threshold). \u03b1'=1.25, enstrophy=218.2. No stagnation zones detected. Hemolysis reduced by 43.9%."
           },
           "fitness_score": 43.9306,
           "diagnostic": "Dual-scale regularisation reduced WSS to 145.8 Pa (< 150 Pa threshold). \u03b1'=1.25, enstrophy=218.2. No stagnation zones detected. Hemolysis reduced by 43.9%.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 2536.39,
+          "eval_time_ms": 46.53,
           "best_fitness": 43.9306,
           "verification": {
             "status": "FAILED",
@@ -225,12 +229,13 @@
             "alpha_prime": 1.3,
             "shear_reduction_ratio": 1.79,
             "fitness_score": 44.2865,
+            "rom_time_ms": 24.87,
             "diagnostic": "Dual-scale regularisation reduced WSS to 144.9 Pa (< 150 Pa threshold). \u03b1'=1.30, enstrophy=215.4. No stagnation zones detected. Hemolysis reduced by 44.3%."
           },
           "fitness_score": 44.2865,
           "diagnostic": "Dual-scale regularisation reduced WSS to 144.9 Pa (< 150 Pa threshold). \u03b1'=1.30, enstrophy=215.4. No stagnation zones detected. Hemolysis reduced by 44.3%.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 2509.69,
+          "eval_time_ms": 24.87,
           "best_fitness": 44.2865,
           "verification": {
             "status": "FAILED",
@@ -256,12 +261,13 @@
             "alpha_prime": 1.35,
             "shear_reduction_ratio": 1.81,
             "fitness_score": 44.6287,
+            "rom_time_ms": 23.37,
             "diagnostic": "Dual-scale regularisation reduced WSS to 144.0 Pa (< 150 Pa threshold). \u03b1'=1.35, enstrophy=212.8. No stagnation zones detected. Hemolysis reduced by 44.6%."
           },
           "fitness_score": 44.6287,
           "diagnostic": "Dual-scale regularisation reduced WSS to 144.0 Pa (< 150 Pa threshold). \u03b1'=1.35, enstrophy=212.8. No stagnation zones detected. Hemolysis reduced by 44.6%.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 2508.11,
+          "eval_time_ms": 23.37,
           "best_fitness": 44.6287,
           "verification": {
             "status": "FAILED",
@@ -287,12 +293,13 @@
             "alpha_prime": 1.4000000000000001,
             "shear_reduction_ratio": 1.82,
             "fitness_score": 44.9581,
+            "rom_time_ms": 26.54,
             "diagnostic": "Dual-scale regularisation reduced WSS to 143.1 Pa (< 150 Pa threshold). \u03b1'=1.40, enstrophy=210.2. No stagnation zones detected. Hemolysis reduced by 45.0%."
           },
           "fitness_score": 44.9581,
           "diagnostic": "Dual-scale regularisation reduced WSS to 143.1 Pa (< 150 Pa threshold). \u03b1'=1.40, enstrophy=210.2. No stagnation zones detected. Hemolysis reduced by 45.0%.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 2509.99,
+          "eval_time_ms": 26.54,
           "best_fitness": 44.9581,
           "verification": {
             "status": "FAILED",
@@ -318,12 +325,13 @@
             "alpha_prime": 1.4500000000000002,
             "shear_reduction_ratio": 1.83,
             "fitness_score": 45.2753,
+            "rom_time_ms": 113.79,
             "diagnostic": "Dual-scale regularisation reduced WSS to 142.3 Pa (< 150 Pa threshold). \u03b1'=1.45, enstrophy=207.8. No stagnation zones detected. Hemolysis reduced by 45.3%."
           },
           "fitness_score": 45.2753,
           "diagnostic": "Dual-scale regularisation reduced WSS to 142.3 Pa (< 150 Pa threshold). \u03b1'=1.45, enstrophy=207.8. No stagnation zones detected. Hemolysis reduced by 45.3%.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 2550.64,
+          "eval_time_ms": 113.79,
           "best_fitness": 45.2753,
           "verification": {
             "status": "CERTIFIED",
@@ -367,12 +375,13 @@
             "alpha_prime": 0.45,
             "yield_gain_factor": 1.31,
             "fitness_score": 4.5974,
+            "rom_time_ms": 12.66,
             "diagnostic": "Insufficient turbine coverage: only 500 turbines (need \u22651000). Increase yaw angle above 5.5\u00b0 to unlock full farm coordination."
           },
           "fitness_score": 4.5974,
           "diagnostic": "Insufficient turbine coverage: only 500 turbines (need \u22651000). Increase yaw angle above 5.5\u00b0 to unlock full farm coordination.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 6.46,
+          "eval_time_ms": 12.66,
           "best_fitness": 4.5974,
           "verification": {
             "status": "FAILED",
@@ -398,12 +407,13 @@
             "alpha_prime": 0.5700000000000001,
             "yield_gain_factor": 4.44,
             "fitness_score": 15.5531,
+            "rom_time_ms": 9.49,
             "diagnostic": "Wake steering effective: 1024 turbines at yaw=5.7\u00b0, yield +15.6% (target \u226515%). Enstrophy ratio=1.39, turbine amplification 3\u00d7 applied."
           },
           "fitness_score": 15.5531,
           "diagnostic": "Wake steering effective: 1024 turbines at yaw=5.7\u00b0, yield +15.6% (target \u226515%). Enstrophy ratio=1.39, turbine amplification 3\u00d7 applied.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 3.94,
+          "eval_time_ms": 9.49,
           "best_fitness": 15.5531,
           "verification": {
             "status": "CERTIFIED",
@@ -443,12 +453,13 @@
             "alpha_prime": 1.25,
             "thermal_gain_factor": 2.7,
             "fitness_score": 21.6289,
+            "rom_time_ms": 6.91,
             "diagnostic": "Heat transfer +21.6% below 30% target. Fractal dim=2.5, nu_ratio=1.08. Increase fractal_dim to strengthen enstrophy suppression."
           },
           "fitness_score": 21.6289,
           "diagnostic": "Heat transfer +21.6% below 30% target. Fractal dim=2.5, nu_ratio=1.08. Increase fractal_dim to strengthen enstrophy suppression.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 3.84,
+          "eval_time_ms": 6.91,
           "best_fitness": 21.6289,
           "verification": {
             "status": "FAILED",
@@ -472,12 +483,13 @@
             "alpha_prime": 1.5290333333333332,
             "thermal_gain_factor": 3.37,
             "fitness_score": 26.9865,
+            "rom_time_ms": 5.75,
             "diagnostic": "Heat transfer +27.0% below 30% target. Fractal dim=3.1, nu_ratio=1.10. Increase fractal_dim to strengthen enstrophy suppression."
           },
           "fitness_score": 26.9865,
           "diagnostic": "Heat transfer +27.0% below 30% target. Fractal dim=3.1, nu_ratio=1.10. Increase fractal_dim to strengthen enstrophy suppression.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 3.76,
+          "eval_time_ms": 5.75,
           "best_fitness": 26.9865,
           "verification": {
             "status": "FAILED",
@@ -501,12 +513,13 @@
             "alpha_prime": 1.7790333333333332,
             "thermal_gain_factor": 3.98,
             "fitness_score": 31.8782,
+            "rom_time_ms": 5.81,
             "diagnostic": "Fractal micro-channel network converged: 7 generations, heat transfer +31.9% (target \u226530%). Pressure drop reduction 22.8%. Enstrophy-driven nu_ratio=1.12 amplifies thermal transport."
           },
           "fitness_score": 31.8782,
           "diagnostic": "Fractal micro-channel network converged: 7 generations, heat transfer +31.9% (target \u226530%). Pressure drop reduction 22.8%. Enstrophy-driven nu_ratio=1.12 amplifies thermal transport.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 3.71,
+          "eval_time_ms": 5.81,
           "best_fitness": 31.8782,
           "verification": {
             "status": "CERTIFIED",
@@ -551,12 +564,13 @@
             "alpha_prime": 0.5,
             "horizon_gain_multiplier": 20.0,
             "fitness_score": 16.0,
+            "rom_time_ms": 7.18,
             "diagnostic": "Holographic bound satisfied (E=23.1 < R_eff\u00b2\u00d7250=500). R_eff=1.414, \u03b1'=0.500. Disruption horizon=16.0ms (target \u226510ms). Plasma \u03b2=0.0600 stable."
           },
           "fitness_score": 16.0,
           "diagnostic": "Holographic bound satisfied (E=23.1 < R_eff\u00b2\u00d7250=500). R_eff=1.414, \u03b1'=0.500. Disruption horizon=16.0ms (target \u226510ms). Plasma \u03b2=0.0600 stable.",
           "ratchet_decision": "KEEP",
-          "eval_time_ms": 2564.32,
+          "eval_time_ms": 7.18,
           "best_fitness": 16.0,
           "verification": {
             "status": "CERTIFIED",
@@ -570,5 +584,5 @@
       ]
     }
   },
-  "wall_time_s": 12.619
+  "wall_time_s": 2.75
 }

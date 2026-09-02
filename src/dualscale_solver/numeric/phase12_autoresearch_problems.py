@@ -233,27 +233,38 @@ def _get_solver_commit() -> str:
 # ---------------------------------------------------------------------------
 # ROM Simulations (FIX-01 real spectral + FIX-02 HF calibration)
 # ---------------------------------------------------------------------------
+_CACHED_SBLI_U0: Optional[float] = None
+_CACHED_VAD_NU: Optional[float] = None
+_CACHED_MHD_DATA: Optional[tuple] = None
+
 
 async def solve_scramjet_sbli_mitigation(control_params: dict) -> Dict[str, Any]:
     """H66: Hypersonic SBLI mitigation via dual-scale spectral ROM."""
-    console.print("[cyan][Ingest] Fetching SBLI ground-truth from pdebench/PDEBench...[/]")
-    u0_scale = 1.0
-    snapshot: Optional[dict] = None
-    try:
-        def _fetch_sbli():
-            data = load_dataset("pdebench/PDEBench", split="train", streaming=True)
-            return next(iter(data))
+    global _CACHED_SBLI_U0
+    if _CACHED_SBLI_U0 is not None:
+        u0_scale = _CACHED_SBLI_U0
+    else:
+        console.print("[cyan][Ingest] Fetching SBLI ground-truth from pdebench/PDEBench...[/]")
+        u0_scale = 1.0
+        snapshot: Optional[dict] = None
+        try:
+            def _fetch_sbli():
+                data = load_dataset("pdebench/PDEBench", split="train", streaming=True)
+                return next(iter(data))
 
-        snapshot = await asyncio.wait_for(asyncio.to_thread(_fetch_sbli), timeout=2.5)
-        mach = float(snapshot.get("Mach", snapshot.get("mach", 2.0)))
-        u0_scale = mach / 2.0
-        console.print(f"[green][Ingest] Calibrated Mach = {mach:.2f}[/]")
-    except Exception as e:
-        console.print(f"[yellow][Warning] HF fetch failed ({e}). Using synthetic Mach=2.0.[/]")
+            snapshot = await asyncio.wait_for(asyncio.to_thread(_fetch_sbli), timeout=2.5)
+            mach = float(snapshot.get("Mach", snapshot.get("mach", 2.0)))
+            u0_scale = mach / 2.0
+            console.print(f"[green][Ingest] Calibrated Mach = {mach:.2f}[/]")
+        except Exception as e:
+            console.print(f"[yellow][Warning] HF fetch failed ({e}). Using synthetic Mach=2.0.[/]")
+        _CACHED_SBLI_U0 = u0_scale
 
     filter_coef = float(control_params.get("spectral_filter_coef", 1.0))
     alpha_prime = _ALPHA_PRIME_BASE * filter_coef
+    t_rom_0 = time.perf_counter()
     enstrophy = _spectral_rom_enstrophy(alpha_prime=alpha_prime, u0_scale=u0_scale)
+    rom_time_ms = round((time.perf_counter() - t_rom_0) * 1000, 2)
 
     # Calibrated threshold: at coef>=2.6, alpha_prime>=1.3, ETD-RK4 enstrophy drops below ~18
     enstrophy_threshold = 18.0
@@ -285,29 +296,37 @@ async def solve_scramjet_sbli_mitigation(control_params: dict) -> Dict[str, Any]
         "alpha_prime": float(alpha_prime),
         "speed_gain_multiplier": round(float(baseline_latency / actuation_latency), 2),
         "fitness_score": _fitness,
+        "rom_time_ms": rom_time_ms,
         "diagnostic": _diag,
     }
 
 
 async def solve_medical_vad_dynamics(impeller_params: dict) -> Dict[str, Any]:
     """H67: VAD rotor dynamics — minimise wall shear stress via spectral enstrophy."""
-    console.print("[cyan][Ingest] Fetching hemodynamic ground-truth (angioinsight/single-vessel-flow)...[/]")
-    nu_blood = 3.5e-3
-    snapshot: Optional[dict] = None
-    try:
-        def _fetch_vad():
-            dataset = load_dataset("angioinsight/single-vessel-flow", split="train", streaming=True)
-            return next(iter(dataset))
+    global _CACHED_VAD_NU
+    if _CACHED_VAD_NU is not None:
+        nu_blood = _CACHED_VAD_NU
+    else:
+        console.print("[cyan][Ingest] Fetching hemodynamic ground-truth (angioinsight/single-vessel-flow)...[/]")
+        nu_blood = 3.5e-3
+        snapshot: Optional[dict] = None
+        try:
+            def _fetch_vad():
+                dataset = load_dataset("angioinsight/single-vessel-flow", split="train", streaming=True)
+                return next(iter(dataset))
 
-        snapshot = await asyncio.wait_for(asyncio.to_thread(_fetch_vad), timeout=2.5)
-        nu_blood = float(snapshot.get("viscosity", snapshot.get("nu", 3.5e-3)))
-        console.print(f"[green][Ingest] Calibrated nu_blood = {nu_blood:.4e} Pa·s[/]")
-    except Exception as e:
-        console.print(f"[yellow][Warning] HF fetch failed ({e}). Using physiological nu = 3.5e-3.[/]")
+            snapshot = await asyncio.wait_for(asyncio.to_thread(_fetch_vad), timeout=2.5)
+            nu_blood = float(snapshot.get("viscosity", snapshot.get("nu", 3.5e-3)))
+            console.print(f"[green][Ingest] Calibrated nu_blood = {nu_blood:.4e} Pa·s[/]")
+        except Exception as e:
+            console.print(f"[yellow][Warning] HF fetch failed ({e}). Using physiological nu = 3.5e-3.[/]")
+        _CACHED_VAD_NU = nu_blood
 
     tensor_stiffness = float(impeller_params.get("tensor_stiffness", 1.0))
     alpha_prime = _ALPHA_PRIME_BASE * tensor_stiffness
+    t_rom_0 = time.perf_counter()
     enstrophy = _spectral_rom_enstrophy(alpha_prime=alpha_prime, u0_scale=nu_blood / 1e-3)
+    rom_time_ms = round((time.perf_counter() - t_rom_0) * 1000, 2)
 
     # WSS ~ nu * C * sqrt(enstrophy) (calibrated for VAD geometry at u0_scale=3.5)
     # C_geom = 2.82 gives shear=137.9 Pa at stiff=3.5, alpha_prime=1.75, E=195.2 (47% reduction)
@@ -343,6 +362,7 @@ async def solve_medical_vad_dynamics(impeller_params: dict) -> Dict[str, Any]:
         "alpha_prime": float(alpha_prime),
         "shear_reduction_ratio": round(float(baseline_shear / max(shear, 1.0)), 2),
         "fitness_score": _fitness,
+        "rom_time_ms": rom_time_ms,
         "diagnostic": _diag,
     }
 
@@ -351,8 +371,10 @@ async def solve_wind_farm_steering(yaw_matrix: list) -> Dict[str, Any]:
     """H68: 1024-turbine wake steering — enstrophy-based power yield model."""
     yaw_angle = float(yaw_matrix[0]) if yaw_matrix else 2.0
     alpha_prime = _ALPHA_PRIME_BASE * (yaw_angle / 5.0)
+    t_rom_0 = time.perf_counter()
     enstrophy = _spectral_rom_enstrophy(alpha_prime=alpha_prime)
     enstrophy_base = _spectral_rom_enstrophy(alpha_prime=0.0)
+    rom_time_ms = round((time.perf_counter() - t_rom_0) * 1000, 2)
     enstrophy_ratio = enstrophy_base / max(enstrophy, 1e-12)
 
     baseline_yield_inc = 3.5
@@ -386,6 +408,7 @@ async def solve_wind_farm_steering(yaw_matrix: list) -> Dict[str, Any]:
         "alpha_prime": float(alpha_prime),
         "yield_gain_factor": round(float(yield_inc / baseline_yield_inc), 2),
         "fitness_score": _fitness,
+        "rom_time_ms": rom_time_ms,
         "diagnostic": _diag,
     }
 
@@ -394,8 +417,10 @@ async def solve_btms_microchannels(fractal_step: float) -> Dict[str, Any]:
     """H69: BTMS micro-channel cooling — fractal-spectral heat transfer model."""
     fractal_dim = float(fractal_step)
     alpha_prime = _ALPHA_PRIME_BASE * fractal_dim
+    t_rom_0 = time.perf_counter()
     enstrophy = _spectral_rom_enstrophy(alpha_prime=alpha_prime)
     enstrophy_ref = _spectral_rom_enstrophy(alpha_prime=_ALPHA_PRIME_BASE * 1.0)
+    rom_time_ms = round((time.perf_counter() - t_rom_0) * 1000, 2)
     nu_ratio = (enstrophy_ref / max(enstrophy, 1e-12)) ** 0.3
 
     baseline_heat = 8.0
@@ -430,34 +455,42 @@ async def solve_btms_microchannels(fractal_step: float) -> Dict[str, Any]:
         "alpha_prime": float(alpha_prime),
         "thermal_gain_factor": round(float(heat / baseline_heat), 2),
         "fitness_score": _fitness,
+        "rom_time_ms": rom_time_ms,
         "diagnostic": _diag,
     }
 
 
 async def solve_tokamak_disruption(magnetic_tuning: dict) -> Dict[str, Any]:
     """H70: Tokamak MHD plasma disruption avoidance via holographic enstrophy bounds."""
-    console.print("[cyan][Ingest] Fetching real MHD turbulence from polymathic-ai/MHD_64...[/]")
-    plasma_beta_0 = 0.05
-    u0_scale = 1.0
-    snapshot: Optional[dict] = None
-    try:
-        def _fetch_mhd():
-            mhd_data = load_dataset("polymathic-ai/MHD_64", split="train", streaming=True)
-            return next(iter(mhd_data))
+    global _CACHED_MHD_DATA
+    if _CACHED_MHD_DATA is not None:
+        plasma_beta_0, u0_scale = _CACHED_MHD_DATA
+    else:
+        console.print("[cyan][Ingest] Fetching real MHD turbulence from polymathic-ai/MHD_64...[/]")
+        plasma_beta_0 = 0.05
+        u0_scale = 1.0
+        snapshot: Optional[dict] = None
+        try:
+            def _fetch_mhd():
+                mhd_data = load_dataset("polymathic-ai/MHD_64", split="train", streaming=True)
+                return next(iter(mhd_data))
 
-        snapshot = await asyncio.wait_for(asyncio.to_thread(_fetch_mhd), timeout=2.5)
-        plasma_beta_0 = float(snapshot.get("plasma_beta", snapshot.get("beta", 0.05)))
-        vel_data = snapshot.get("velocity", None)
-        if vel_data is not None:
-            u0_scale = float(np.mean(np.abs(np.array(vel_data))))
-        console.print(f"[green][Ingest] Calibrated plasma_beta_0 = {plasma_beta_0:.3f}[/]")
-    except Exception as e:
-        console.print(f"[yellow][Warning] HF fetch failed ({e}). Using synthetic baseline.[/]")
+            snapshot = await asyncio.wait_for(asyncio.to_thread(_fetch_mhd), timeout=2.5)
+            plasma_beta_0 = float(snapshot.get("plasma_beta", snapshot.get("beta", 0.05)))
+            vel_data = snapshot.get("velocity", None)
+            if vel_data is not None:
+                u0_scale = float(np.mean(np.abs(np.array(vel_data))))
+            console.print(f"[green][Ingest] Calibrated plasma_beta_0 = {plasma_beta_0:.3f}[/]")
+        except Exception as e:
+            console.print(f"[yellow][Warning] HF fetch failed ({e}). Using synthetic baseline.[/]")
+        _CACHED_MHD_DATA = (plasma_beta_0, u0_scale)
 
     holo_threshold = float(magnetic_tuning.get("holographic_threshold", 0.0))
     alpha_prime = _ALPHA_PRIME_BASE * max(holo_threshold, 0.1)
     r_eff = 2.0 * np.sqrt(alpha_prime)
+    t_rom_0 = time.perf_counter()
     enstrophy = _spectral_rom_enstrophy(alpha_prime=alpha_prime, u0_scale=u0_scale)
+    rom_time_ms = round((time.perf_counter() - t_rom_0) * 1000, 2)
 
     # Holographic bound: R_eff^2 * scale must exceed enstrophy
     holo_bound_energy = r_eff ** 2 * 250.0
@@ -500,6 +533,7 @@ async def solve_tokamak_disruption(magnetic_tuning: dict) -> Dict[str, Any]:
         "alpha_prime": float(alpha_prime),
         "horizon_gain_multiplier": round(float(horizon / baseline_horizon), 2),
         "fitness_score": _fitness,
+        "rom_time_ms": rom_time_ms,
         "diagnostic": _diag,
     }
 

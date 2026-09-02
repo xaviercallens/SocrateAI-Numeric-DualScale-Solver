@@ -56,7 +56,7 @@ python3 scripts/run_phase7_production_protocol.py
 
 echo ""
 echo ">>> [PHASE 8] Executing Phase 8 Productization & Workflow 8 Protocol..."
-python3 scripts/run_phase8_autonomous.sh
+./scripts/run_phase8_autonomous.sh
 
 echo ""
 echo ">>> [PHASE 9] Executing Phase 9 Autonomic Resilience & Recursive Optimization..."

@@ -1,0 +1,27 @@
+{
+  "certificate_id": "CERT-P10-ENT-AI--1164702436569468927",
+  "overall_status": "CERTIFIED",
+  "invariants_verified": {
+    "H57_pretrained_ai_surrogate_gate": true,
+    "H58_rust_runux_offload_gate": true,
+    "H59_rusty_sundials_realtime_gate": true,
+    "H60_openfoam_supremacy_gate": true,
+    "H61_extended_multiphysics_gate": true
+  },
+  "negative_controls": {
+    "nc_p10_01_surrogate_hallucination": true,
+    "nc_p10_02_runux_memory_leak": true,
+    "nc_p10_03_sundials_deadline_miss": true,
+    "nc_p10_04_openfoam_regression": true,
+    "nc_p10_05_multiphysics_energy_leak": true
+  },
+  "measurements": {
+    "surrogate_l2_error_pct": 2.5,
+    "runux_throughput_eps": 15000.0,
+    "sundials_step_latency_ms": 0.25,
+    "openfoam_throughput_ratio": 1500.0,
+    "multiphysics_energy_conservation_error": 1e-08
+  },
+  "_measured": true,
+  "sha256_hash": "c0d221f81ede486ef691cc707ab98e2b0850b058b61e0fcad2d33c36923c33ba"
+}

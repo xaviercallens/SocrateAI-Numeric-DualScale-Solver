@@ -14,4 +14,4 @@ cd "$ROOT_DIR"
 export PYTHONPATH="$ROOT_DIR/src:$PYTHONPATH"
 
 # Run the Phase 10 execution via the CLI
-python -m dualscale_solver.cli workflow10
+python3 -m dualscale_solver.cli workflow10

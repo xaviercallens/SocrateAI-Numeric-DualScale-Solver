@@ -78,7 +78,7 @@ class KarpathyAutoResearchLoop:
             sim_result = self.execution_engine(hypothesis)
             if inspect.isawaitable(sim_result):
                 sim_result = await sim_result
-            eval_time_ms = round((time.perf_counter() - t0) * 1000, 2)
+            eval_time_ms = sim_result.get("rom_time_ms", round((time.perf_counter() - t0) * 1000, 2))
 
             fitness = sim_result.get("fitness_score", 0.0)
             diagnostic = sim_result.get("diagnostic", "")

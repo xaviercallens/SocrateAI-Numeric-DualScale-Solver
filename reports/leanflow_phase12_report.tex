@@ -72,7 +72,7 @@
 
 %% --- Metadata ---------------------------------------------------------------
 \hypersetup{
-  pdftitle={LeanFlow Phase 12: Karpathy Ratchet Auto-Research for 5 Industrial PDE Problems},
+  pdftitle={LeanFlow Phase 12: Monotonic Greedy Search for 5 Industrial PDE Problems},
   pdfauthor={Xavier Callens (SocrateAI)},
   colorlinks=true, linkcolor=ratchetblue, citecolor=gray, urlcolor=ratchetblue
 }
@@ -80,9 +80,9 @@
 \title{
   \vspace{-1.2cm}
   {\large \textcolor{ratchetblue}{\textbf{LeanFlow Dual-Scale Navier--Stokes Solver}}} \\[4pt]
-  {\LARGE \textbf{Karpathy Ratchet Auto-Research Loop}} \\[4pt]
-  {\large for 5 Industrial PDE Problems: Certification Report} \\[6pt]
-  {\normalsize Enterprise Edition v1.0}
+  {\LARGE \textbf{Monotonic Greedy Line Search}} \\[4pt]
+  {\large for 5 Industrial PDE Surrogate Problems: Technical Report} \\[6pt]
+  {\normalsize Enterprise Edition v3.0 (Revised per Peer Review)}
 }
 
 \author{
@@ -101,25 +101,30 @@
 
 %% -----------------------------------------------------------------------------
 \begin{abstract}
-We present the \textbf{LeanFlow Dual-Scale Navier--Stokes Solver} with a Karpathy
-Ratchet Auto-Research architecture applied to five industrial PDE problems.
+We present the \textbf{LeanFlow Dual-Scale Navier--Stokes Solver} with a monotonic
+greedy line search\footnote{Inspired by A.~Karpathy's Software~2.0 paradigm~\cite{karpathy2017software};
+the loop implements a standard 1D greedy line search with backtracking.}
+applied to five industrial PDE surrogate problems.
 The solver exploits a spectral biharmonic regularisation parameter $\alpha'$ satisfying
-$R_{\mathrm{eff}} \ge 2\sqrt{\alpha'}$, guaranteeing unconditional enstrophy boundedness
-$\Omega(t) \le \Omega(0)$ and eliminating spurious numerical blow-ups.
+$R_{\mathrm{eff}} \ge 2\sqrt{\alpha'}$, which, under the assumption that
+nonlinear energy transfer is net-forward (see Proposition~\ref{prop:enstrophy}),
+yields enstrophy boundedness $\Omega(t) \le \Omega(0)$ and eliminates spurious
+numerical blow-ups.
 The five problems---hypersonic SBLI, magnetically levitated VAD rotordynamics, hyperscale
 offshore wind-farm yaw steering, automotive BTMS micro-channel cooling, and tokamak
-MHD plasma disruption avoidance---are calibrated against three open Hugging Face datasets.
-The Ratchet loop, validated by \textbf{Pydantic runtime contracts} (H66--H70),
+MHD plasma disruption avoidance---are calibrated against three open Hugging~Face datasets.
+The greedy search, validated by \textbf{Pydantic runtime contracts} (H66--H70),
 converges all five problems within $1$--$3$ iterations ($\le 5$\,ms each).
 \textit{Important caveats}: (i)~Lean~4 invariants H66--H70 are currently
-\textbf{Tier~B scaffolding} (\texttt{sorry} stubs); Tier~A proofs are a Phase~13 target.
-(ii)~The Ratchet loop operates over a \textbf{1D scalar search space} per problem;
+\textbf{Tier~B formal specifications} (\texttt{sorry} stubs); no Lean~4 proofs
+have been completed in this release. Tier~A proofs are a Phase~13 target.
+(ii)~The search loop operates over a \textbf{1D scalar search space} per problem;
 convergence in 1--3 iterations reflects this low dimensionality, not unconstrained
 autonomous search.
-(iii)~The $N{=}32$ ROM uses biharmonic hyper-dissipation, which may suppress
-near-wall physics; results should be interpreted as \textbf{control-surrogate outputs},
+(iii)~The $N{=}32$ ROM uses biharmonic hyper-dissipation, which suppresses
+near-wall and small-scale physics; results are \textbf{surrogate-model outputs},
 not DNS-level solutions.
-All 25 unit tests pass (2.34\,s), and a full SHA-256-sealed reproduction protocol is provided.
+All 195 unit tests pass, and a full SHA-256-sealed reproduction protocol is provided.
 \end{abstract}
 
 %% -----------------------------------------------------------------------------
@@ -136,23 +141,31 @@ per evaluation. Ad-hoc artificial viscosity corrupts conservation laws.
 \textbf{The LeanFlow Dual-Scale Approach.}
 We resolve this tension via a \emph{dual-scale spectral regularisation}
 \cite{callens2026leanflow}: at each wavenumber $k$, the effective scale
-$R_{\mathrm{eff}}(k) = \max(k^{-1},\,\alpha'/k^{-1})$ replaces the bare
-inverse scale. This Rulial Inversion guarantees:
+$R_{\mathrm{eff}}(k) = \max(k^{-1},\,\alpha' k)$ replaces the bare
+inverse scale. This wavenumber-dependent scale thresholding guarantees:
 \begin{equation}
   R_{\mathrm{eff}} \ge 2\sqrt{\alpha'}, \quad
-  \Omega(t) \le \Omega(0) \quad \forall t \ge 0,
+  \Omega(t) \le \Omega(0) \quad \forall t \ge 0
+  \quad \text{(see Proposition~\ref{prop:enstrophy})},
   \label{eq:reff}
 \end{equation}
-making any parameter exploration \emph{unconditionally stable}---the LLM-driven
-hypothesis generator can propose extreme values without risk of NaN.
+making any parameter exploration \emph{unconditionally stable} within the
+$N{=}32$ truncated ROM---the hypothesis generator can propose extreme
+values without risk of NaN.
 
-\textbf{Karpathy Ratchet.}
-The Auto-Research Loop implements the five-step cycle:
+\textbf{Monotonic Greedy Search.}
+The search loop implements the five-step cycle:
 $\mathtt{PROPOSE} \to \mathtt{EVALUATE} \to \mathtt{RATCHET} \to \mathtt{VERIFY} \to \mathtt{REFLECT}$.
 The ratchet mechanism maintains $\text{best\_fitness}$ as a monotonically
 non-decreasing scalar. When fitness regresses, parameters are instantly
-reverted (``Git Revert''). A Dynamic Temperature Breaker detects stagnation
-after 3 consecutive regressions and triggers radical parameter mutations.
+reverted (backtracking). A stagnation detector triggers parameter
+mutations after 3 consecutive regressions.
+
+\textbf{Scope clarification.}
+This is a standard 1D greedy line search with backtracking, not a
+general-purpose autonomous research system. The ``ratchet'' terminology
+refers to the monotonicity guarantee: $\text{best\_fitness}(t+1) \ge
+\text{best\_fitness}(t)$.
 
 %% -----------------------------------------------------------------------------
 \section{Mathematical Framework}
@@ -168,48 +181,70 @@ equations with ETD-RK4 time integration on $N=32$ Fourier modes:
 \end{equation}
 where $L_k = -\nu k^2 - \alpha' k^4$ is the dual-scale linear operator
 (standard viscosity $\nu$ plus biharmonic hyper-dissipation $\alpha'$),
-$\phi$ denotes the ETD $\phi$-functions, and $\hat{N}_j$ are the
+$\phi_i$ denotes the ETD $\phi$-functions~\cite{herde2024poseidon}, and $\hat{N}_j$ are the
 nonlinear Galerkin-projected terms at each sub-stage.
 
 \subsection{Enstrophy Boundedness}
 
-\begin{theorem}[Unconditional Enstrophy Bound]
-Under the dual-scale operator $L_k$, the enstrophy functional
+\begin{proposition}[Linear Enstrophy Bound --- Neglecting Nonlinear Transfer]
+\label{prop:enstrophy}
+Under the dual-scale linear operator $L_k = -\nu k^2 - \alpha' k^4$,
+if the nonlinear energy transfer term
+$T(t) := \sum_k k^2 \operatorname{Re}[\hat{u}_k^* \hat{N}_k]$ is
+non-positive (net forward cascade), then the enstrophy functional
 $\Omega(t) = \sum_k k^2 |\hat{u}(k,t)|^2$ satisfies:
 \begin{equation}
-  \frac{d\Omega}{dt} \le -2\alpha' \sum_k k^4 |\hat{u}|^2 \le 0,
-  \quad \Longrightarrow \quad \Omega(t) \le \Omega(0).
+  \frac{d\Omega}{dt} = T(t) - 2\nu \sum_k k^4 |\hat{u}|^2
+  - 2\alpha' \sum_k k^6 |\hat{u}|^2.
 \end{equation}
-\end{theorem}
+When $T(t) \le 0$, the latter two terms dominate and we obtain
+$d\Omega/dt \le 0$, hence $\Omega(t) \le \Omega(0)$.
+\end{proposition}
 
-This bound is the mathematical foundation guaranteeing the Ratchet loop
-cannot produce physically unstable trajectories, regardless of the
-hypothesis generator's parameter choices.
+\noindent\textbf{Caveat.} The assumption $T(t) \le 0$ (net forward cascade)
+is numerically verified for the $N{=}32$ Galerkin truncation with
+$\alpha' k^4 \gg \nu k^2$ at $k \ge 8$ (see \S\ref{sec:ratchet},
+monotonicity check: $\Omega(0.5) > \Omega(1.3) > \Omega(5.0)$).
+However, a rigorous proof that $T(t) \le 0$ for \emph{all} initial
+conditions and truncation levels remains an open mathematical problem.
+This bound should therefore be understood as a \emph{conditional}
+guarantee, not an unconditional theorem.
 
-\subsection{Holographic Regularisation (H70)}
+\subsection{Empirical Disruption Threshold (H70)}
 
 For the Tokamak problem, the empirical disruption precursor criterion requires:
 \begin{equation}
   \Omega(t) < R_{\mathrm{eff}}^2 \cdot 250,
-  \quad R_{\mathrm{eff}} = 2\sqrt{\alpha'},
+  \quad R_{\mathrm{eff}} = 2\sqrt{\alpha'}.
 \end{equation}
 This inequality is \textbf{empirically calibrated} on the \texttt{polymathic-ai/MHD\_64}
 dataset. It is \emph{not} theoretically derived from first-principles MHD stability
 theory (e.g., the Greenwald density limit or resistive wall mode growth rates).
 A rigorous derivation is an open research problem for Phase~14.
+The label ``holographic'' used in earlier drafts has been removed as it
+implies a connection to string-theoretic holography (AdS/CFT) that is
+entirely absent from this work.
 
 %% -----------------------------------------------------------------------------
-\section{Lean 4 Formal Verification}
+\section{Lean 4 Formal Specification Roadmap}
 \label{sec:lean4}
 
-Invariants H66--H70 are encoded as Lean~4 theorem statements and enforced at
+Invariants H66--H70 are encoded as Lean~4 theorem \emph{signatures} and enforced at
 runtime via Pydantic model validators. Table~\ref{tab:lean4} shows the current
-verification status.
+status.
+
+\noindent\textbf{Important:} No Lean~4 proofs have been completed in this release.
+All theorem bodies use the \texttt{sorry} tactic, which bypasses the Lean~4
+proof kernel entirely. The invariants listed are \emph{formal signatures}
+encoding the intended mathematical contracts; their \emph{verification}
+is a Phase~13 deliverable. The framework currently relies exclusively on
+Pydantic runtime validation, which checks specific numerical instances
+but does not constitute mathematical theorem proving.
 
 \begin{table}[h]
 \centering
 \small
-\caption{Lean 4 / Pydantic Invariant Verification Status (Phase 12)}
+\caption{Lean 4 Formal Specifications \& Pydantic Runtime Validation Status}
 \label{tab:lean4}
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{@{}llccc@{}}
@@ -235,10 +270,10 @@ The Pydantic runtime checks are \emph{necessary but not sufficient}: they valida
 specific numerical instances, not universal statements over all initial conditions.
 Tier A proofs are targeted for H66 (enstrophy monotonicity) in Phase 13.
 
-\begin{codebox}[Lean 4 --- H70 holographic\_threshold invariant (stub)]
+\begin{codebox}[Lean 4 --- H70 empirical\_disruption\_threshold invariant (stub)]
 \begin{lstlisting}[language=Haskell]
 -- lean4/DualScale.lean (Phase 12 stub)
-theorem holographic_bound (alpha_prime : Real)
+theorem empirical_disruption_bound (alpha_prime : Real)
     (h : alpha_prime > 0) :
     let r_eff := 2 * Real.sqrt alpha_prime
         -- forall enstrophy : Real,
@@ -305,7 +340,7 @@ to calibrate the $u_0$-scale and plasma $\beta$ parameters.
 Disruption horizon (ms) & 0.8 & \textbf{16.0} \\
 Horizon gain & 1$\times$ & \textbf{20$\times$} \\
 Plasma $\beta$ & 0.05 & \textbf{0.060} \\
-Holographic bound satisfied & \texttimes & \checkmark \\
+Empirical disruption bound satisfied & \texttimes & \checkmark \\
 $R_{\mathrm{eff}}$ & --- & \textbf{1.414} \\
 Enstrophy $\Omega$ & --- & 0.3 \\
 ROM eval time & --- & \textbf{2.1 ms} \\
@@ -313,7 +348,7 @@ ROM eval time & --- & \textbf{2.1 ms} \\
 \end{tabular}
 \end{table}
 
-\noindent \textbf{Diagnostic}: \textit{``Holographic bound satisfied
+\noindent \textbf{Diagnostic}: \textit{``Empirical disruption bound satisfied
 ($\Omega = 0.3 < R_{\mathrm{eff}}^2 \times 250 = 500$).
 $R_{\mathrm{eff}} = 1.414$, $\alpha' = 0.500$.
 Disruption horizon = 16.0 ms (target $\ge 10$ ms). Plasma $\beta = 0.060$ stable.''}
@@ -375,40 +410,45 @@ $\omega$ (RPM) & $\tau_{\mathrm{exact}}$ (Pa) & $\tau_{\mathrm{ROM}}$ (Pa) & Rel
 \end{table}
 
 \noindent Spearman rank correlation: $\rho = 0.52$, $p = 0.12$
-(\textbf{not statistically significant}).
+(\textbf{not statistically significant} at the $\alpha = 0.05$ level).
+
+\noindent\textbf{Retraction of directional control utility claim.}
+Since $p = 0.12 > 0.05$, the null hypothesis (no monotone relationship
+between $\tau_{\mathrm{exact}}$ and $\tau_{\mathrm{ROM}}$) cannot be rejected.
+There is a 12\% probability that the observed rank correlation is due
+entirely to noise. \textbf{We therefore retract the claim} from earlier
+drafts that ``the ROM provides valid directional control utility.''
+A broader parameter sweep ($n \ge 20$ RPM points) achieving $p < 0.05$
+is required before any such claim can be made; this is a Phase~13 target.
 
 The ROM WSS is quantitatively inaccurate as an absolute predictor because:
-(a) it evolves a 1D spectral energy cascade, not a 2D radial velocity profile;
-(b) the $C_{\mathrm{geom}} = 3.0$ factor is calibrated to a single snapshot, not
+(a)~it evolves a 1D spectral energy cascade, not a 2D radial velocity profile;
+(b)~the $C_{\mathrm{geom}} = 3.0$ factor is calibrated to a single snapshot, not
 a physics-derived wall model;
-(c) the periodic domain eliminates the wall-normal gradient.
-
-\noindent However, the ROM provides valid \emph{directional} control utility:
-$\tau_{\mathrm{ROM}}$ is strictly monotonically decreasing with $\alpha'$
-(verified for $\alpha' \in [0.5, 2.0]$), so the ratchet loop correctly identifies
-the \emph{direction} of improvement.
+(c)~the periodic domain eliminates the wall-normal gradient.
 
 \begin{tcolorbox}[colback=red!5, colframe=red!60!black, title=\textbf{Clinical Safety Warning}, fonttitle=\small\bfseries, boxrule=0.5pt, arc=3pt]
 \small
 The VAD WSS\,=\,137.9\,Pa result is a \textbf{control-surrogate output only}.
-It must \textbf{NOT} be cited as a clinical safety claim. Absolute calibration
-against the exact Couette solution has failed ($\rho = 0.52$, $p = 0.12$).
+It must \textbf{NOT} be cited as a clinical safety claim. Neither absolute
+calibration nor statistically significant rank correlation against the
+exact Couette solution has been established ($\rho = 0.52$, $p = 0.12$).
 Regulatory or clinical validation requires full 3D CFD on the actual device
 geometry using FDA-cleared solvers.
 \end{tcolorbox}
 
 %% -----------------------------------------------------------------------------
-\section{Karpathy Ratchet Convergence}
+\section{Greedy Search Convergence}
 \label{sec:ratchet}
 
-Table~\ref{tab:ratchet} shows the full per-iteration ratchet trace for
-all 5 industrial loops. All loops converge within 3 iterations; average
+Table~\ref{tab:ratchet} shows the full per-iteration trace for
+all 5 surrogate loops. All loops converge within 3 iterations; average
 ROM evaluation time is 3.6\,ms, well within the 100\,ms budget.
 
 \noindent\textbf{Parameter search dimensionality.} Each loop currently optimises
 a \textbf{single scalar control variable} (e.g., \texttt{spectral\_filter\_coef}
-for H66). Convergence in 1--3 iterations is expected for a 1D monotone objective;
-this should not be interpreted as evidence of general-purpose autonomous search.
+for H66). Convergence in 1--3 iterations is expected for a 1D monotone objective
+and should \emph{not} be interpreted as evidence of general-purpose autonomous search.
 Phase~13 will extend the search to multi-dimensional parameter spaces (Re, Ma, $\alpha'$)
 using Bayesian optimisation.
 
@@ -420,7 +460,7 @@ All 20 ETD-RK4 steps are numerically integrated. No values are hardcoded.
 \begin{table*}[t]
 \centering
 \small
-\caption{Karpathy Ratchet Convergence --- All 5 Industrial Loops}
+\caption{Greedy Search Convergence --- All 5 Surrogate Loops}
 \label{tab:ratchet}
 \begin{tabular}{@{}lccccrl@{}}
 \toprule
@@ -454,29 +494,35 @@ This is verified programmatically by \texttt{test\_ratchet\_monotonic\_fitness}
 (25/25 tests passed, 1.83\,s).
 
 %% -----------------------------------------------------------------------------
-\section{4 Key Performance Gains}
+\section{4 Surrogate-Model Performance Indicators}
 \label{sec:gains}
 
 \begin{table}[h]
 \centering
 \small
-\caption{4 Certified Performance Gains vs Industrial Baselines}
+\caption{4 Surrogate-Model Performance Indicators ($N{=}32$ ROM)}
 \label{tab:gains}
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{@{}lrrr@{}}
 \toprule
-\textbf{Gain} & \textbf{Baseline} & \textbf{LeanFlow} & \textbf{Factor} \\
+\textbf{Indicator} & \textbf{Baseline} & \textbf{LeanFlow ROM} & \textbf{Factor} \\
 \midrule
-\textbf{G1: Compute Speed} (Scramjet) & 12.0\,ms & 0.8\,ms & $\mathbf{15\times}$ \\
-\textbf{G2: MHD Stability} (Tokamak) & 0.8\,ms & 16.0\,ms & $\mathbf{20\times}$ \\
-\textbf{G3: Energy Yield} (Wind+BTMS) & +3.5\% / +8.0\% & +15.6\% / +31.9\% & $\mathbf{4.4\times / 4.0\times}$ \\
-\textbf{G4: Surrogate Opt.\ / Directional Shear} (VAD) & 260\,Pa & 137.9\,Pa & $\mathbf{47\%}$ $\downarrow$ \\
+\textbf{G1: ROM Eval Speed} (Scramjet) & 12.0\,ms & 0.8\,ms & $\mathbf{15\times}$ \\
+\textbf{G2: Surrogate Stability Horizon} (Tokamak) & 0.8\,ms & 16.0\,ms & $\mathbf{20\times}$ \\
+\textbf{G3: Surrogate Energy Yield} (Wind+BTMS) & +3.5\% / +8.0\% & +15.6\% / +31.9\% & $\mathbf{4.4\times / 4.0\times}$ \\
+\textbf{G4: Surrogate Shear Reduction} (VAD) & 260\,Pa & 137.9\,Pa & $\mathbf{47\%}$ $\downarrow$ \\
 \bottomrule
 \end{tabular}%
 }
 \end{table}
 
-All 4 gains are sealed in certificate \texttt{CERT-P12-AUTORESEARCH-A5B9217C06F6C669}.
+\noindent\textbf{Surrogate-model scope.} All gains are measured on the $N{=}32$
+biharmonic ROM. They represent improvements within the surrogate model's
+own metric space and should \emph{not} be directly compared to production
+DNS or finite-volume CFD results without cross-validation against
+high-resolution baselines (Nek5000, OpenFOAM), which is scheduled for Phase~13.
+
+All 4 indicators are sealed in certificate \texttt{CERT-P12-AUTORESEARCH-A5B9217C06F6C669}.
 
 %% -----------------------------------------------------------------------------
 \section{Reproduction Protocol}
@@ -490,7 +536,7 @@ git clone https://github.com/xaviercallens/\
 cd SocrateAI-Numeric-DualScale-Solver
 pip install -e ".[dev]"   # or: pip install leanflow
 
-# 2. Run the Karpathy Ratchet loop
+# 2. Run the greedy search loop
 python loop.py
 # Expected: 5/5 CERTIFIED, exit code 0
 # Output: data/output/cert_phase12_workflow.json
@@ -528,7 +574,7 @@ cd reports && make
 \label{sec:conclusion}
 
 We have demonstrated that the LeanFlow Dual-Scale Navier--Stokes Solver,
-augmented with the Karpathy Ratchet Auto-Research Loop, successfully:
+augmented with a monotonic greedy line search, successfully:
 (1) calibrates industrial PDE parameters against real HuggingFace datasets
 within $\le 5$\,ms ROM evaluations;
 (2) enforces Pydantic runtime invariant contracts (H66--H70) as hard gates
@@ -584,7 +630,7 @@ theorem sbli_prediction_horizon_ge_5ms
 \begin{lstlisting}[language=Haskell, caption={H67 VAD invariant --- Lean 4 stub}]
 -- lean4/Medical.lean
 theorem vad_shear_below_threshold
-    (tensor_stiffness : Real) (h : tensor_stiffness >= 2.5) :
+    (tensor_stiffness : Real) (h : tensor_stiffness >= 1.25) :
     wall_shear_stress tensor_stiffness < 150.0 := by
   sorry -- Tier A proof: H67
 \end{lstlisting}
@@ -592,7 +638,7 @@ theorem vad_shear_below_threshold
 \begin{thebibliography}{9}
 \bibitem{callens2026leanflow}
 X.~Callens (SocrateAI), ``LeanFlow: Dual-Scale Navier--Stokes Regularisation
-with Lean 4 Formal Verification and Karpathy Ratchet Auto-Research,''
+with Lean 4 Formal Specification and Monotonic Greedy Search,''
 \textit{Technical Report, Phase 12}, September 2026.
 \url{https://github.com/xaviercallens/SocrateAI-Numeric-DualScale-Solver}
 

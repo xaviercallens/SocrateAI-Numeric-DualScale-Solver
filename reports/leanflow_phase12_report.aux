@@ -2,28 +2,31 @@
 \providecommand\hyper@newdestlabel[2]{}
 \providecommand\HyField@AuxAddToFields[1]{}
 \providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{karpathy2017software}
 \citation{callens2026leanflow}
+\citation{herde2024poseidon}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
 \newlabel{sec:intro}{{1}{1}{Introduction}{section.1}{}}
 \newlabel{eq:reff}{{1}{1}{Introduction}{equation.1.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {2}Mathematical Framework}{1}{section.2}\protected@file@percent }
 \newlabel{sec:math}{{2}{1}{Mathematical Framework}{section.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Dual-Scale ETD-RK4 Spectral ROM}{1}{subsection.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Enstrophy Boundedness}{1}{subsection.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Holographic Regularisation (H70)}{2}{subsection.2.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3}Lean 4 Formal Verification}{2}{section.3}\protected@file@percent }
-\newlabel{sec:lean4}{{3}{2}{Lean 4 Formal Verification}{section.3}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Lean 4 / Pydantic Invariant Verification Status (Phase 12)}}{2}{table.caption.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Enstrophy Boundedness}{2}{subsection.2.2}\protected@file@percent }
+\newlabel{prop:enstrophy}{{2.1}{2}{Linear Enstrophy Bound --- Neglecting Nonlinear Transfer}{theorem.2.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Empirical Disruption Threshold (H70)}{2}{subsection.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Lean 4 Formal Specification Roadmap}{2}{section.3}\protected@file@percent }
+\newlabel{sec:lean4}{{3}{2}{Lean 4 Formal Specification Roadmap}{section.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Lean 4 Formal Specifications \& Pydantic Runtime Validation Status}}{2}{table.caption.2}\protected@file@percent }
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{tab:lean4}{{1}{2}{Lean 4 / Pydantic Invariant Verification Status (Phase 12)}{table.caption.2}{}}
+\newlabel{tab:lean4}{{1}{2}{Lean 4 Formal Specifications \& Pydantic Runtime Validation Status}{table.caption.2}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4}Experimental Results: 3 HuggingFace Datasets}{2}{section.4}\protected@file@percent }
 \newlabel{sec:results}{{4}{2}{Experimental Results: 3 HuggingFace Datasets}{section.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Dataset 1: \texttt  {angioinsight/single-vessel-flow} (H67 --- VAD)}{2}{subsection.4.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces H67 VAD Results --- \texttt  {angioinsight/single-vessel-flow}}}{2}{table.caption.3}\protected@file@percent }
-\newlabel{tab:vad}{{2}{2}{H67 VAD Results --- \texttt {angioinsight/single-vessel-flow}}{table.caption.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Dataset 2: \texttt  {polymathic-ai/MHD\_64} (H70 --- Tokamak)}{2}{subsection.4.2}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces H70 Tokamak Results --- \texttt  {polymathic-ai/MHD\_64}}}{2}{table.caption.4}\protected@file@percent }
-\newlabel{tab:tokamak}{{3}{2}{H70 Tokamak Results --- \texttt {polymathic-ai/MHD\_64}}{table.caption.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces H67 VAD Results --- \texttt  {angioinsight/single-vessel-flow}}}{3}{table.caption.3}\protected@file@percent }
+\newlabel{tab:vad}{{2}{3}{H67 VAD Results --- \texttt {angioinsight/single-vessel-flow}}{table.caption.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Dataset 2: \texttt  {polymathic-ai/MHD\_64} (H70 --- Tokamak)}{3}{subsection.4.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces H70 Tokamak Results --- \texttt  {polymathic-ai/MHD\_64}}}{3}{table.caption.4}\protected@file@percent }
+\newlabel{tab:tokamak}{{3}{3}{H70 Tokamak Results --- \texttt {polymathic-ai/MHD\_64}}{table.caption.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Dataset 3: PDEBench Compressible Advection Data (H66 --- Scramjet)}{3}{subsection.4.3}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces H66 Scramjet Results --- PDEBench Mach-2}}{3}{table.caption.5}\protected@file@percent }
 \newlabel{tab:scramjet}{{4}{3}{H66 Scramjet Results --- PDEBench Mach-2}{table.caption.5}{}}
@@ -31,14 +34,10 @@
 \newlabel{subsec:surrogate}{{4.4}{3}{Surrogate Control Utility in Non-Periodic Regimes}{subsection.4.4}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces ROM WSS Surrogate vs.~Exact Couette Solution (VAD H67)}}{3}{table.caption.6}\protected@file@percent }
 \newlabel{tab:couette}{{5}{3}{ROM WSS Surrogate vs.~Exact Couette Solution (VAD H67)}{table.caption.6}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Karpathy Ratchet Convergence}{3}{section.5}\protected@file@percent }
-\newlabel{sec:ratchet}{{5}{3}{Karpathy Ratchet Convergence}{section.5}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}4 Key Performance Gains}{3}{section.6}\protected@file@percent }
-\newlabel{sec:gains}{{6}{3}{4 Key Performance Gains}{section.6}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Karpathy Ratchet Convergence --- All 5 Industrial Loops}}{4}{table.caption.7}\protected@file@percent }
-\newlabel{tab:ratchet}{{6}{4}{Karpathy Ratchet Convergence --- All 5 Industrial Loops}{table.caption.7}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces 4 Certified Performance Gains vs Industrial Baselines}}{4}{table.caption.8}\protected@file@percent }
-\newlabel{tab:gains}{{7}{4}{4 Certified Performance Gains vs Industrial Baselines}{table.caption.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Greedy Search Convergence}{3}{section.5}\protected@file@percent }
+\newlabel{sec:ratchet}{{5}{3}{Greedy Search Convergence}{section.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}4 Surrogate-Model Performance Indicators}{4}{section.6}\protected@file@percent }
+\newlabel{sec:gains}{{6}{4}{4 Surrogate-Model Performance Indicators}{section.6}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {7}Reproduction Protocol}{4}{section.7}\protected@file@percent }
 \newlabel{sec:repro}{{7}{4}{Reproduction Protocol}{section.7}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {8}Conclusion}{4}{section.8}\protected@file@percent }
@@ -48,6 +47,10 @@
 \bibcite{polymathic2024mhd}{3}
 \bibcite{angioinsight2024flow}{4}
 \bibcite{herde2024poseidon}{5}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Greedy Search Convergence --- All 5 Surrogate Loops}}{5}{table.caption.7}\protected@file@percent }
+\newlabel{tab:ratchet}{{6}{5}{Greedy Search Convergence --- All 5 Surrogate Loops}{table.caption.7}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces 4 Surrogate-Model Performance Indicators ($N{=}32$ ROM)}}{5}{table.caption.8}\protected@file@percent }
+\newlabel{tab:gains}{{7}{5}{4 Surrogate-Model Performance Indicators ($N{=}32$ ROM)}{table.caption.8}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {A}SHA-256 Certificate}{5}{appendix.A}\protected@file@percent }
 \newlabel{app:cert}{{A}{5}{SHA-256 Certificate}{appendix.A}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {B}Lean 4 Invariant Stubs (H66--H70)}{5}{appendix.B}\protected@file@percent }

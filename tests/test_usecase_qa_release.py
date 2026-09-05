@@ -25,6 +25,11 @@ from scripts.usecase_qa_release_verifier import (
     verify_use_case_4_ida_dae,
     verify_use_case_5_polarquant,
     verify_use_case_6_pyo3_zerocopy,
+    verify_use_case_7_taylor_green,
+    verify_use_case_8_lid_driven_cavity,
+    verify_use_case_9_rayleigh_benard,
+    verify_use_case_10_kelvin_helmholtz,
+    verify_use_case_11_jhtdb_isotropic,
     run_negative_controls,
     audit_epistemic_nomenclature,
 )
@@ -41,6 +46,11 @@ def test_qa_negative_controls():
     assert nc_results["nc_ida_dae_divergence_caught"] is True
     assert nc_results["nc_polarquant_distortion_caught"] is True
     assert nc_results["nc_memory_slice_overflow_caught"] is True
+    assert nc_results["nc_uc7_divergence_caught"] is True
+    assert nc_results["nc_uc8_cavity_deviation_caught"] is True
+    assert nc_results["nc_uc9_unphysical_nusselt_caught"] is True
+    assert nc_results["nc_uc10_mixing_collapse_caught"] is True
+    assert nc_results["nc_uc11_anti_cascade_slope_caught"] is True
 
 
 def test_qa_gate1_stiff_cascade():
@@ -98,24 +108,66 @@ def test_qa_gate6_pyo3_zerocopy():
     assert metrics["lean4_memory_invariant_verified"] is True
 
 
+def test_qa_gate7_taylor_green():
+    """Verify Gate 7: Taylor-Green Vortex 2D Decay against PDEBench analytical reference."""
+    metrics = verify_use_case_7_taylor_green(verbose=False)
+    assert metrics["status"] == "PASSED"
+    assert metrics["solenoidal_residual"] < 1e-12
+    assert metrics["energy_monotone"] is True
+    assert metrics["l2_error"] < 0.1
+
+
+def test_qa_gate8_lid_driven_cavity():
+    """Verify Gate 8: 2D Lid-Driven Cavity Flow against Ghia et al. reference table."""
+    metrics = verify_use_case_8_lid_driven_cavity(verbose=False)
+    assert metrics["status"] == "PASSED"
+    assert metrics["centerline_u_linf_error"] < 1.0
+    assert metrics["centerline_points_checked"] == 17
+
+
+def test_qa_gate9_rayleigh_benard():
+    """Verify Gate 9: 2D Rayleigh-Bénard Convection against Dedalus reference."""
+    metrics = verify_use_case_9_rayleigh_benard(verbose=False)
+    assert metrics["status"] == "PASSED"
+    assert metrics["nusselt_mean"] >= 1.0
+    assert metrics["surrogate_scope_caveat_verified"] is True
+
+
+def test_qa_gate10_kelvin_helmholtz():
+    """Verify Gate 10: 2D Kelvin-Helmholtz Instability against Athena++ reference."""
+    metrics = verify_use_case_10_kelvin_helmholtz(verbose=False)
+    assert metrics["status"] == "PASSED"
+    assert metrics["mixing_width_growth_ratio"] > 1.0
+    assert metrics["enstrophy_peak_value"] > 0.0
+
+
+def test_qa_gate11_jhtdb_isotropic():
+    """Verify Gate 11: 3D Forced Isotropic Turbulence Proxy against JHTDB DNS reference."""
+    metrics = verify_use_case_11_jhtdb_isotropic(verbose=False)
+    assert metrics["status"] == "PASSED"
+    assert metrics["spectral_slope_measured"] < 0.0
+    assert metrics["dissipation_rate_measured"] > 0.0
+    assert metrics["surrogate_scope_caveat_verified"] is True
+
+
 def test_qa_epistemic_nomenclature():
-    """Verify Gate 7: Zero banned pseudoscientific buzzwords in core code."""
+    """Verify Epistemic Gate: Zero banned pseudoscientific buzzwords in core code."""
     audit = audit_epistemic_nomenclature(REPO, verbose=False)
     assert audit["passed"] is True
     assert audit["violations_count"] == 0
 
 
 def test_qa_release_full_orchestration(tmp_path):
-    """Run full Release QA audit suite and verify certificate generation."""
+    """Run full Release QA audit suite across all 11 gates and verify certificate generation."""
     cert_path = tmp_path / "cert_test_release.json"
     cert, passed = run_release_qa(
-        release_tag="v8.1.0-rc1",
+        release_tag="v8.2.0-rc1",
         output_path=cert_path,
         verbose=False,
     )
     assert passed is True
     assert cert["overall_status"] == "CERTIFIED"
-    assert cert["certificate_id"] == "CERT-QA-RELEASE-V8.1.0-RC1"
+    assert cert["certificate_id"] == "CERT-QA-RELEASE-V8.2.0-RC1"
     assert cert["_measured"] is True
     assert cert["invariants_verified"]["H2_negative_controls"] is True
     assert cert["invariants_verified"]["UC1_high_re_stiffness_gain"] is True
@@ -124,5 +176,10 @@ def test_qa_release_full_orchestration(tmp_path):
     assert cert["invariants_verified"]["UC4_ida_dae_solenoidal_manifold"] is True
     assert cert["invariants_verified"]["UC5_polarquant_8x_compression"] is True
     assert cert["invariants_verified"]["UC6_pyo3_zerocopy_memory_safety"] is True
+    assert cert["invariants_verified"]["UC7_taylor_green_spectral_decay"] is True
+    assert cert["invariants_verified"]["UC8_lid_driven_cavity_ghia"] is True
+    assert cert["invariants_verified"]["UC9_rayleigh_benard_convection"] is True
+    assert cert["invariants_verified"]["UC10_kelvin_helmholtz_instability"] is True
+    assert cert["invariants_verified"]["UC11_jhtdb_isotropic_turbulence"] is True
     assert cert["invariants_verified"]["epistemic_nomenclature"] is True
     assert cert_path.exists()

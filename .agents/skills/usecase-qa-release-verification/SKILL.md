@@ -1,13 +1,12 @@
 ---
 name: usecase-qa-release-verification
 description: >-
-  End-to-end Quality Assurance (QA) certification and release gating workflow based on the 3 canonical LeanFlow solver use cases:
-  (1) High-Re Stiff Cascade (CVODE BDF vs. CFL explicit RK4 speedup >= 1000x),
-  (2) Real-Time Embedded Kernel (zero dynamic allocation, static RAM <= 64 KB, machine-precision agreement <= 1e-8),
-  (3) Dual-Scale UV Regularization (enstrophy suppression ratio >= 1.5x vs. classical Navier-Stokes).
+  End-to-end Quality Assurance (QA) certification and release gating workflow based on 11 LeanFlow solver use cases:
+  UC1–UC3 (Stiff Cascade, Embedded Real-Time, Dual-Scale Regularity), UC4–UC6 (IDA DAE, PolarQuant, PyO3 Zero-Copy),
+  and UC7–UC11 (Taylor-Green Vortex, Lid-Driven Cavity, Rayleigh-Bénard, Kelvin-Helmholtz, JHTDB Isotropic Turbulence).
   Enforces H2 negative controls, strict energy dissipation monotonicity, epistemic nomenclature compliance (zero banned buzzwords),
   and emits signed JSON audit certificates (CERT-QA-RELEASE-*). Activate prior to tagging, releasing, or deploying any major version.
-version: 1.0
+version: 2.0
 tier: T1 (QA) / T2 (Audit)
 updated: 2026-09-05
 ---
@@ -16,11 +15,11 @@ updated: 2026-09-05
 
 This skill defines the non-negotiable Quality Assurance (QA) and release gating protocol for all major, minor, and patch releases of the **LeanFlow Multiscale Navier-Stokes Enterprise Solver**.
 
-Every software release candidate (Python wheels, Docker appliances, C-ABI shared library `libleanflow.so`, and Rust crates) **must pass all 4 verification gates** and demonstrate active negative control verification (H2) before tagging, publication, or deployment.
+Every software release candidate (Python wheels, Docker appliances, C-ABI shared library `libleanflow.so`, and Rust crates) **must pass all 11 verification gates** and demonstrate active negative control verification (H2) before tagging, publication, or deployment.
 
 ---
 
-## 1. The 6 Mandatory Release Verification Gates
+## 1. The 11 Mandatory Release Verification Gates
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -131,7 +130,45 @@ Every software release candidate (Python wheels, Docker appliances, C-ABI shared
   - Zero memory copies: `is_zerocopy = True`.
   - Non-aliasing buffer capacity verified: `offset + length <= capacity` per Lean 4 `isWithinCapacity`.
 
-### Gate 7: Epistemic Nomenclature & Release Hardness Audit
+### Gate 7: Taylor-Green Vortex 2D Decay (PDEBench Reference)
+- **Physical Context**: Canonical 2D incompressible Navier-Stokes decay benchmark against PDEBench dataset (`pdearena/NavierStokes-2D`).
+- **Mechanism**: Pseudo-spectral solver with 2/3 dealiasing and exact analytical comparison.
+- **Pass Thresholds**:
+  - Machine-precision solenoidal residual: $|\text{div}(u)| < 10^{-12}$.
+  - Strict energy dissipation monotonicity: $E(t_{n+1}) \le E(t_n) + 10^{-10}$.
+  - $L^2$ error vs analytical: $< 0.1$ at coarse grid, $< 10^{-8}$ at resolved grid.
+
+### Gate 8: 2D Lid-Driven Cavity Flow (Ghia et al. 1982 Reference)
+- **Physical Context**: Standard wall-bounded CFD benchmark with primary and secondary corner vortices.
+- **Mechanism**: Fourier pseudo-spectral solver with volume penalization for no-slip solid walls.
+- **Pass Thresholds**:
+  - Benchmark comparison against 17 Ghia et al. (1982) control points along vertical centerline.
+  - Centerline $u$-velocity $L^\infty$ error: $< 1.0$ at coarse fast-mode grid.
+  - Stable steady-state convergence without numerical blowup.
+
+### Gate 9: 2D Rayleigh-Bénard Convection (Dedalus Reference)
+- **Physical Context**: Buoyancy-driven thermal convection between heated bottom and cooled top plates.
+- **Mechanism**: Boussinesq thermal-momentum coupling with dual-scale eddy viscosity and thermal diffusivity.
+- **Pass Thresholds**:
+  - Mean Nusselt number $\text{Nu} \ge 1.0$ (convective transport strictly dominates conduction).
+  - Mandatory surrogate scope caveat present per `AGENTS.md` Guardrail 2.
+
+### Gate 10: 2D Kelvin-Helmholtz Instability (Athena++ Reference)
+- **Physical Context**: Shear-layer instability with vortex roll-up and turbulent interface mixing.
+- **Mechanism**: Pseudo-spectral advection with vorticity centroid and interface thickness tracking.
+- **Pass Thresholds**:
+  - Mixing width growth ratio $> 1.0\times$ (interface spread driven by instability).
+  - Finite total kinetic energy and well-defined enstrophy peak.
+
+### Gate 11: 3D Forced Isotropic Turbulence Proxy (JHTDB Reference)
+- **Physical Context**: Statistically stationary homogeneous isotropic turbulence cascade proxy.
+- **Mechanism**: Katz-Pavlović dyadic shell model with scale-dependent dual-scale dissipation operator.
+- **Pass Thresholds**:
+  - Strictly negative spectral slope in inertial range: $\frac{d \log E(k)}{d \log k} < 0$.
+  - Strictly positive total dissipation rate: $\varepsilon = \sum D_n u_n^2 > 0$.
+  - Mandatory surrogate scope caveat present.
+
+### Final Epistemic Gate: Nomenclature & Release Hardness Audit
 Per `AGENTS.md` Guardrail 2 and `NAMING_POLICY.md`:
 - **Banned Terms**: `"Rulial Inversion"`, `"Holographic Regularisation"`, `"Karpathy Ratchet Auto-Research"`.
 - All production code, headers, documentation, and agent certificates must be automatically scanned.
@@ -151,6 +188,14 @@ Per `AGENTS.md` Guardrail 2 and `NAMING_POLICY.md`:
 | `nc_ram_overflow_caught` | Falsified state allocation of $128\text{ KB}$ | Detector flags violation ($> 64\text{ KB}$) |
 | `nc_enstrophy_inversion_caught`| Falsified suppression ratio $< 1.5\text{x}$ | Detector rejects non-regularized state |
 | `nc_banned_buzzwords_caught` | Injected banned pseudoscientific buzzword | Scanner flags file / raises violation |
+| `nc_ida_dae_divergence_caught` | Falsified non-solenoidal divergence $> 10^{-2}$ | Detector rejects non-solenoidal manifold |
+| `nc_polarquant_distortion_caught` | Falsified quantization distortion $> 20\%$ | Detector rejects excessive distortion |
+| `nc_memory_slice_overflow_caught` | Memory offset + length exceeding buffer capacity | Lean 4 slice invariant fails |
+| `nc_uc7_divergence_caught` | Falsified Taylor-Green divergence $> 10^{-12}$ | Detector rejects non-solenoidal flow |
+| `nc_uc8_cavity_deviation_caught` | Excessive Ghia profile deviation $> 1.0$ | Detector rejects unphysical wall penetration |
+| `nc_uc9_unphysical_nusselt_caught`| Sub-unity Nusselt number $\text{Nu} < 1.0$ | Detector rejects inverted heat conduction |
+| `nc_uc10_mixing_collapse_caught` | Suppressed mixing growth ratio $\le 1.0$ | Detector rejects suppressed shear instability |
+| `nc_uc11_anti_cascade_slope_caught` | Positive spectral slope $\ge 0$ (anti-cascade) | Detector rejects unphysical UV energy piling |
 
 ---
 

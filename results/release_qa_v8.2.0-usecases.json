@@ -1,0 +1,160 @@
+{
+  "certificate_id": "CERT-QA-RELEASE-V8.2.0-USECASES",
+  "release_tag": "v8.2.0-usecases",
+  "timestamp": "2026-09-05T19:33:35.105661+00:00",
+  "overall_status": "CERTIFIED",
+  "audit_duration_seconds": 9.107,
+  "invariants_verified": {
+    "H2_negative_controls": true,
+    "UC1_high_re_stiffness_gain": true,
+    "UC2_embedded_static_ram_budget": true,
+    "UC3_dualscale_uv_regularity": true,
+    "UC4_ida_dae_solenoidal_manifold": true,
+    "UC5_polarquant_8x_compression": true,
+    "UC6_pyo3_zerocopy_memory_safety": true,
+    "UC7_taylor_green_spectral_decay": true,
+    "UC8_lid_driven_cavity_ghia": true,
+    "UC9_rayleigh_benard_convection": true,
+    "UC10_kelvin_helmholtz_instability": true,
+    "UC11_jhtdb_isotropic_turbulence": true,
+    "epistemic_nomenclature": true
+  },
+  "use_cases": {
+    "use_case_1_turbulent_cascade": {
+      "status": "PASSED",
+      "cvode_steps_full": 6576,
+      "cvode_steps_ref": 1142,
+      "rk4_cfl_steps_required": 2048001,
+      "step_reduction_factor": 1793.35,
+      "wall_time_speedup_factor": 50098.34,
+      "energy_dissipated_pct": 28.2071,
+      "energy_monotone": true,
+      "_measured": true
+    },
+    "use_case_2_embedded_realtime": {
+      "status": "PASSED",
+      "static_ram_bytes": 1344,
+      "static_ram_budget_bytes": 65536,
+      "ram_budget_margin_pct": 97.95,
+      "max_state_deviation": 0.0,
+      "per_step_latency_emb_us": 68.85,
+      "energy_monotone": true,
+      "_measured": true
+    },
+    "use_case_3_dualscale_regularity": {
+      "status": "PASSED",
+      "k_star_crossover": 4.4721,
+      "energy_dissipated_dual": 0.037095,
+      "energy_dissipated_classical": 0.008836,
+      "final_enstrophy_dual": 25.6814,
+      "final_enstrophy_classical": 72.2033,
+      "enstrophy_suppression_ratio": 2.81,
+      "cvode_steps_dual": 3140,
+      "cvode_steps_classical": 3894,
+      "energy_monotone": true,
+      "_measured": true
+    },
+    "use_case_4_ida_dae_solenoidal": {
+      "status": "PASSED",
+      "t_final": 0.01,
+      "div_residual": 0.000137,
+      "is_solenoidal": true,
+      "energy": 0.624975,
+      "enstrophy": 1.015166,
+      "pressure": 0.0,
+      "execution_time_ms": 0.07,
+      "_measured": true
+    },
+    "use_case_5_polarquant_compression": {
+      "status": "PASSED",
+      "original_dim": 16,
+      "original_bytes": 128,
+      "compressed_bytes": 16,
+      "compression_ratio": 8.0,
+      "energy_distortion_pct": 17.808,
+      "compression_latency_us": 8.97,
+      "_measured": true
+    },
+    "use_case_6_pyo3_zerocopy": {
+      "status": "PASSED",
+      "is_zerocopy": true,
+      "num_steps": 329,
+      "final_energy": 0.624958,
+      "execution_time_ms": 0.405,
+      "lean4_memory_invariant_verified": true,
+      "_measured": true
+    },
+    "use_case_7_taylor_green": {
+      "status": "PASSED",
+      "grid": 64,
+      "nu": 0.001,
+      "l2_error": 0.057192,
+      "solenoidal_residual": 3.550636658606806e-19,
+      "energy_dissipated_pct": 16.1611,
+      "energy_monotone": true,
+      "wall_time_s": 0.581,
+      "_measured": true
+    },
+    "use_case_8_lid_driven_cavity": {
+      "status": "PASSED",
+      "grid": 16,
+      "re": 100,
+      "centerline_u_linf_error": 0.434,
+      "centerline_points_checked": 17,
+      "wall_time_s": 1.415,
+      "_measured": true
+    },
+    "use_case_9_rayleigh_benard": {
+      "status": "PASSED",
+      "grid": "16x8",
+      "ra": 2000,
+      "pr": 1.0,
+      "nusselt_mean": 1.0751,
+      "wall_time_s": 3.806,
+      "surrogate_scope_caveat_verified": true,
+      "_measured": true
+    },
+    "use_case_10_kelvin_helmholtz": {
+      "status": "PASSED",
+      "grid": 64,
+      "nu": 0.001,
+      "alpha_prime": 0.05,
+      "mixing_width_growth_ratio": 15.1136,
+      "enstrophy_peak_value": 7.2924,
+      "energy_final": 0.000122,
+      "wall_time_s": 0.203,
+      "_measured": true
+    },
+    "use_case_11_jhtdb_isotropic": {
+      "status": "PASSED",
+      "n_shells": 16,
+      "spectral_slope_measured": -14.8471,
+      "spectral_slope_reference": -1.6667,
+      "dissipation_rate_measured": 0.002403,
+      "dissipation_rate_reference": 0.103,
+      "wall_time_s": 0.82,
+      "surrogate_scope_caveat_verified": true,
+      "_measured": true
+    }
+  },
+  "negative_controls": {
+    "nc_energy_growth_caught": true,
+    "nc_ram_overflow_caught": true,
+    "nc_enstrophy_inversion_caught": true,
+    "nc_banned_buzzwords_caught": true,
+    "nc_ida_dae_divergence_caught": true,
+    "nc_polarquant_distortion_caught": true,
+    "nc_memory_slice_overflow_caught": true,
+    "nc_uc7_divergence_caught": true,
+    "nc_uc8_cavity_deviation_caught": true,
+    "nc_uc9_unphysical_nusselt_caught": true,
+    "nc_uc10_mixing_collapse_caught": true,
+    "nc_uc11_anti_cascade_slope_caught": true
+  },
+  "nomenclature_audit": {
+    "passed": true,
+    "violations_count": 0
+  },
+  "sha256_digest": "bbf368becea905b2aa59f4c36a8abb2c3f5880bda5a43971d9caead17acf5b20",
+  "_measured": true
+}

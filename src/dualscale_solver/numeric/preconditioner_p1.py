@@ -29,7 +29,7 @@ class SpectralFourierGatePreconditioner(spla.LinearOperator):
         epsilon: float = 1.0e-10,
     ):
         self.grid_shape = grid_shape
-        self.ndim = len(grid_shape)
+        self._spatial_ndim = len(grid_shape)
         self.total_size = int(np.prod(grid_shape))
         self.alpha_prime = alpha_prime
         self.nu = nu
@@ -42,7 +42,7 @@ class SpectralFourierGatePreconditioner(spla.LinearOperator):
 
     def _build_fourier_symbol(self) -> None:
         """Construct the 1D/2D dual-scale regularized inverse spectral symbol."""
-        if self.ndim == 1:
+        if self._spatial_ndim == 1:
             n = self.grid_shape[0]
             k = 2.0 * np.pi * np.fft.fftfreq(n, d=1.0 / n)
             k_sq = k ** 2
@@ -50,7 +50,7 @@ class SpectralFourierGatePreconditioner(spla.LinearOperator):
             symbol[0] = self.epsilon
             self.inv_symbol = 1.0 / symbol
             self.symbol = symbol
-        elif self.ndim == 2:
+        elif self._spatial_ndim == 2:
             ny, nx = self.grid_shape
             kx = 2.0 * np.pi * np.fft.fftfreq(nx, d=1.0 / nx)
             ky = 2.0 * np.pi * np.fft.fftfreq(ny, d=1.0 / ny)
@@ -61,16 +61,16 @@ class SpectralFourierGatePreconditioner(spla.LinearOperator):
             self.inv_symbol = 1.0 / symbol
             self.symbol = symbol
         else:
-            raise ValueError(f"Unsupported dimension: {self.ndim}")
+            raise ValueError(f"Unsupported dimension: {self._spatial_ndim}")
 
     def _matvec(self, x: np.ndarray) -> np.ndarray:
         """Apply P1^{-1} to input vector x in O(N log N) via FFT."""
         x_reshaped = x.reshape(self.grid_shape)
-        if self.ndim == 1:
+        if self._spatial_ndim == 1:
             x_hat = np.fft.fft(x_reshaped)
             sol_hat = x_hat * self.inv_symbol
             sol = np.fft.ifft(sol_hat).real
-        elif self.ndim == 2:
+        elif self._spatial_ndim == 2:
             x_hat = np.fft.fft2(x_reshaped)
             sol_hat = x_hat * self.inv_symbol
             sol = np.fft.ifft2(sol_hat).real

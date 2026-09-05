@@ -80,3 +80,4 @@ secrets/
 *.hf_token
 HF_TOKEN
 JHTDB_AUTH_TOKEN
+*.code-workspace

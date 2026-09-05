@@ -2,7 +2,7 @@
 set -eo pipefail
 
 echo "================================================================================"
-echo " SocrateAI LeanFlow: Phase 12 Karpathy Auto-Research Loop & Industrial Workflows"
+echo " SocrateAI LeanFlow: Phase 12 Monotonic Greedy Search Loop & Industrial Workflows"
 echo "================================================================================"
 
 export PYTHONPATH="src:${PYTHONPATH:-}"

@@ -1,0 +1,42 @@
+[package]
+name = "leanflow-enterprise"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "LeanFlow Enterprise: Extensions over rusty-SUNDIALS (IDA / CVODE) and runux-ai-runtime (HAL / Arena)"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+leanflow-core = { path = "../leanflow-core" }
+leanflow-solver = { path = "../leanflow-solver" }
+leanflow-ai = { path = "../leanflow-ai" }
+
+# Upstream 1: rusty-SUNDIALS (No code duplication)
+cvode = { path = "/home/xavkal/xdev/rusty-SUNDIALS/crates/cvode" }
+ida = { path = "/home/xavkal/xdev/rusty-SUNDIALS/crates/ida" }
+nvector = { path = "/home/xavkal/xdev/rusty-SUNDIALS/crates/nvector" }
+sundials-core = { path = "/home/xavkal/xdev/rusty-SUNDIALS/crates/sundials-core" }
+
+# Upstream 2: rust-linux-mini-kernel (ai_bridge & LockFreeAuditRingBuffer)
+ai_bridge = { path = "/home/xavkal/xdev/rust-linux-mini-kernel/crates/ai_bridge" }
+
+# Upstream 3: runux-ai-runtime (turbo_quant / PolarQuant compression)
+turbo_quant = { path = "/home/xavkal/xdev/runux-ai-runtime/crates/turbo_quant" }
+
+num-complex = { workspace = true }
+num-traits = { workspace = true }
+ndarray = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+pyo3 = { version = "0.20", features = ["extension-module"], optional = true }
+numpy = { version = "0.20", optional = true }
+
+[features]
+default = []
+python = ["dep:pyo3", "dep:numpy"]
+
+

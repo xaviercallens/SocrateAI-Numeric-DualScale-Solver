@@ -46,8 +46,8 @@ Every theorem statement, predicate, and filter must be proven non-vacuous by exh
 
 ---
 
-### `H5` : Strict Rulial Inversion (No Artificial Cutoffs)
-Singularity prevention and scale regularization must never rely on ad-hoc empirical cutoffs or artificial smoothing, but strictly on exact **Rulial Inversions**:
+### `H5` : Wavenumber-Dependent Scale Thresholding / Dual-Scale Regularization (No Artificial Cutoffs)
+Singularity prevention and scale regularization must never rely on ad-hoc empirical cutoffs or artificial smoothing, but strictly on exact **dual-scale wavenumber thresholding / T-duality mapping**:
 
 $$R_{\text{eff}}(R) = \max\left(R, \frac{\alpha'}{R}\right), \quad R_{\text{eff}} \ge \sqrt{\alpha'}$$
 

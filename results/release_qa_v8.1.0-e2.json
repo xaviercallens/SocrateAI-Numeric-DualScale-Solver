@@ -1,0 +1,98 @@
+{
+  "certificate_id": "CERT-QA-RELEASE-V8.1.0-E2",
+  "release_tag": "v8.1.0-e2",
+  "timestamp": "2026-09-05T17:34:14.881361+00:00",
+  "overall_status": "CERTIFIED",
+  "audit_duration_seconds": 2.283,
+  "invariants_verified": {
+    "H2_negative_controls": true,
+    "UC1_high_re_stiffness_gain": true,
+    "UC2_embedded_static_ram_budget": true,
+    "UC3_dualscale_uv_regularity": true,
+    "UC4_ida_dae_solenoidal_manifold": true,
+    "UC5_polarquant_8x_compression": true,
+    "UC6_pyo3_zerocopy_memory_safety": true,
+    "epistemic_nomenclature": true
+  },
+  "use_cases": {
+    "use_case_1_turbulent_cascade": {
+      "status": "PASSED",
+      "cvode_steps_full": 6576,
+      "cvode_steps_ref": 1142,
+      "rk4_cfl_steps_required": 2048001,
+      "step_reduction_factor": 1793.35,
+      "wall_time_speedup_factor": 49914.21,
+      "energy_dissipated_pct": 28.2071,
+      "energy_monotone": true,
+      "_measured": true
+    },
+    "use_case_2_embedded_realtime": {
+      "status": "PASSED",
+      "static_ram_bytes": 1344,
+      "static_ram_budget_bytes": 65536,
+      "ram_budget_margin_pct": 97.95,
+      "max_state_deviation": 0.0,
+      "per_step_latency_emb_us": 73.26,
+      "energy_monotone": true,
+      "_measured": true
+    },
+    "use_case_3_dualscale_regularity": {
+      "status": "PASSED",
+      "k_star_crossover": 4.4721,
+      "energy_dissipated_dual": 0.037095,
+      "energy_dissipated_classical": 0.008836,
+      "final_enstrophy_dual": 25.6814,
+      "final_enstrophy_classical": 72.2033,
+      "enstrophy_suppression_ratio": 2.81,
+      "cvode_steps_dual": 3140,
+      "cvode_steps_classical": 3894,
+      "energy_monotone": true,
+      "_measured": true
+    },
+    "use_case_4_ida_dae_solenoidal": {
+      "status": "PASSED",
+      "t_final": 0.01,
+      "div_residual": 0.000137,
+      "is_solenoidal": true,
+      "energy": 0.624975,
+      "enstrophy": 1.015166,
+      "pressure": 0.0,
+      "execution_time_ms": 0.062,
+      "_measured": true
+    },
+    "use_case_5_polarquant_compression": {
+      "status": "PASSED",
+      "original_dim": 16,
+      "original_bytes": 128,
+      "compressed_bytes": 16,
+      "compression_ratio": 8.0,
+      "energy_distortion_pct": 17.808,
+      "compression_latency_us": 9.3,
+      "_measured": true
+    },
+    "use_case_6_pyo3_zerocopy": {
+      "status": "PASSED",
+      "is_zerocopy": true,
+      "num_steps": 329,
+      "final_energy": 0.624958,
+      "execution_time_ms": 0.424,
+      "lean4_memory_invariant_verified": true,
+      "_measured": true
+    }
+  },
+  "negative_controls": {
+    "nc_energy_growth_caught": true,
+    "nc_ram_overflow_caught": true,
+    "nc_enstrophy_inversion_caught": true,
+    "nc_banned_buzzwords_caught": true,
+    "nc_ida_dae_divergence_caught": true,
+    "nc_polarquant_distortion_caught": true,
+    "nc_memory_slice_overflow_caught": true
+  },
+  "nomenclature_audit": {
+    "passed": true,
+    "violations_count": 0
+  },
+  "sha256_digest": "5ed79ee92e1be43a48e6ce9f133cc55cdd554329a95dd0ac5b1ba27c504473dd",
+  "_measured": true
+}

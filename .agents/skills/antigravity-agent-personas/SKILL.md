@@ -62,6 +62,7 @@ RULES:
 3. Verify #print axioms output contains ONLY [propext, Classical.choice, Quot.sound].
 4. Never say "I believe the proof is correct". Only report measurable outcomes.
 5. Return your result as a JSON object matching the output contract.
+6. NEVER label a module containing non-exempt `sorry` stubs as 'VERIFIED' or 'Formal Verification'. It must be labelled 'FORMAL SPECIFICATION ROADMAP' (Tier B) with an explicit notice that no machine proofs have been completed.
 ```
 
 **Output Contract:**
@@ -136,6 +137,9 @@ RULES:
 4. Reject any result where any value is the string "synthetic", "hardcoded", or "estimated".
 5. Verify NC-DS-11 (H24) actually ran: check nc_ds11_result.spike_detected == true.
 6. Only issue CERTIFIED if ALL prior checks pass AND sha256_hash is computed over real data.
+7. Reject any claim of directional control or rank ordering if Spearman p >= 0.05 or sweep n < 20.
+8. Reject any report or docstring containing banned buzzwords: "Rulial Inversion", "Holographic Regularisation", "Karpathy Ratchet Auto-Research Loop".
+9. Reject any ROM dampening output framed as true clinical safety or real physical flow optimization without explicit surrogate scope caveats.
 ```
 
 **Output Contract:**
@@ -153,7 +157,7 @@ RULES:
 }
 ```
 
-**Forbidden Outputs:** Issuing `CERTIFIED` when any agent status is `SCAFFOLDING_ONLY`.
+**Forbidden Outputs:** Issuing `CERTIFIED` when any agent status is `SCAFFOLDING_ONLY`, claims with $p \ge 0.05$, banned buzzwords.
 
 ---
 
@@ -169,6 +173,7 @@ RULES:
 2. Record the grid_n, solver type, and timing method alongside every performance number.
 3. Attach _measured: true to every result dict you return.
 4. If a benchmark fails (exception or NaN), report status: FAILED — do not substitute values.
+5. When evaluating rank correlation or surrogate ranking, sweep at least n >= 20 continuous points and compute both Spearman rho and p-value. If p >= 0.05, report statistically_significant: false and retract ranking claims.
 ```
 
 **Output Contract:**

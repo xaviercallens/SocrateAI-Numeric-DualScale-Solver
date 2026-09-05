@@ -4,6 +4,7 @@ members = [
     "crates/leanflow-core",
     "crates/leanflow-solver",
     "crates/leanflow-ai",
+    "crates/leanflow-enterprise",
 ]
 
 [workspace.package]

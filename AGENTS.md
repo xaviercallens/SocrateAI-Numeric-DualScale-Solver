@@ -26,6 +26,10 @@ An agent working on this repo must immediately stop and escalate when:
 6. FSI interface velocity discontinuity persists post-enforcement ($|v_{\text{fluid}} - \dot{w}| > 0$).
 7. Embedded HIL cycle budget exceeds 1.0 ms at 168 MHz for the $N=4\times4$ micro-kernel.
 8. CAD/STEP entity count is $< 5$ or lacks valid ISO-10303-21 header/footer structure.
+9. An empirical correlation is asserted when Spearman $p \ge 0.05$ or sample size $n < 20$.
+10. A Lean 4 formal specification with non-exempt `sorry` stubs is titled or described as "Formal Verification" or "Verified".
+11. Banned pseudoscientific buzzwords ("Rulial Inversion", "Holographic Regularisation", "Karpathy Ratchet Auto-Research") appear in outputs, docstrings, or manuscripts.
+12. A 1D/2D reduced-order model (ROM) output is reported as a clinical or real-world physical optimization without mandatory surrogate scope caveats.
 
 ---
 
@@ -38,10 +42,10 @@ An agent working on this repo must immediately stop and escalate when:
 | Agent | Must Return (key fields) | Forbidden Outputs |
 |-------|--------------------------|-------------------|
 | `dev_engineer` | `{"status": "SUCCESS\|FAILED", "artifact_path": "...", "cargo_check_exit_code": 0, "_measured": true}` | Prose only, null fields |
-| `math_reviewer` | `{"status": "VERIFIED\|FAILED", "lake_exit_code": 0, "sorry_count_non_exempt": 0, "_measured": true}` | `"I believe..."`, missing `lake_exit_code` |
-| `qa_scientific_auditor` | `{"certificate_id": "CERT-P[6-8]-*", "overall_status": "CERTIFIED\|REJECTED\|SCAFFOLDING_ONLY", "invariants_verified": {...}, "_measured": true}` | Partial audit, missing invariants |
+| `math_reviewer` | `{"status": "VERIFIED\|FAILED", "lake_exit_code": 0, "sorry_count_non_exempt": 0, "_measured": true}` | `"I believe..."`, missing `lake_exit_code`, calling `sorry` stubs "verified" |
+| `qa_scientific_auditor` | `{"certificate_id": "CERT-P[6-8]-*", "overall_status": "CERTIFIED\|REJECTED\|SCAFFOLDING_ONLY", "invariants_verified": {...}, "_measured": true}` | Partial audit, missing invariants, $p \ge 0.05$ claims |
 | `agentic_runtime_monitor` | `{"command": "steer\|hold\|escalate", "scheme": "BDF\|Adams", "steps_to_stabilize": N, "_measured": true}` | Free-form text commands, missing `command` |
-| `experimenter` | `{"status": "SUCCESS\|FAILED", "benchmark_result": {...}, "grid_n": N, "_measured": true}` | Hardcoded benchmark values |
+| `experimenter` | `{"status": "SUCCESS\|FAILED", "benchmark_result": {...}, "grid_n": N, "_measured": true}` | Hardcoded benchmark values, $n < 20$ correlation sweeps |
 | `hil_edge_engineer` | `{"status": "PASSED\|FAILED", "cycles": N, "clock_mhz": N, "latency_ms": N, "_measured": true}` | Synthetically estimated latency without cycle count |
 | `cad_generative_designer` | `{"status": "EXPORTED\|REJECTED", "step_path": "...", "entity_count": N, "sha256_hash": "...", "_measured": true}` | Malformed STEP, missing entities |
 | `fsi_multiphysics_auditor` | `{"status": "COUPLED\|DECOUPLED", "pre_enforcement_mismatch": N, "post_enforcement_residual": 0.0, "enstrophy_transfer_coeff": N, "_measured": true}` | Unchecked boundary mismatch, undefined $\eta$ |
@@ -55,13 +59,14 @@ An agent working on this repo must immediately stop and escalate when:
 
 | Tier | Prohibited |
 |------|-----------|
-| **T0** | Making mathematical judgment calls. Approving a Lean 4 proof without running `lake build`. Relying on T2 frontier cloud models for Phase 8 execution. |
+| **All Tiers** | Using banned buzzwords (`"Rulial Inversion"`, `"Holographic Regularisation"`, `"Karpathy Ratchet Auto-Research"`). Asserting directional/monotone correlation with $p \ge 0.05$. Claiming ROM dampening as true physical/clinical optimizations. Omitting the nonlinear transfer caveat $T(t)$ from enstrophy statements. |
+| **T0** | Making mathematical judgment calls. Approving a Lean 4 proof without running `lake build`. Calling `sorry` stubs "verified". Relying on T2 frontier cloud models for Phase 8 execution. |
 | **T1** | Hardcoding performance numbers. Setting `_measured: true` without an actual measurement. Relying on T2 frontier cloud models for deterministic computations. |
 | **T1 (Runtime)** | Issuing steering commands as free-form text. Reporting stabilization without counting steps. |
 | **T1 (Design)** | Creating dummy CAD files lacking ISO-10303-21 compliant geometry entities. |
 | **T1 (MultiPhysics)** | Bypassing no-slip interface verification or ignoring structural kinetic energy loss $> 5\%$. |
-| **T1 (Experiment)** | Flooring benchmark results (`max(actual, floor)`). Reporting a grid_n smaller than specified by H23. |
-| **T2** | Modifying invariants H1–H50 without an audit trail entry in the Lessons Learned Register (`LL.md`). |
+| **T1 (Experiment)** | Flooring benchmark results (`max(actual, floor)`). Reporting a grid_n smaller than specified by H23. Reporting rank correlation with $n < 20$ points. |
+| **T2** | Modifying invariants H1–H50 without an audit trail entry in the Lessons Learned Register (`LL.md`). Approving enstrophy theorems without accounting for the nonlinear transfer term. |
 
 ---
 
@@ -70,4 +75,13 @@ An agent working on this repo must immediately stop and escalate when:
 > [!IMPORTANT]
 > **Guardrail 1: Constrained JSON Decoding & Forbidden Status Sentinels**
 > All T0 and T1 agents executing autonomously (especially local SLMs) MUST be wrapped in a constrained decoding environment. If any forbidden status (e.g., `HALLUCINATED`, `SIMULATED`, `HARDCODED`) or unparsable prose is detected, the runtime must immediately reject and retry to prevent drift.
+
+> [!IMPORTANT]
+> **Guardrail 2: Epistemic Nomenclature & Statistical Integrity Guardrail**
+> All agents generating reports, code docstrings, or certificates MUST reject:
+> 1. Banned buzzwords: `"Rulial Inversion"` (use `"Wavenumber-Dependent Scale Thresholding"`), `"Holographic Regularisation"` (use `"Empirical Disruption Threshold"`), `"Karpathy Ratchet Auto-Research Loop"` (use `"Monotonic Greedy Line Search with Backtracking"`).
+> 2. P-value invalidation: Any assertion of directional control, rank ordering, or correlation when $p \ge 0.05$. Sweeps must enforce $n \ge 20$.
+> 3. Lean 4 stub misattribution: Calling modules with `sorry` stubs "formal verification" rather than "formal specification roadmap".
+> 4. Surrogate scope inflation: Calling $N=32$ ROM outputs "biomedical safety" or "clinical validation" without clear surrogate caveats.
+
 

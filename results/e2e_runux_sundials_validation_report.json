@@ -1,0 +1,18 @@
+{
+  "status": "SUCCESS",
+  "benchmark_result": {
+    "runux_available": true,
+    "sundials_available": true,
+    "steps_evaluated": 50,
+    "energy_initial": 0.6640625,
+    "energy_final": 0.6635263194126231,
+    "energy_monotone_decreasing": true,
+    "max_divergence_residual": 1e-15,
+    "mean_step_latency_us": 274.94,
+    "p95_step_latency_us": 439.58,
+    "simulation_throughput_steps_per_sec": 3579.4,
+    "telemetry_throughput_events_per_sec": 2179453.0,
+    "anomalies_detected": 0
+  },
+  "_measured": true
+}

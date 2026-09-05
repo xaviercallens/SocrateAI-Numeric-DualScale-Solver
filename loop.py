@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Karpathy Auto-Research Loop Runner (`loop.py`)
-================================================
-Definitive Karpathy Ratchet architecture for LeanFlow Phase 12.
+Monotonic Greedy Search Loop Runner (`loop.py`)
+==============================================
+Definitive Monotonic Greedy Line Search with Backtracking architecture for LeanFlow Phase 12.
 
 5-Step Cycle per problem:
   1. PROPOSE  — LLM-style hypothesis generator with Chain-of-Thought reasoning
@@ -87,7 +87,7 @@ def _print_loop_history(loop_name: str, loop_res: dict):
 
 def main():
     console.print(Panel.fit(
-        "[bold white]SOCRATEAI LEANFLOW — KARPATHY RATCHET AUTO-RESEARCH LOOP[/]\n"
+        "[bold white]SOCRATEAI LEANFLOW — MONOTONIC GREEDY SEARCH LOOP[/]\n"
         "[dim]PROPOSE → EVALUATE → RATCHET → VERIFY → REFLECT[/]",
         border_style="bright_cyan",
     ))

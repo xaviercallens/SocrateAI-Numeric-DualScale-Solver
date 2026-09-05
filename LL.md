@@ -258,4 +258,49 @@ OpenFOAM `icoFoam` with `tolerance 1e-08, relTol 0.001` achieves `max_div ≈ 4.
 - **Gotcha**: When shifting execution from Tier-2 frontier cloud models to local Tier-0/1 SLMs (e.g., `gemma2:27b`, `mistral:7b`), the models tend to drift into generating unstructured prose, failing to respect the strict JSON schema contracts mandated by H26. This breaks the autonomous pipeline.
 - **Rule**: Autonomous low-tier agents MUST be executed within a constrained decoding loop (Guardrail 1). The runner must strictly parse outputs against the JSON contract and utilize a `FORBIDDEN_STATUSES` sentinel list (`HALLUCINATED`, `SIMULATED`, `HARDCODED`) to instantly reject invalid or prose-polluted tokens, ensuring mathematical validity is driven purely by the compiled orchestrator, not LLM token probabilities.
 
+---
+
+### LL-38: Non-Significant Correlation ($p \ge 0.05$) Cannot Support "Directional Control" Claims
+**Date:** 2026-09-02 (Phase 12 Peer Review Audit)
+- **Gotcha**: Reporting Spearman $\rho = 0.52$ with $p = 0.12$ and claiming "the ROM provides valid directional control utility... so the ratchet loop correctly identifies the direction of improvement" is a direct logical and statistical contradiction. When $p > 0.05$, the null hypothesis cannot be rejected; there is a 12% probability that the rank correlation is entirely due to noise. Furthermore, testing on $n = 3$ points (where 2 values are capped by a numerical limiter at 300 Pa) produces tied ranks where achieving $p < 0.05$ is mathematically impossible.
+- **Rule**: If $p \ge 0.05$, any claim of directional, monotonic, or ranking utility MUST be retracted immediately. Sample size for rank correlation sweeps must be $n \ge 20$ points across the continuous operational domain. Automated sweeps (`couette_spearman_sweep(n_points=20)`) must verify $\rho > 0.90$ with $p < 0.05$ before any surrogate ranking claim is stated in publications.
+
+---
+
+### LL-39: Ban on Pseudoscientific Nomenclature & Buzzword Inflation
+**Date:** 2026-09-02 (Phase 12 Peer Review Audit)
+- **Gotcha**: Using terms like "Karpathy Ratchet Auto-Research Loop", "Rulial Inversion", and "Holographic Regularisation" severely undermines scientific rigor and invites peer-review rejection. In reality, these correspond to:
+  1. A 1D greedy line search with backtracking (Git revert upon fitness regression).
+  2. Wavenumber-dependent scale thresholding ($R_{\text{eff}}(k) = \max(k^{-1}, \alpha' k)$).
+  3. An empirical disruption stability threshold ($\Omega < 250 \cdot R_{\text{eff}}^2$).
+- **Rule**: Banned buzzwords across all code, docstrings, papers, and agent system instructions:
+  - BANNED: `"Karpathy Ratchet Auto-Research Loop"` → USE: `"Monotonic Greedy Line Search with Backtracking"`.
+  - BANNED: `"Rulial Inversion"` → USE: `"Wavenumber-Dependent Scale Thresholding"`.
+  - BANNED: `"Holographic Regularisation"` (in MHD/CFD context) → USE: `"Empirical Disruption Threshold"`.
+  Inspirations (e.g., Software 2.0) may be credited in footnotes, but must never replace precise technical terminology.
+
+---
+
+### LL-40: Enstrophy Monotonicity Requires Explicit Nonlinear Energy Transfer Accounting
+**Date:** 2026-09-02 (Phase 12 Peer Review Audit)
+- **Gotcha**: Formulating the enstrophy bound as an unconditional theorem ($\frac{d\Omega}{dt} \le -2\alpha' \sum k^4 |\hat{u}|^2 \le 0 \implies \Omega(t) \le \Omega(0)$) ignores the nonlinear Galerkin-projected advective transfer term $T(t) = \sum_k k^2 \text{Re}[\hat{u}_k^* \hat{N}_k]$. While biharmonic dissipation ($\alpha' k^4$) heavily dominates high wavenumbers, universal monotonicity for all $t \ge 0$ requires proving that dissipation bounds the nonlinear production term across all scales.
+- **Rule**: Never label the bound as an unconditional theorem unless the nonlinear term is formally bounded in Lean 4. It must be stated as a `Proposition` with the full decomposition:
+  $$\frac{d\Omega}{dt} = T(t) - 2\nu \sum_k k^4 |\hat{u}|^2 - 2\alpha' \sum_k k^6 |\hat{u}|^2$$
+  The condition $T(t) \le 0$ (net forward cascade) must be explicitly stated as a conditional assumption that is numerically verified on the truncated $N=32$ ROM, but remains an open problem for unconstrained initial conditions.
+
+---
+
+### LL-41: Lean 4 `sorry` Stubs Are Formal Specifications, Never "Formal Verification"
+**Date:** 2026-09-02 (Phase 12 Peer Review Audit)
+- **Gotcha**: Titling a manuscript section "Lean 4 Formal Verification" when all theorem statements contain `sorry` stubs misleads readers into believing that machine theorem proving has verified the PDE properties. In Lean 4, the `sorry` tactic completely bypasses the proof checker, resulting in zero mathematical verification.
+- **Rule**: A section or module containing non-exempt `sorry` stubs MUST be titled "Formal Specification Roadmap" or "Formal Signatures". The documentation must explicitly state: *"No Lean 4 proofs have been completed in this release; theorem bodies use sorry stubs and are validated at runtime via Pydantic."* The title "Formal Verification" is strictly reserved for Tier A modules passing `lake build` with 0 `sorry` and certified via `#print axioms`.
+
+---
+
+### LL-42: Framing Reduced-Order Model (ROM) Optimizations vs Real Industrial Flows
+**Date:** 2026-09-02 (Phase 12 Peer Review Audit)
+- **Gotcha**: Claiming a drop in Wall Shear Stress from 260 Pa to 137.9 Pa on a 1D periodic Fourier ROM with heavy biharmonic damping as an "Industrial / Biomedical Safety Gain" is physically invalid. High biharmonic viscosity ($-\alpha' k^4$) artificially smooths velocity gradients near walls, so the reduction may be largely a numerical artifact.
+- **Rule**: All performance indicators must be explicitly framed as "Surrogate-Model Performance Indicators ($N=32$ ROM)". Mandatory safety warnings must be included: *"ROM outputs are control surrogates only and cannot be cited as clinical or regulatory safety claims without 3D CFD validation on patient-specific geometries using validated Navier-Stokes solvers."*
+
+
 

@@ -1,0 +1,63 @@
+{
+  "status": "SUCCESS",
+  "benchmark_result": {
+    "use_case_1": {
+      "name": "High-Re Turbulent Dyadic Cascade (CVODE BDF vs. Fixed RK4)",
+      "lf_adaptive_steps": 1142,
+      "rk4_cfl_fixed_steps_required": 2048001,
+      "rk4_cfl_steps_ran": 50000,
+      "step_reduction_factor": 1793.35,
+      "wall_time_speedup_factor_extrapolated": 58284.34,
+      "rk4_extrapolated_wall_time_s": 106.25,
+      "lf_wall_time_ms": 1.823,
+      "energy_initial": 0.7921732667224936,
+      "energy_final": 0.5687242365905323,
+      "energy_conservation_pct_dissipated": 28.2071,
+      "energy_monotone": true,
+      "n_shells": 16,
+      "nu": 0.0001,
+      "t_final": 0.5,
+      "_measured": true
+    },
+    "use_case_2": {
+      "name": "Real-Time Embedded Control Loop (Zero-Alloc ETD-RK4 vs. Heap RK4)",
+      "n_shells": 16,
+      "n_steps": 1000,
+      "dt_ms": 1.0,
+      "lf_per_step_latency_us": 79.7904,
+      "ref_per_step_latency_us": 51.9971,
+      "allocation_speedup_factor": 0.652,
+      "static_ram_kb": 1.27,
+      "ram_budget_kb": 64,
+      "ram_budget_passed": true,
+      "energy_initial": 0.625,
+      "energy_final_lf": 0.2585470781980515,
+      "energy_final_ref": 0.2585470781980515,
+      "max_state_deviation": 0.0,
+      "energy_monotone": true,
+      "_measured": true
+    },
+    "use_case_3": {
+      "name": "Dual-Scale Enhanced Dissipation vs. Classical Kolmogorov Viscosity",
+      "n_shells": 16,
+      "nu": 0.001,
+      "alpha_prime": 0.05,
+      "dual_scale_crossover_k_star": 4.4721,
+      "t_final": 0.5,
+      "energy_initial": 0.625,
+      "energy_final_dual": 0.5879049797973601,
+      "energy_final_classical": 0.6161639070558494,
+      "enstrophy_final_dual": 25.681437669045206,
+      "enstrophy_final_classical": 72.20325969630834,
+      "peak_dissipation_wavenumber_dual": 16.0,
+      "peak_dissipation_wavenumber_classical": 32.0,
+      "uv_dissipation_shift_factor": 0.5,
+      "cvode_steps_dual": 3140,
+      "cvode_steps_classical": 3894,
+      "energy_monotone_dual": true,
+      "energy_monotone_classical": true,
+      "_measured": true
+    }
+  },
+  "_measured": true
+}

@@ -28,7 +28,7 @@ where $\alpha' > 0$ defines the crossover scale:
 ## 2. Solver & Preconditioner Modules
 
 ### P1 Spectral Fourier Gate Preconditioner (`dualscale_solver.numeric.preconditioner_p1`)
-- Implements Fourier-space inverse Rulial symbol: $P_1(k) = \max(k^2, \alpha' k^4)$.
+- Implements Fourier-space dual-scale wavenumber-dependent thresholding symbol: $P_1(k) = \max(k^2, \alpha' k^4)$.
 - Applied in $\mathcal{O}(N \log N)$ operations via FFT.
 - Guarantees preconditioned condition number $\kappa(P_1^{-1} A) \le 10^3$ (H14).
 
@@ -133,4 +133,28 @@ When advancing industrial PoCs to cloud-production (Phase 6c), you must adhere t
 
 ### 7.5. Industrial Productization (Phase 8 Mandate)
 - Package core solver as a standalone Python Wheel (`leanflow`), native C-ABI shared library (`libleanflow.so`), and lightweight Docker HPC appliance.
+
+## 8. Epistemic Integrity & Peer Review Guardrails (LL-38–LL-42)
+
+### 8.1. Statistical Significance for Surrogate Rankings (LL-38)
+- Any assertion of monotonic ranking or directional control utility MUST have Spearman rank correlation $p < 0.05$. If $p \ge 0.05$, the assertion is scientifically invalid and must be retracted.
+- Sweeps must use sample size $n \ge 20$ points across the operational domain (e.g., `couette_spearman_sweep(n_points=20)`).
+
+### 8.2. Scientific Terminology Mandate (LL-39)
+- Strictly ban pseudoscientific buzzwords:
+  - Do NOT use: `"Karpathy Ratchet Auto-Research Loop"`. Use: `"Monotonic Greedy Line Search with Backtracking"`.
+  - Do NOT use: `"Rulial Inversion"`. Use: `"Wavenumber-Dependent Scale Thresholding"`.
+  - Do NOT use: `"Holographic Regularisation"` in fluid/plasma context. Use: `"Empirical Disruption Threshold"`.
+
+### 8.3. Enstrophy Monotonicity Caveat (LL-40)
+- Enstrophy bounds must explicitly account for the nonlinear transfer term:
+  $$\frac{d\Omega}{dt} = T(t) - 2\nu \sum k^4 |\hat{u}|^2 - 2\alpha' \sum k^6 |\hat{u}|^2$$
+  Unconditional monotonicity holds if and only if $T(t) \le 0$ (net forward cascade). Document this as a `Proposition` with conditional numerical validation, not an unconditional theorem.
+
+### 8.4. Lean 4 Formal Specifications vs Formal Proofs (LL-41)
+- Modules containing `sorry` stubs are **Formal Specifications (Tier B)**, NOT Formal Verification. Reserve "Formal Verification" strictly for Lean 4 modules passing `lake build` with 0 `sorry` and certified via `#print axioms`.
+
+### 8.5. Surrogate ROM Scope Framing (LL-42)
+- All performance gains on 1D/2D periodic Fourier models must be framed as **Surrogate-Model Performance Indicators**. Mandatory warnings must clarify that ROM damping cannot be cited as clinical safety or production CFD validation without 3D high-fidelity cross-validation.
+
 

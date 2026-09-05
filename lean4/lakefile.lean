@@ -33,3 +33,9 @@ lean_lib «Aerospace» where
 lean_lib «Medical» where
   -- Medical FDA Class III Hemodynamics Invariants (Phase 11 PoC)
 
+lean_lib «EnterpriseSpec» where
+  -- LeanFlow Enterprise Formal Architectural Specification & Safety Contracts
+
+lean_lib «EnterprisePhase2Spec» where
+  -- Phase E2 Extensions: PyO3 Zero-Copy, IDA DAE Solenoidal Solver, PolarQuant Compression
+

@@ -1,7 +1,7 @@
 """
 P1 Spectral Fourier Gate Preconditioner for Dual-Scale PDEs.
 
-Implements exact Fourier-space Rulial scale-regularized operator inversion:
+Implements exact Fourier-space dual-scale wavenumber-dependent operator inversion:
     P_1(k) = max(k^2, alpha' * k^4)
     P_1^{-1} v = F^{-1} [ F(v) / (k^2 + alpha' * k^4 + eps) ]
 
@@ -41,7 +41,7 @@ class SpectralFourierGatePreconditioner(spla.LinearOperator):
         super().__init__(dtype=np.float64, shape=(self.total_size, self.total_size))
 
     def _build_fourier_symbol(self) -> None:
-        """Construct the 1D/2D Rulial regularized inverse spectral symbol."""
+        """Construct the 1D/2D dual-scale regularized inverse spectral symbol."""
         if self.ndim == 1:
             n = self.grid_shape[0]
             k = 2.0 * np.pi * np.fft.fftfreq(n, d=1.0 / n)

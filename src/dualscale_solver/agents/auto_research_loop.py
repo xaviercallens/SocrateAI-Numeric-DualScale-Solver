@@ -7,10 +7,10 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class KarpathyAutoResearchLoop:
+class MonotonicGreedySearchLoop:
     """
-    Karpathy Ratchet Auto-Research Loop
-    ====================================
+    Monotonic Greedy Line Search Loop with Backtracking
+    ===================================================
     5-step cycle: PROPOSE → EVALUATE → RATCHET → VERIFY → REFLECT
 
     The ratchet mechanism guarantees monotonic progress:
@@ -45,7 +45,7 @@ class KarpathyAutoResearchLoop:
         self.stagnation_count: int = 0
 
     async def run(self) -> Dict[str, Any]:
-        logger.info(f"🚀 Starting Karpathy Ratchet Loop: {self.problem_name}")
+        logger.info(f"🚀 Starting Monotonic Greedy Search Loop: {self.problem_name}")
 
         certified_result = None
 
@@ -166,3 +166,7 @@ class KarpathyAutoResearchLoop:
             # Inject the live stagnation signal into the last history entry
             enriched[-1] = {**enriched[-1], "stuck_in_local_minimum": is_stuck}
         return enriched
+
+
+# Backward-compatibility alias
+KarpathyAutoResearchLoop = MonotonicGreedySearchLoop

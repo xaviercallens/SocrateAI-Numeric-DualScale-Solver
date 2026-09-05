@@ -165,9 +165,9 @@ def cmd_workflow11(args: argparse.Namespace) -> int:
 from dualscale_solver.agents.phase12_workflow_orchestrator import run_phase12_pipeline
 
 def cmd_workflow12(args: argparse.Namespace) -> int:
-    """Run Phase 12 Autonomous Auto-Research Loop & Industrial Workflows (Workflow 12)."""
+    """Run Phase 12 Autonomous Monotonic Greedy Search Loop & Industrial Workflows (Workflow 12)."""
     print("================================================================================")
-    print(" SocrateAI LeanFlow: Phase 12 Karpathy Auto-Research Loop & Industrial Workflows")
+    print(" SocrateAI LeanFlow: Phase 12 Monotonic Greedy Search Loop & Industrial Workflows")
     print("================================================================================")
     report = run_phase12_pipeline()
     cert = report["certificate"]

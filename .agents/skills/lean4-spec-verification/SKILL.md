@@ -13,12 +13,17 @@ updated: 2026-08-31
 
 Guidance for formal mathematical verification in Lean 4 with Mathlib.
 
-## 1. Epistemic Standard for Tier A
-
+## 1. Epistemic Standard for Tier A vs. Tier B Specifications
+ 
 A Lean 4 theorem achieves **Tier A Certification** if and only if:
 1. It compiles cleanly with the pinned `lean-toolchain`.
 2. It contains **zero `sorry`** tactics in active proof bodies.
 3. The `#print axioms` output contains only Lean's foundational axioms: `[propext, Classical.choice, Quot.sound]`.
+
+**Tier B Specifications (Stubs)**:
+- Any file or theorem containing `sorry` stubs is a **Formal Specification Roadmap**, NOT a formal verification.
+- In Lean 4, `sorry` completely bypasses the proof checker, providing zero formal verification.
+- It is strictly forbidden to title sections or modules containing `sorry` as "Formal Verification". They must be titled "Formal Specification Roadmap" or "Formal Signatures".
 
 ## 2. Verification Procedure
 

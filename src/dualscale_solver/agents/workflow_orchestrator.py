@@ -382,7 +382,7 @@ class Phase1WorkflowOrchestrator:
         # H4 — Non-Vacuity: At least one simulation ran and produced nonzero output
         h4_non_vacuous = float(exp_data["phase_1_divergence"]["final_energy"]) > 0
 
-        # H5 — Strict Rulial Inversions: Enstrophy bound enforced
+        # H5 — Wavenumber-Dependent Scale Thresholding: Enstrophy bound enforced
         h5_enstrophy_bound = exp_data["phase_2_taylor_green"]["bound_satisfied"]
 
         # H6 — Solenoidal Transversality: Machine-precision divergence

@@ -171,3 +171,109 @@ def native_cvode_integrate(
         "num_rhs_evals": num_rhs_evals,
     }
 
+
+# =========================================================================
+# Phase E2: PyO3 Native Extension Zero-Copy Bridge
+# =========================================================================
+import sys
+_REPO_ROOT = Path(__file__).parent.parent.parent.parent
+_RELEASE_DIR = _REPO_ROOT / "target" / "release"
+if _RELEASE_DIR.exists() and str(_RELEASE_DIR) not in sys.path:
+    sys.path.insert(0, str(_RELEASE_DIR))
+
+try:
+    import leanflow_enterprise as _lfe
+    PYO3_ENTERPRISE_AVAILABLE = True
+except ImportError:
+    _lfe = None
+    PYO3_ENTERPRISE_AVAILABLE = False
+
+
+def native_cvode_integrate_zerocopy(
+    n_shells: int,
+    nu: float,
+    alpha_prime: Optional[float],
+    use_bdf: bool,
+    rtol: float,
+    atol: float,
+    u0: np.ndarray,
+    t_final: float,
+    n_steps: int
+) -> Dict[str, Any]:
+    """Execute CVODE dyadic integration with zero-copy NumPy array views via PyO3."""
+    if PYO3_ENTERPRISE_AVAILABLE and _lfe is not None:
+        u0_c = np.ascontiguousarray(u0, dtype=np.float64)
+        res = _lfe.solve_cvode_dyadic_zerocopy(
+            n_shells, nu, alpha_prime, use_bdf, rtol, atol, u0_c, t_final, n_steps
+        )
+        return {
+            "times": res.time_history,
+            "energy": res.energy_history,
+            "enstrophy": res.enstrophy_history,
+            "final_state": res.final_state,
+            "num_steps": res.num_steps,
+            "num_rhs_evals": res.num_rhs_evals,
+            "is_zerocopy": True,
+        }
+    # Fallback to ctypes
+    res_ctypes = native_cvode_integrate(
+        n_shells, nu, alpha_prime, use_bdf, rtol, atol, u0, t_final, n_steps
+    )
+    res_ctypes["is_zerocopy"] = False
+    return res_ctypes
+
+
+def native_ida_solenoidal_integrate_zerocopy(
+    n_modes: int,
+    nu: float,
+    alpha_prime: Optional[float],
+    rtol: float,
+    atol: float,
+    u0: np.ndarray,
+    p0: float,
+    t_final: float,
+    h: float
+) -> Dict[str, Any]:
+    """Execute IDA Incompressible Navier-Stokes DAE solenoidal solve via PyO3."""
+    if not PYO3_ENTERPRISE_AVAILABLE or _lfe is None:
+        raise RuntimeError("leanflow_enterprise PyO3 extension is required for IDA DAE solve.")
+    u0_c = np.ascontiguousarray(u0, dtype=np.float64)
+    res = _lfe.solve_ida_solenoidal_zerocopy(
+        n_modes, nu, alpha_prime, rtol, atol, u0_c, p0, t_final, h
+    )
+    return {
+        "t_final": res.t_final,
+        "velocity": res.velocity,
+        "pressure": res.pressure,
+        "div_residual": res.div_residual,
+        "energy": res.energy,
+        "enstrophy": res.enstrophy,
+        "is_solenoidal": res.is_solenoidal,
+        "is_zerocopy": True,
+    }
+
+
+def native_polarquant_compress_zerocopy(
+    state: np.ndarray,
+    target_bits: int = 4,
+    step_index: int = 0,
+    time: float = 0.0,
+    seed: int = 42
+) -> Any:
+    """Compress high-frequency telemetry state using PolarQuant orthogonal rotation."""
+    if not PYO3_ENTERPRISE_AVAILABLE or _lfe is None:
+        raise RuntimeError("leanflow_enterprise PyO3 extension is required for PolarQuant compression.")
+    state_c = np.ascontiguousarray(state, dtype=np.float64)
+    return _lfe.polarquant_compress_zerocopy(state_c, target_bits, step_index, time, seed)
+
+
+def native_polarquant_decompress_zerocopy(
+    packet: Any,
+    seed: int = 42
+) -> np.ndarray:
+    """Decompress PolarQuant telemetry packet back into physical f64 state vector."""
+    if not PYO3_ENTERPRISE_AVAILABLE or _lfe is None:
+        raise RuntimeError("leanflow_enterprise PyO3 extension is required for PolarQuant decompression.")
+    return _lfe.polarquant_decompress_zerocopy(packet, seed)
+
+

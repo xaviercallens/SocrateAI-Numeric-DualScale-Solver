@@ -67,6 +67,8 @@ def publish_dataset(api: HfApi, cert: dict) -> str:
         "leanflow_phase12_report.tex": REPORT_TEX,
         "loop.py": LOOP_PY,
         "README.md": README_DATASET,
+        "hf_benchmark.json": REPO_ROOT / "data" / "output" / "hf_benchmark.json",
+        "formal_manifest.json": Path("/home/xavkal/xdev/SocrateAIShared/foundationpaper2/outputs/formal_manifest.json"),
     }
 
     for remote_path, local_path in files_to_upload.items():
@@ -82,18 +84,8 @@ def publish_dataset(api: HfApi, cert: dict) -> str:
             commit_message=f"feat: LeanFlow Phase 12 Enterprise v1.0 — {remote_path}",
         )
 
-    # Upload source snapshot
-    src_dir = REPO_ROOT / "src" / "dualscale_solver"
-    if src_dir.exists():
-        log.info("  Uploading source snapshot: src/dualscale_solver/")
-        api.upload_folder(
-            folder_path=str(src_dir),
-            path_in_repo="src/dualscale_solver",
-            repo_id=DATASET_REPO_ID,
-            repo_type="dataset",
-            commit_message="feat: LeanFlow Phase 12 — source code snapshot",
-            ignore_patterns=["__pycache__", "*.pyc", "*.egg-info"],
-        )
+    # Source snapshot deliberately omitted to protect intellectual property
+    # as per enterprise and scientific licensing models.
 
     dataset_url = f"https://huggingface.co/datasets/{DATASET_REPO_ID}"
     log.info("Dataset published: %s", dataset_url)

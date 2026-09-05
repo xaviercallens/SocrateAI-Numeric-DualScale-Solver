@@ -181,7 +181,7 @@ equations with ETD-RK4 time integration on $N=32$ Fourier modes:
 \end{equation}
 where $L_k = -\nu k^2 - \alpha' k^4$ is the dual-scale linear operator
 (standard viscosity $\nu$ plus biharmonic hyper-dissipation $\alpha'$),
-$\phi_i$ denotes the ETD $\phi$-functions~\cite{herde2024poseidon}, and $\hat{N}_j$ are the
+$\phi_i$ denotes the ETD $\phi$-functions~\cite{cox2002etd}, and $\hat{N}_j$ are the
 nonlinear Galerkin-projected terms at each sub-stage.
 
 \subsection{Enstrophy Boundedness}
@@ -566,8 +566,28 @@ cd reports && make
 \begin{itemize}[nosep]
   \item \href{https://huggingface.co/datasets/angioinsight/single-vessel-flow}{\texttt{angioinsight/single-vessel-flow}} --- VAD/blood viscosity calibration
   \item \href{https://huggingface.co/datasets/polymathic-ai/MHD_64}{\texttt{polymathic-ai/MHD\_64}} --- MHD turbulence plasma $\beta$ calibration
-  \item \href{https://huggingface.co/datasets/pdebench/PDEBench}{\texttt{pdebench/PDEBench}} --- Compressible Euler Mach-2 (fallback: synthetic)
+  \item \href{https://huggingface.co/datasets/pdebench/PDEBench}{\texttt{pdebench/PDEBench}} --- Compressible Euler Mach-2 (fallback: synthetic) \cite{takamoto2022pdebench}
 \end{itemize}
+
+%% -----------------------------------------------------------------------------
+\section{Lean 4 Kernel Compilation Guide}
+\label{sec:lean4_compilation}
+
+The solver interfaces with the \texttt{SocrateAI-Lean-Lib} for formal verification. 
+To compile the kernel and run the agentic verification loop:
+
+\begin{codebox}[Lean 4 Kernel Compilation]
+\begin{lstlisting}[language=bash]
+# Ensure lean-toolchain v4.33.1 is active in the library
+cd SocrateAI-Lean-Lib
+lake build
+
+# The agents interact via the blueprint script
+python scripts/quickwin_blueprint.py
+\end{lstlisting}
+\end{codebox}
+
+The blueprint script compiles the \texttt{blueprint.tex} specifications into Lean 4 skeletons, which are then placed into the \texttt{Generated/} directory. Note that the main \texttt{SocrateAI-Lean-Lib} uses \texttt{v4.33.1}, while the solver environment runs on \texttt{v4.34.0-rc2}. Agents must never use \texttt{native\_decide} to bypass the kernel.
 
 %% -----------------------------------------------------------------------------
 \section{Conclusion}
@@ -656,10 +676,14 @@ AngioInsight, ``single-vessel-flow: Arterial Blood Flow Dataset,''
 \textit{HuggingFace Hub}, 2024.
 \url{https://huggingface.co/datasets/angioinsight/single-vessel-flow}
 
-\bibitem{herde2024poseidon}
-M.~Herde et~al., ``PDEBench: An Extensive Benchmark for Scientific
-Machine Learning,'' \textit{NeurIPS 2022 Datasets and Benchmarks Track}.
-\url{https://huggingface.co/datasets/pdebench/PDEBench}
+\bibitem{cox2002etd}
+S.~M.~Cox and P.~C.~Matthews, ``Exponential Time Differencing for Stiff Systems,''
+\textit{Journal of Computational Physics}, vol. 176, no. 2, pp. 430--455, 2002.
+
+\bibitem{takamoto2022pdebench}
+M.~Takamoto et~al., ``PDEBench: An Extensive Benchmark for Scientific
+Machine Learning,'' \textit{NeurIPS 2022 Datasets and Benchmarks Track}, 2022.
+\url{https://arxiv.org/abs/2210.07182}
 \end{thebibliography}
 
 \end{document}

@@ -30,8 +30,14 @@ from dualscale_solver.benchmarks.usecase_runners import (
     run_uc9_rayleigh_benard,
     run_uc10_kelvin_helmholtz,
     run_uc11_jhtdb_isotropic,
+    run_uc12_burgers,
+    run_uc13_poiseuille,
+    run_uc14_double_shear_layer,
+    run_uc15_vortex_merger,
+    run_uc16_hartmann_mhd,
     run_all_usecases,
 )
+
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -231,16 +237,154 @@ class TestUC11JHTDBIsotropic:
 
 
 # ═══════════════════════════════════════════════════════════════════════════
+# UC12: 1D Viscous Burgers Shock Formation & Decay
+# ═══════════════════════════════════════════════════════════════════════════
+
+class TestUC12BurgersShock:
+    """UC12: 1D Viscous Burgers Shock Formation & Decay."""
+
+    def test_uc12_runs_successfully(self):
+        result = run_uc12_burgers(n_grid=64, nu=0.05, t_final=0.5, dt=0.005)
+        assert result["status"] == "PASSED"
+        assert result["_measured"] is True
+        assert result["use_case"] == "UC12"
+
+    def test_uc12_colehopf_accuracy(self):
+        """L2 error against Cole-Hopf analytical solution must be < 0.08."""
+        result = run_uc12_burgers(n_grid=64, nu=0.05, t_final=0.5, dt=0.005)
+        assert result["L2_error_final"] < 0.08, \
+            f"Burgers L2 error {result['L2_error_final']} exceeds 0.08"
+
+    def test_uc12_energy_monotone(self):
+        """Energy must decay monotonically."""
+        result = run_uc12_burgers(n_grid=64, nu=0.05, t_final=0.5, dt=0.005)
+        assert result["energy_monotone"] is True
+        assert result["energy_final"] <= result["energy_initial"]
+
+    def test_uc12_shock_steepening(self):
+        """Velocity gradient magnitude should be finite and positive."""
+        result = run_uc12_burgers(n_grid=64, nu=0.05, t_final=0.5, dt=0.005)
+        assert np.isfinite(result["max_abs_gradient"])
+        assert result["max_abs_gradient"] > 0.0
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# UC13: 2D Poiseuille Channel Flow
+# ═══════════════════════════════════════════════════════════════════════════
+
+class TestUC13PoiseuilleChannel:
+    """UC13: 2D Poiseuille Channel Flow."""
+
+    def test_uc13_runs_successfully(self):
+        result = run_uc13_poiseuille(ny=32, nu=1.0, t_final=1.0, dt=0.01)
+        assert result["status"] == "PASSED"
+        assert result["_measured"] is True
+        assert result["use_case"] == "UC13"
+
+    def test_uc13_parabolic_profile_accuracy(self):
+        """Centerline velocity should match analytical parabolic solution within 8%."""
+        result = run_uc13_poiseuille(ny=32, nu=1.0, t_final=1.0, dt=0.01)
+        assert result["centerline_u_relative_error"] < 0.08, \
+            f"Centerline relative error {result['centerline_u_relative_error']} exceeds 8%"
+
+    def test_uc13_wall_shear_stress(self):
+        """Wall shear stress must be positive."""
+        result = run_uc13_poiseuille(ny=32, nu=1.0, t_final=1.0, dt=0.01)
+        assert result["wall_shear_stress"] > 0.0
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# UC14: 2D Double Shear Layer Roll-Up
+# ═══════════════════════════════════════════════════════════════════════════
+
+class TestUC14DoubleShearLayer:
+    """UC14: 2D Double Shear Layer Roll-Up."""
+
+    def test_uc14_runs_successfully(self):
+        result = run_uc14_double_shear_layer(n_grid=64, nu=1e-3, t_final=0.5, dt=0.002)
+        assert result["status"] == "PASSED"
+        assert result["_measured"] is True
+        assert result["use_case"] == "UC14"
+
+    def test_uc14_rollup_enstrophy_concentration(self):
+        """Peak enstrophy must exceed 5.0 during roll-up."""
+        result = run_uc14_double_shear_layer(n_grid=64, nu=1e-3, t_final=0.5, dt=0.002)
+        assert result["enstrophy_peak_value"] > 5.0, \
+            f"Peak enstrophy {result['enstrophy_peak_value']} <= 5.0"
+
+    def test_uc14_solenoidal_preservation(self):
+        """Divergence residual must remain < 1e-12."""
+        result = run_uc14_double_shear_layer(n_grid=64, nu=1e-3, t_final=0.5, dt=0.002)
+        assert result["solenoidal_residual"] < 1e-12
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# UC15: 2D Co-Rotating Vortex Merging
+# ═══════════════════════════════════════════════════════════════════════════
+
+class TestUC15VortexMerger:
+    """UC15: 2D Co-Rotating Vortex Merging."""
+
+    def test_uc15_runs_successfully(self):
+        result = run_uc15_vortex_merger(n_grid=32, nu=1e-3, t_final=0.5, dt=0.002)
+        assert result["status"] == "PASSED"
+        assert result["_measured"] is True
+        assert result["use_case"] == "UC15"
+
+    def test_uc15_vortex_attraction_separation(self):
+        """Separation ratio d_final / d_0 must be <= 1.05 (attraction/merging)."""
+        result = run_uc15_vortex_merger(n_grid=32, nu=1e-3, t_final=0.5, dt=0.002)
+        assert result["vortex_separation_ratio"] <= 1.05, \
+            f"Separation ratio {result['vortex_separation_ratio']} > 1.05"
+
+    def test_uc15_circulation_bounded(self):
+        """Core circulation conservation error must be finite and bounded."""
+        result = run_uc15_vortex_merger(n_grid=32, nu=1e-3, t_final=0.5, dt=0.002)
+        assert np.isfinite(result["circulation_conservation_pct"])
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# UC16: 3D Hartmann Channel Duct (MHD)
+# ═══════════════════════════════════════════════════════════════════════════
+
+class TestUC16HartmannMhd:
+    """UC16: 3D Hartmann Channel Duct (MHD)."""
+
+    def test_uc16_runs_successfully(self):
+        result = run_uc16_hartmann_mhd(ny=32, hartmann_number=5.0, nu=0.2, t_final=0.5, dt=0.002)
+        assert result["status"] == "PASSED"
+        assert result["_measured"] is True
+        assert result["use_case"] == "UC16"
+
+    def test_uc16_hartmann_flattening_profile(self):
+        """Hartmann profile Linf error vs analytical must be < 0.15."""
+        result = run_uc16_hartmann_mhd(ny=32, hartmann_number=5.0, nu=0.2, t_final=0.5, dt=0.002)
+        assert result["hartmann_profile_linf_error"] < 0.15, \
+            f"Hartmann Linf error {result['hartmann_profile_linf_error']} exceeds 0.15"
+
+    def test_uc16_lorentz_force_damping(self):
+        """Lorentz braking must damp flow velocity ratio > 1.2x compared to hydrodynamic."""
+        result = run_uc16_hartmann_mhd(ny=32, hartmann_number=5.0, nu=0.2, t_final=0.5, dt=0.002)
+        assert result["lorentz_damping_ratio"] > 1.2, \
+            f"Lorentz damping ratio {result['lorentz_damping_ratio']} <= 1.2"
+
+    def test_uc16_surrogate_caveat_present(self):
+        """Mandatory surrogate scope caveat must be present."""
+        result = run_uc16_hartmann_mhd(ny=32, hartmann_number=5.0, nu=0.2, t_final=0.5, dt=0.002)
+        assert "surrogate_scope_caveat" in result
+
+
+# ═══════════════════════════════════════════════════════════════════════════
 # Database & Registry Tests
 # ═══════════════════════════════════════════════════════════════════════════
 
 class TestUseCaseDatabase:
     """Tests for the use case database and registry."""
 
-    def test_registry_has_5_use_cases(self):
+    def test_registry_has_10_use_cases(self):
         registry = build_usecase_registry()
-        assert len(registry) == 5
-        for uc_id in ["UC7", "UC8", "UC9", "UC10", "UC11"]:
+        assert len(registry) == 10
+        for uc_id in [f"UC{i}" for i in range(7, 17)]:
             assert uc_id in registry
 
     def test_all_use_cases_have_datasets(self):
@@ -277,7 +421,7 @@ class TestUseCaseDatabase:
         assert output.exists()
         with open(output) as f:
             data = json.load(f)
-        assert len(data) == 5
+        assert len(data) == 10
 
     def test_ghia_reference_completeness(self):
         """Ghia data must have 17 points for each Re."""
@@ -319,25 +463,56 @@ class TestNegativeControls:
         assert r1["dissipation_rate_measured"] != r2["dissipation_rate_measured"], \
             "Negative control: results are identical for different ν — possible hardcoding"
 
+    def test_nc_uc12_shock_divergence_detected(self):
+        """Falsified large L2 error in Burgers shock must fail acceptance."""
+        falsified_l2 = 0.5
+        criterion = AcceptanceCriterion("L2_error_final", 0.08, "<")
+        assert not criterion.evaluate(falsified_l2)
+
+    def test_nc_uc13_poiseuille_profile_detected(self):
+        """Falsified large profile error in Poiseuille channel must fail acceptance."""
+        falsified_err = 0.4
+        criterion = AcceptanceCriterion("centerline_u_relative_error", 0.08, "<")
+        assert not criterion.evaluate(falsified_err)
+
+    def test_nc_uc14_suppressed_enstrophy_detected(self):
+        """Falsified low enstrophy in Double Shear Layer must fail acceptance."""
+        falsified_enstrophy = 2.0
+        criterion = AcceptanceCriterion("enstrophy_peak_value", 5.0, ">")
+        assert not criterion.evaluate(falsified_enstrophy)
+
+    def test_nc_uc15_vortex_repulsion_detected(self):
+        """Falsified vortex divergence (repulsion) in Vortex Merger must fail acceptance."""
+        falsified_sep_ratio = 1.8
+        criterion = AcceptanceCriterion("vortex_separation_ratio", 1.05, "<")
+        assert not criterion.evaluate(falsified_sep_ratio)
+
+    def test_nc_uc16_mhd_deviation_detected(self):
+        """Falsified large Hartmann profile error must fail acceptance."""
+        falsified_hartmann_err = 0.5
+        criterion = AcceptanceCriterion("hartmann_profile_linf_error", 0.15, "<")
+        assert not criterion.evaluate(falsified_hartmann_err)
+
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Full Pipeline (fast mode)
 # ═══════════════════════════════════════════════════════════════════════════
 
 class TestFullPipeline:
-    """Integration test: run all 5 use cases in fast mode."""
+    """Integration test: run all 10 reference use cases in fast mode."""
 
     def test_full_pipeline_executes(self):
         results = run_all_usecases(fast_mode=True)
-        assert results["total_use_cases"] == 5
+        assert results["total_use_cases"] == 10
         assert results["_measured"] is True
         assert results["total_wall_time_s"] > 0
 
     def test_full_pipeline_majority_pass(self):
-        """At least 4 of 5 should pass in fast mode."""
+        """At least 9 of 10 should pass in fast mode."""
         results = run_all_usecases(fast_mode=True)
-        assert results["passed"] >= 4, \
-            f"Only {results['passed']}/5 passed; expected ≥ 4"
+        assert results["passed"] >= 9, \
+            f"Only {results['passed']}/10 passed; expected ≥ 9"
 
 
 import json  # for TestUseCaseDatabase.test_registry_serializable
+

@@ -42,7 +42,7 @@ def main():
         help="Full resolution mode (128²–256² grids, longer integration)"
     )
     parser.add_argument(
-        "--output", type=str, default="results/usecase_benchmarks_uc7_uc11.json",
+        "--output", type=str, default="results/usecase_benchmarks_uc7_uc16.json",
         help="Output JSON path"
     )
     parser.add_argument(
@@ -54,7 +54,7 @@ def main():
     fast_mode = not args.full
 
     print("=" * 70)
-    print("LeanFlow Enterprise — Reference Benchmark Suite (UC7–UC11)")
+    print("LeanFlow Enterprise — Reference Benchmark Suite (UC7–UC16)")
     print(f"Mode: {'FAST (CI)' if fast_mode else 'FULL RESOLUTION'}")
     print("=" * 70)
 
@@ -68,7 +68,7 @@ def main():
     results = run_all_usecases(fast_mode=fast_mode)
 
     # Add metadata
-    results["certificate_id"] = f"CERT-UC7-UC11-BENCH-{datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%d%H%M%S')}"
+    results["certificate_id"] = f"CERT-UC7-UC16-BENCH-{datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%d%H%M%S')}"
     results["timestamp"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
     results["schema_version"] = "UC-BENCH-v1"
 

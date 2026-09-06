@@ -1,0 +1,6 @@
+# Reference Literature Stub: UC6
+Title: PyO3 Zero-Copy Buffer Safety
+DOI: 10.1145/3313808.3313822
+
+Note: The full PDF is not freely available (paywalled or lacks direct arXiv link).
+This stub serves as a persistent reference for LeanFlowScratchDB.

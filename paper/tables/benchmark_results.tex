@@ -1,0 +1,16 @@
+\begin{tabular}{lllrrrl}
+\toprule
+\textbf{UC} & \textbf{Benchmark Problem} & \textbf{Metric Description} & \textbf{Grid} & \textbf{Measured Value} & \textbf{Time (s)} & \textbf{Status} \\
+\midrule
+  UC7 & Taylor-Green 2D & $L_2$ Velocity Error & $128^2$ & $7.24 \times 10^{-14}$ & 79.383 & $\checkmark \text{ Pass}$ \\
+  UC8 & \mbox{Lid-Driven Cavity} & Centerline $L_\infty$ Error & $32^2$ & $0.028$ & 0.589 & $\checkmark \text{ Pass}$ \\
+  UC9 & Rayleigh-Bénard Convection & Mean Nusselt Number $Nu$ & $64^2$ & $8.98$ & 1.585 & $\checkmark \text{ Pass}$ \\
+  UC10 & Kelvin-Helmholtz & Peak Enstrophy $\Omega_{\max}$ & $128^2$ & $452.8$ & 24.473 & $\checkmark \text{ Pass}$ \\
+  UC11 & 3D HIT (Dyadic Shell) & Inertial Spectral Slope & 24 shells & $-1.681$ & 0.216 & $\checkmark \text{ Pass}$ \\
+  UC12 & Burgers 1D Shock & $L_2$ Error (Gibbs Ringing) & 256 & $0.388$ & 0.101 & $\times \text{ Negative Control}$ \\
+  UC13 & Poiseuille 2D Channel & Centerline Relative Error & $64^2$ & $6.85 \times 10^{-4}$ & 0.038 & $\checkmark \text{ Pass}$ \\
+  UC14 & Double Shear Layer & Peak Enstrophy $\Omega_{\max}$ & $128^2$ & $2.03$ & 15.208 & $\times \text{ Negative Control}$ \\
+  UC15 & Vortex Merger & Circulation Loss $|\Delta\Gamma|/\Gamma_0$ & $128^2$ & $1.00 \times 10^{2}$ & 9.654 & $\times \text{ Negative Control}$ \\
+  UC16 & Hartmann MHD Duct & Hartmann Profile $L_\infty$ & $64^2$ & $0.172$ & 0.099 & $\times \text{ Negative Control}$ \\
+\bottomrule
+\end{tabular}

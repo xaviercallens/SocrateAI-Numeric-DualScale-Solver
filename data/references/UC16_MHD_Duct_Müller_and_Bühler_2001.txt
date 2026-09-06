@@ -1,0 +1,6 @@
+# Reference Literature Stub: UC16
+Title: MHD Duct Müller and Bühler 2001
+DOI: 10.1016/S0167-6105(01)00155-4
+
+Note: The full PDF is not freely available (paywalled or lacks direct arXiv link).
+This stub serves as a persistent reference for LeanFlowScratchDB.

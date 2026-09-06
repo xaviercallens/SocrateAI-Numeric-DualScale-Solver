@@ -30,6 +30,11 @@ from scripts.usecase_qa_release_verifier import (
     verify_use_case_9_rayleigh_benard,
     verify_use_case_10_kelvin_helmholtz,
     verify_use_case_11_jhtdb_isotropic,
+    verify_use_case_12_burgers,
+    verify_use_case_13_poiseuille,
+    verify_use_case_14_double_shear_layer,
+    verify_use_case_15_vortex_merger,
+    verify_use_case_16_hartmann_mhd,
     run_negative_controls,
     audit_epistemic_nomenclature,
 )
@@ -51,6 +56,12 @@ def test_qa_negative_controls():
     assert nc_results["nc_uc9_unphysical_nusselt_caught"] is True
     assert nc_results["nc_uc10_mixing_collapse_caught"] is True
     assert nc_results["nc_uc11_anti_cascade_slope_caught"] is True
+    assert nc_results["nc_uc12_shock_divergence_caught"] is True
+    assert nc_results["nc_uc13_poiseuille_profile_caught"] is True
+    assert nc_results["nc_uc14_shear_layer_suppression_caught"] is True
+    assert nc_results["nc_uc15_vortex_merger_repulsion_caught"] is True
+    assert nc_results["nc_uc16_hartmann_mhd_deviation_caught"] is True
+
 
 
 def test_qa_gate1_stiff_cascade():
@@ -150,6 +161,46 @@ def test_qa_gate11_jhtdb_isotropic():
     assert metrics["surrogate_scope_caveat_verified"] is True
 
 
+def test_qa_gate12_burgers():
+    """Verify Gate 12: 1D Viscous Burgers Shock Formation & Decay against PyClaw reference."""
+    metrics = verify_use_case_12_burgers(verbose=False)
+    assert metrics["status"] == "PASSED"
+    assert metrics["l2_error"] < 0.08
+    assert metrics["energy_monotone"] is True
+
+
+def test_qa_gate13_poiseuille():
+    """Verify Gate 13: 2D Poiseuille Channel Flow against OpenFOAM reference."""
+    metrics = verify_use_case_13_poiseuille(verbose=False)
+    assert metrics["status"] == "PASSED"
+    assert metrics["centerline_u_relative_error"] < 0.08
+    assert metrics["wall_shear_stress"] > 0.0
+
+
+def test_qa_gate14_double_shear_layer():
+    """Verify Gate 14: 2D Double Shear Layer Roll-Up against AMReX reference."""
+    metrics = verify_use_case_14_double_shear_layer(verbose=False)
+    assert metrics["status"] == "PASSED"
+    assert metrics["enstrophy_peak_value"] > 5.0
+    assert metrics["solenoidal_residual"] < 1e-12
+
+
+def test_qa_gate15_vortex_merger():
+    """Verify Gate 15: 2D Co-Rotating Vortex Merging against Spectral-DNS reference."""
+    metrics = verify_use_case_15_vortex_merger(verbose=False)
+    assert metrics["status"] == "PASSED"
+    assert metrics["vortex_separation_ratio"] <= 1.05
+
+
+def test_qa_gate16_hartmann_mhd():
+    """Verify Gate 16: 3D Hartmann Channel Duct (MHD) against Athena++ reference."""
+    metrics = verify_use_case_16_hartmann_mhd(verbose=False)
+    assert metrics["status"] == "PASSED"
+    assert metrics["hartmann_profile_linf_error"] < 0.15
+    assert metrics["lorentz_damping_ratio"] > 1.2
+    assert metrics["surrogate_scope_caveat_verified"] is True
+
+
 def test_qa_epistemic_nomenclature():
     """Verify Epistemic Gate: Zero banned pseudoscientific buzzwords in core code."""
     audit = audit_epistemic_nomenclature(REPO, verbose=False)
@@ -158,16 +209,16 @@ def test_qa_epistemic_nomenclature():
 
 
 def test_qa_release_full_orchestration(tmp_path):
-    """Run full Release QA audit suite across all 11 gates and verify certificate generation."""
+    """Run full Release QA audit suite across all 16 gates and verify certificate generation."""
     cert_path = tmp_path / "cert_test_release.json"
     cert, passed = run_release_qa(
-        release_tag="v8.2.0-rc1",
+        release_tag="v8.3.0-extended-usecases",
         output_path=cert_path,
         verbose=False,
     )
     assert passed is True
     assert cert["overall_status"] == "CERTIFIED"
-    assert cert["certificate_id"] == "CERT-QA-RELEASE-V8.2.0-RC1"
+    assert cert["certificate_id"] == "CERT-QA-RELEASE-V8.3.0-EXTENDED-USECASES"
     assert cert["_measured"] is True
     assert cert["invariants_verified"]["H2_negative_controls"] is True
     assert cert["invariants_verified"]["UC1_high_re_stiffness_gain"] is True
@@ -181,5 +232,11 @@ def test_qa_release_full_orchestration(tmp_path):
     assert cert["invariants_verified"]["UC9_rayleigh_benard_convection"] is True
     assert cert["invariants_verified"]["UC10_kelvin_helmholtz_instability"] is True
     assert cert["invariants_verified"]["UC11_jhtdb_isotropic_turbulence"] is True
+    assert cert["invariants_verified"]["UC12_burgers_shock_decay"] is True
+    assert cert["invariants_verified"]["UC13_poiseuille_channel_flow"] is True
+    assert cert["invariants_verified"]["UC14_double_shear_layer_rollup"] is True
+    assert cert["invariants_verified"]["UC15_vortex_merger_dynamics"] is True
+    assert cert["invariants_verified"]["UC16_hartmann_mhd_channel"] is True
     assert cert["invariants_verified"]["epistemic_nomenclature"] is True
     assert cert_path.exists()
+

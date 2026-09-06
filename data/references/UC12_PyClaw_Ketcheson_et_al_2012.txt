@@ -1,0 +1,6 @@
+# Reference Literature Stub: UC12
+Title: PyClaw Ketcheson et al 2012
+DOI: 10.1137/11082539X
+
+Note: The full PDF is not freely available (paywalled or lacks direct arXiv link).
+This stub serves as a persistent reference for LeanFlowScratchDB.

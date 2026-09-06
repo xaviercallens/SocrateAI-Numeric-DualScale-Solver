@@ -1,0 +1,6 @@
+# Reference Literature Stub: UC4
+Title: IDA DAE Incompressibility
+DOI: 10.1137/0909062
+
+Note: The full PDF is not freely available (paywalled or lacks direct arXiv link).
+This stub serves as a persistent reference for LeanFlowScratchDB.

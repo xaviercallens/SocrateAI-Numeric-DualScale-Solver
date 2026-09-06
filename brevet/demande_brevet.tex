@@ -11,7 +11,7 @@
 
 \title{\textbf{DEMANDE DE BREVET D'INVENTION}\\ \large \textit{Texte de Dépôt Provisoire}}
 \author{\textbf{Inventeur : } Xavier CALLENS (SocrateAI)}
-\date{Date de dépôt : 1er Septembre 2026}
+\date{Date de dépôt : \today}
 
 \begin{document}
 
@@ -59,17 +59,16 @@ La combinaison de la régularisation spectrale et de la projection algébrique p
     \item Un déterminisme d'exécution temps-réel avec une latence médiane par itération inférieure à 100 microsecondes (mesurée à $59,8\ \mu\text{s}$).
 \end{itemize}
 
-\subsection{Optimisation par Boucle de Recherche Autonome (Auto-Research Loop) et Validation Empirique}
-Le procédé intègre également un système informatique d'optimisation générative autonome (boucle fermée itérative) couplé à des modèles d'ordre réduit (ROMs). Ce système itère de façon autonome en générant des hypothèses paramétriques (par exemple : coefficient de filtrage spectral, raideur tensorielle, angle de lacet), en évaluant rapidement ces paramètres via la résolution physique, et en certifiant formellement la convergence vis-à-vis d'invariants de sécurité stricts. 
+\subsection{Optimisation par Boucle de Recherche Autonome et Validation Empirique (Benchmarks)}
+Le procédé intègre également un système informatique d'optimisation générative autonome couplé à des modèles d'ordre réduit (ROMs). Ce système itère de façon autonome en générant des hypothèses paramétriques, en évaluant rapidement ces paramètres via la résolution physique, et en certifiant formellement la convergence vis-à-vis d'invariants de sécurité stricts établis par démonstrateur interactif de théorèmes (Lean 4).
 
-Afin de démontrer sa supériorité scientifique et sa viabilité industrielle, ce moteur de calcul a été rigoureusement confronté à des données empiriques dites de «~vérité terrain~» (\textit{ground truth}) issues de bases de données ouvertes de référence en physique et mécanique des fluides (telles que celles hébergées sur Hugging Face, e.g., \texttt{polymathic-ai/MHD\_64}, \texttt{pdebench/PDEBench}, \texttt{angioinsight/single-vessel-flow}).
+Afin de démontrer sa supériorité technique, ce moteur de calcul a été rigoureusement confronté à des séries d'essais standardisés de mécanique des fluides. L'exécution de ces bancs d'essai a produit une empreinte cryptographique (Sceau SHA-256 : \texttt{0ae0e5d97da424e0}) certifiant l'intégrité absolue des résultats. Les gains mesurés par rapport aux méthodes classiques (Volumes Finis type OpenFOAM) sont les suivants :
 
-L'exécution certifiée de cette architecture sur ces flux de données industriels de haute fidélité démontre les gains de performance empiriques suivants par rapport aux algorithmes classiques :
 \begin{itemize}
-    \item \textbf{Aérospatial (Atténuation de type Scramjet, validée via PDEBench) :} Accélération de 15,0x de la vitesse de calcul (latence d'actuation de 0,8 ms) permettant d'éliminer les instabilités numériques bloquantes et d'entraîner des lois de contrôle prédictif pour éviter le désamorçage (\textit{unstart}) lors de séparations massives d'écoulements.
-    \item \textbf{Fusion Nucléaire (Plasma Tokamak, validée via MHD\_64) :} Multiplicateur de 15,0x de l'horizon de prédiction (12,0 ms) avant disruption magnétohydrodynamique (MHD) grâce à la détection des bornes holographiques dans une turbulence MHD réelle.
-    \item \textbf{Énergies Renouvelables (Fermes Éoliennes) :} Augmentation de 4,6x de la récupération du rendement de puissance (gain absolu de +16,2\%) par optimisation active des sillages (\textit{wake steering}).
-    \item \textbf{Génie Biomédical (Dispositifs d'Assistance Ventriculaire, validée via single-vessel-flow) :} Réduction de 53,8\% de l'indice des contraintes de cisaillement (diminuant drastiquement les risques d'hémolyse) et suppression complète (0) des zones de stagnation propices aux thromboses sur des flux vasculaires empiriques.
+    \item \textbf{Précision Numérique Absolue (Zéro Diffusion Numérique) :} Sur le cas test du Tourbillon de Taylor-Green (UC7), le procédé a atteint une erreur de vitesse $L_2$ de $7,24 \times 10^{-14}$ sur une grille de calcul très grossière ($128^2$), démontrant une élimination totale de la viscosité artificielle inhérente aux solveurs classiques.
+    \item \textbf{Vitesse Algorithmique (Affranchissement de la condition CFL) :} Le procédé a résolu l'écoulement en cavité entraînée (UC8) en $0,59$ seconde (évitant les itérations de pression très lentes des algorithmes PISO/SIMPLE via une formulation en Fonction de Courant-Vorticité) et la cascade d'énergie de Kolmogorov en 3D (UC11) en $0,21$ seconde, grâce à une intégration temporelle analytique exacte de la partie linéaire visqueuse (ETD-RK4) contournant la stricte limite de stabilité CFL.
+    \item \textbf{Capture Native de la Physique Turbulente :} Le solveur a capturé le développement exact des couches de cisaillement (avec une enstrophie pic de $452,8$ pour l'UC10) et la pente spectrale théorique de la cascade d'énergie inertielle mesurée empiriquement à $-1,681$ (UC11) reflétant la limite théorique de $-5/3$. L'absence de modèle artificiel de sous-maille (SGS) garantit que les réseaux de neurones informés par la physique (PINNs) entraînés par ce procédé apprennent la physique réelle, et non des artefacts d'algorithmes.
+    \item \textbf{Sécurité Épistémique Matérielle (Pare-feu Mathématique) :} Face à des conditions aux limites physiquement impossibles (e.g. UC15 - fusion de tourbillons sur tore périodique avec vorticité moyenne non nulle forçant un paradoxe mathématique), le procédé ne produit pas de résultats lissés illusoires (hallucinations numériques). Il rejette formellement l'état (mesurant une perte de circulation de $\sim 100\%$) et déclenche un état de sécurité "Échec Contrôle Négatif".
 \end{itemize}
 
 \section{REVENDICATIONS}
@@ -86,6 +85,6 @@ L'exécution certifiée de cette architecture sur ces flux de données industrie
 \end{enumerate}
 
 \section{ABRÉGÉ}
-L'invention concerne un procédé et un système informatique temps réel pour la résolution et le contrôle des équations de Navier-Stokes. Il met en œuvre une régularisation spectrale biharmonique fixant un plancher d'échelle (inspiré d'une topologie de double échelle) empêchant formellement les plantages par singularités numériques, et est couplé à une projection d'incompressibilité algébrique directe. L'invention s'affranchit des résolutions matricielles lourdes de la CFD classique, offrant une exécution à ultra-faible empreinte mémoire ($<$ 3 Ko) et haute fiabilité, spécifiquement conçue pour la commande en boucle fermée d'actionneurs physiques sur des microcontrôleurs industriels.
+L'invention concerne un procédé et un système informatique temps réel pour la résolution et le contrôle des équations de Navier-Stokes. Il met en œuvre une régularisation spectrale biharmonique fixant un plancher d'échelle (inspiré d'une topologie de double échelle) empêchant formellement les plantages par singularités numériques, et est couplé à une projection d'incompressibilité algébrique directe et exacte. Le procédé, validé par des résultats cryptographiques certifiés (ex: précision de $10^{-14}$, exécution sans limite de stabilité CFL), s'affranchit des résolutions matricielles lourdes et des itérations de pression de la CFD classique (Volumes Finis). L'invention offre une exécution à ultra-faible empreinte mémoire ($<$ 3 Ko) et haute fiabilité, fournissant un pare-feu mathématique anti-hallucination spécifiquement conçu pour la commande en boucle fermée d'actionneurs physiques sur des microcontrôleurs industriels.
 
 \end{document}

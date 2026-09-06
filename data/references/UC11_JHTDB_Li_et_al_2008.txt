@@ -1,0 +1,6 @@
+# Reference Literature Stub: UC11
+Title: JHTDB Li et al 2008
+DOI: 10.1080/14685240802376389
+
+Note: The full PDF is not freely available (paywalled or lacks direct arXiv link).
+This stub serves as a persistent reference for LeanFlowScratchDB.

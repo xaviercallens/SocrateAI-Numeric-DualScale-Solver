@@ -1,0 +1,6 @@
+# Reference Literature Stub: UC14
+Title: AMReX-Hydro Bell et al 1989
+DOI: 10.1016/0021-9991(89)90151-4
+
+Note: The full PDF is not freely available (paywalled or lacks direct arXiv link).
+This stub serves as a persistent reference for LeanFlowScratchDB.

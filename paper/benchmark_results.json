@@ -1,0 +1,109 @@
+{
+  "timestamp": "2026-09-06T14:28:26.323007+00:00",
+  "total_wall_time_s": 131.34728134000034,
+  "benchmarks_passed": 6,
+  "benchmarks_total": 10,
+  "sha256_seal": "0ae0e5d97da424e0",
+  "results": {
+    "UC7": {
+      "uc_id": "UC7",
+      "l2_error": 7.239544863522776e-14,
+      "energy_rel_error": 2.0061730054976579e-13,
+      "solenoidal_residual": 5.911116349062871e-16,
+      "cvode_steps": 42,
+      "rk4_cfl_steps": 407,
+      "step_reduction_factor": 9.69047619047619,
+      "energy_monotone": true,
+      "E0": 0.25,
+      "E_final": 0.24019735978813095,
+      "E_exact": 0.2401973597880808,
+      "wall_time_s": 79.38295924199338,
+      "grid_N": 128,
+      "passed": true
+    },
+    "UC8": {
+      "uc_id": "UC8",
+      "re": 100.0,
+      "centerline_u_linf_error": 0.02762688331804633,
+      "centerline_points_checked": 33,
+      "steps_run": 3000,
+      "wall_time_s": 0.5889822159952018,
+      "grid_N": 32,
+      "passed": true
+    },
+    "UC9": {
+      "uc_id": "UC9",
+      "nusselt_mean": 8.97911285473884,
+      "ra": 1000000.0,
+      "pr": 1.0,
+      "surrogate_scope_caveat_verified": true,
+      "wall_time_s": 1.58541721200163,
+      "grid_N": 64,
+      "passed": true
+    },
+    "UC10": {
+      "uc_id": "UC10",
+      "enstrophy_peak": 452.8373725647858,
+      "mixing_width_growth_ratio": 37.890625,
+      "E0": 0.4800249999784888,
+      "E_final": 0.4496057134310203,
+      "wall_time_s": 24.47328373399796,
+      "grid_N": 128,
+      "passed": true
+    },
+    "UC11": {
+      "uc_id": "UC11",
+      "spectral_slope_measured": -1.680944729049225,
+      "dissipation_rate_measured": 0.26361046678314337,
+      "re_lambda_target": 433.0,
+      "surrogate_scope_caveat_verified": true,
+      "wall_time_s": 0.21550571300031152,
+      "grid_N": 24,
+      "passed": true
+    },
+    "UC12": {
+      "uc_id": "UC12",
+      "l2_error": 0.3884363783516688,
+      "energy_monotone": true,
+      "wall_time_s": 0.10071282301214524,
+      "grid_N": 256,
+      "passed": false
+    },
+    "UC13": {
+      "uc_id": "UC13",
+      "centerline_u_relative_error": 0.000685397698815593,
+      "solenoidal_residual": 1e-10,
+      "wall_time_s": 0.03843674200470559,
+      "grid_N": 64,
+      "passed": true
+    },
+    "UC14": {
+      "uc_id": "UC14",
+      "enstrophy_peak_value": 2.0276699765096406,
+      "solenoidal_residual": 3.271466002167716e-14,
+      "wall_time_s": 15.207550716993865,
+      "grid_N": 128,
+      "passed": false
+    },
+    "UC15": {
+      "uc_id": "UC15",
+      "circulation_conservation_pct": 99.99999999999878,
+      "vortex_separation_ratio": 0.9817477042468109,
+      "Gamma_initial": 0.08042477193189873,
+      "Gamma_final": -8.560517226586862e-18,
+      "wall_time_s": 9.653663076998782,
+      "grid_N": 128,
+      "passed": false
+    },
+    "UC16": {
+      "uc_id": "UC16",
+      "hartmann_profile_linf_error": 0.1722261584926842,
+      "lorentz_damping_ratio": 0.64,
+      "hartmann_number": 8.0,
+      "surrogate_scope_caveat_verified": true,
+      "wall_time_s": 0.0991337029990973,
+      "grid_N": 64,
+      "passed": false
+    }
+  }
+}

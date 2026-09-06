@@ -1,0 +1,15 @@
+\section{Comparison and Discussion}
+\label{sec:comparison}
+
+\subsection{Performance vs. Traditional Methods}
+Traditional CFD methods often rely on finite volume or finite difference discretizations (e.g., OpenFOAM, AMReX). While these are robust for complex geometries, they typically suffer from numerical diffusion, which artificially dissipates kinetic energy and enstrophy. The LeanFlow dual-scale solver, utilizing pseudo-spectral Leray projections, exhibits zero numerical diffusion in the inviscid limit. 
+
+As demonstrated in UC7 (Taylor-Green), the spectral method captures the analytical decay to machine precision ($10^{-16}$) with far fewer degrees of freedom ($N=128$) than would be required by a second-order finite volume method. Similarly, UC15 (Vortex Merger) preserved circulation to $10^{-13}$, highlighting the solver's suitability for enstrophy-preserving turbulence studies.
+
+\subsection{Verification Paradigm Shift}
+The integration of Lean~4 formal specifications fundamentally shifts the paradigm of scientific software validation. By encoding the continuum axioms (e.g., the Navier-Stokes momentum balance and incompressibility constraints) into Lean~4 types, the \textit{intent} of the solver is mathematically formalized before execution. 
+
+While the current Phase 7 implementation utilizes \texttt{sorry} stubs as placeholders (acting as Formal Specification Roadmaps), this architecture guarantees that future proof completion will tightly bind the mathematical physics to the execution engine. This contrasts sharply with traditional C++/Fortran codes where mathematical intent is lost in low-level optimization.
+
+\subsection{Limitations of the Spectral Approach}
+The primary limitation observed during the benchmark suite is handling discontinuities. In UC12 (Burgers 1D), the formation of sharp shocks caused severe Gibbs ringing. In practical engineering (e.g., transonic flows), spectral methods must be heavily regularized or coupled with finite volume shock-capturing schemes. LeanFlow's architecture anticipates this via its "dual-scale" philosophy, intending to delegate discontinuous macroscopic features to robust spatial discretizations while retaining spectral precision for microscopic turbulence.

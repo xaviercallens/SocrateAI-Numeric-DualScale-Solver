@@ -1,0 +1,93 @@
+% =============================================================================
+% LeanFlow: Dual-Scale PDE Solver with Lean 4 Formal Verification
+% Benchmark Execution Report — UC7–UC16
+% =============================================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[round]{natbib}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{axiom}{Axiom}[section]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{corollary}{Corollary}[section]
+
+% Code listing style
+\lstset{
+  basicstyle=\ttfamily\small,
+  columns=flexible,
+  keepspaces=true,
+  keywordstyle=\color{blue}\bfseries,
+  commentstyle=\color{gray},
+  stringstyle=\color{red},
+  frame=single,
+  breaklines=true,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+}
+
+% Custom colors
+\definecolor{leanblue}{RGB}{50,100,200}
+\definecolor{passgreen}{RGB}{0,128,0}
+\definecolor{failred}{RGB}{200,0,0}
+
+\title{%
+  \textbf{LeanFlow: A Dual-Scale PDE Solver with Formal Specification Roadmaps in Lean~4}\\[6pt]
+  \large Benchmark Execution of 10 Canonical Use Cases\\
+  and Epistemic Quality Assurance Protocol
+}
+\author{
+  Xavier Callens\\
+  \textit{SocrateAI Research — Google DeepMind Science Collaboration}\\
+  \texttt{xavier.callens@socrateai.com}
+}
+\date{September 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We present the benchmark execution and formal specification roadmap for LeanFlow, 
+a dual-scale pseudo-spectral PDE solver designed for end-to-end mathematical 
+rigor from continuum formulation through numerical implementation to Lean~4 
+kernel verification. We report reproducible results on 10 canonical use cases 
+(UC7--UC16) spanning incompressible Navier-Stokes, Boussinesq convection, 
+Burgers shock dynamics, and magnetohydrodynamics. Each use case is grounded in 
+published reference solutions (PDEBench, Ghia et al., Dedalus, Athena++, JHTDB) 
+and accompanied by axiomatic Lean~4 formal specification roadmaps encoding the 
+continuum PDE semantics. All numerical results are computed externally in Python 
+with SHA-256 certification seals. The formal specifications use \texttt{sorry} 
+stubs per the established epistemic protocol and are designated as Formal 
+Specification Roadmaps, not verified proofs.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\input{sections/introduction}
+\input{sections/methodology}
+\input{sections/formalization}
+\input{sections/results}
+\input{sections/comparison}
+\input{sections/conclusion}
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

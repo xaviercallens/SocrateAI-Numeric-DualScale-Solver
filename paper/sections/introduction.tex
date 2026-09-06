@@ -1,0 +1,51 @@
+% =============================================================================
+% Section 1: Introduction
+% =============================================================================
+
+\section{Introduction}
+\label{sec:introduction}
+
+Computational fluid dynamics (CFD) has matured into an indispensable tool 
+across engineering, atmospheric science, and fundamental physics research. 
+However, a persistent gap remains between the mathematical formulations 
+governing fluid motion and their numerical implementations. Discretization 
+errors, boundary condition artifacts, and algorithmic approximations accumulate 
+silently, undermining confidence in simulation results—particularly for 
+safety-critical applications in aerospace (DO-178C Level~A) and biomedical 
+engineering (FDA Class~III).
+
+\subsection{Motivation}
+
+The LeanFlow project addresses this gap through a \emph{dual-scale} 
+approach: coupling a pseudo-spectral Navier-Stokes solver with the Lean~4 
+interactive theorem prover to create a pipeline where:
+\begin{enumerate}
+  \item The continuum PDE semantics are axiomatized in Lean~4 (Section~\ref{sec:formalization}).
+  \item The numerical solver produces empirical results validated against 
+        published reference solutions (Section~\ref{sec:results}).
+  \item Formal specification roadmaps bridge the mathematical theory to the 
+        implementation, enabling incremental proof construction (Section~\ref{sec:formalization}).
+\end{enumerate}
+
+\subsection{Contributions}
+
+This paper makes the following contributions:
+\begin{itemize}
+  \item \textbf{Reproducible benchmark execution} of 10 canonical PDE use cases 
+        (UC7--UC16) with wall-clock timing, L$_2$ error metrics, and SHA-256 
+        certification seals (Section~\ref{sec:results}).
+  \item \textbf{Lean~4 axiomatic formalization} of the incompressible 
+        Navier-Stokes equations, Boussinesq approximation, inviscid Euler 
+        limit, and spectral enstrophy bounds (Section~\ref{sec:formalization}).
+  \item \textbf{Quantitative comparison} against established reference solutions including the PDEBench dataset~\citep{takamoto2022pdebench}, the lid-driven cavity profiles of \citet{ghia1982high}, Dedalus~\citep{burns2020dedalus}, Athena++~\citep{stone2020athena}, and the JHTDB turbulence database~\citep{li2008public} (Section~\ref{sec:comparison}).
+  \item \textbf{Reproducible protocol} with deterministic random seeds, 
+        certified JSON output, and SHA-256 result sealing.
+\end{itemize}
+
+\subsection{Organization}
+
+Section~\ref{sec:methodology} describes the solver architecture and benchmark 
+protocol. Section~\ref{sec:formalization} presents the Lean~4 formal 
+specification roadmaps. Section~\ref{sec:results} reports the experimental 
+results. Section~\ref{sec:comparison} compares against traditional solvers. 
+Section~\ref{sec:conclusion} discusses implications and future directions.

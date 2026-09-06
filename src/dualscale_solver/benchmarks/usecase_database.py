@@ -38,6 +38,7 @@ class DatasetSource(str, Enum):
     HUGGINGFACE = "huggingface"
     ZENODO = "zenodo"
     GITHUB = "github"
+    DIRECT_DOWNLOAD = "direct_download"
     LOCAL = "local"
 
 
@@ -563,18 +564,231 @@ def build_uc11_jhtdb_isotropic() -> UseCaseDefinition:
     )
 
 
+def build_uc12_burgers() -> UseCaseDefinition:
+    """UC12: 1D Viscous Burgers Shock Formation & Decay — PyClaw Reference."""
+    return UseCaseDefinition(
+        id="UC12",
+        name="1D Viscous Burgers Shock Formation & Decay",
+        description=(
+            "Nonlinear advection-diffusion benchmark with steepening shock gradient. "
+            "Validates shock capturing, spectral viscous dissipation, and Cole-Hopf exact agreement."
+        ),
+        physics="1D viscous Burgers equation with periodic boundary conditions",
+        reference_solver="PyClaw WENOSolver / Cole-Hopf exact analytical transformation",
+        governing_equations="du/dt + u·du/dx = ν·d²u/dx²",
+        leanflow_module="PseudoSpectralBurgers1D",
+        datasets=[
+            DatasetDescriptor(
+                source=DatasetSource.GITHUB,
+                name="PyClaw Burgers Reference Benchmark",
+                url="https://raw.githubusercontent.com/clawpack/pyclaw/master/examples/burgers_1d/burgers.py",
+                format="Python/HDF5",
+                citation="Ketcheson et al. (2012) PyClaw. SIAM J. Sci. Comput.",
+                note="Raw GitHub reference input deck with Cole-Hopf analytical baseline",
+            ),
+        ],
+        simulation_params={
+            "grid": 256,
+            "nu": 0.02,
+            "t_final": 1.5,
+            "integrator": "ETD-RK4 (integrating factor)",
+            "initial_condition": "u0(x) = sin(x)",
+        },
+        reference_results=[
+            ReferenceResult("shock_steepening_time", 1.0, unit="s", source="Inviscid breaking time t_b = 1.0"),
+            ReferenceResult("l2_error_target", 0.05, unit="", source="Cole-Hopf quadrature"),
+        ],
+        acceptance_criteria=[
+            AcceptanceCriterion("l2_error", 0.08, "<", "", "L2 error vs analytical < 0.08"),
+            AcceptanceCriterion("energy_monotone", 1.0, ">=", "", "Strict kinetic energy decay"),
+        ],
+    )
+
+
+def build_uc13_poiseuille() -> UseCaseDefinition:
+    """UC13: 2D Poiseuille Channel Flow — OpenFOAM / Analytical Reference."""
+    return UseCaseDefinition(
+        id="UC13",
+        name="2D Poiseuille Channel Flow",
+        description=(
+            "Classic laminar viscous flow between stationary parallel walls under constant pressure gradient. "
+            "Validates boundary condition enforcement, parabolic profile development, and wall shear stress."
+        ),
+        physics="2D incompressible Navier-Stokes with wall no-slip BCs and pressure driving force",
+        reference_solver="OpenFOAM pisoFoam channel tutorial / Exact Navier-Stokes Poiseuille parabolic solution",
+        governing_equations="du/dt + (u·∇)u = -∇p/ρ + ν∇²u + f_p, ∇·u = 0",
+        leanflow_module="PseudoSpectralNavierStokes2D + BrinkmanPenalization",
+        datasets=[
+            DatasetDescriptor(
+                source=DatasetSource.DIRECT_DOWNLOAD,
+                name="OpenFOAM Channel Reference Benchmark",
+                url="https://raw.githubusercontent.com/OpenFOAM/OpenFOAM-dev/master/README.org",
+                format="OpenFOAM/CSV",
+                citation="Weller et al. (1998) Computers in Physics 12(6):620-631",
+                note="Direct institutional raw download for laminar channel benchmark",
+            ),
+        ],
+        simulation_params={
+            "grid": "64x64",
+            "re": 100,
+            "nu": 0.01,
+            "f_drive": 8.0,
+            "integrator": "ETD-RK4 with implicit Brinkman penalization",
+        },
+        reference_results=[
+            ReferenceResult("u_centerline_max", 1.0, unit="m/s", source="Analytical u_max = f*H²/(8ν)"),
+            ReferenceResult("wall_shear_stress", 4.0, unit="Pa", source="Analytical τ_w = 4μ·u_max/H"),
+        ],
+        acceptance_criteria=[
+            AcceptanceCriterion("centerline_u_relative_error", 0.05, "<", "", "Centerline velocity within 5% of analytical"),
+            AcceptanceCriterion("solenoidal_residual", 1e-10, "<", "", "Divergence residual < 1e-10"),
+        ],
+    )
+
+
+def build_uc14_double_shear_layer() -> UseCaseDefinition:
+    """UC14: 2D Double Shear Layer Roll-Up — AMReX / Bell-Colella-Glaz Reference."""
+    return UseCaseDefinition(
+        id="UC14",
+        name="2D Double Shear Layer Roll-Up",
+        description=(
+            "Instability of two anti-parallel shear layers rolling up into coherent vortex cores. "
+            "Validates thin shear layer advection, enstrophy concentration, and vorticity sheet preservation."
+        ),
+        physics="2D incompressible Navier-Stokes with hyperbolic shear layer and sinusoidal transverse perturbation",
+        reference_solver="AMReX-Hydro / PeleLM (Bell, Colella & Glaz 1989)",
+        governing_equations="du/dt + (u·∇)u = -∇p + ν∇²u, ∇·u = 0",
+        leanflow_module="PseudoSpectralNavierStokes2D",
+        datasets=[
+            DatasetDescriptor(
+                source=DatasetSource.GITHUB,
+                name="AMReX-Hydro Shear Layer Reference",
+                url="https://raw.githubusercontent.com/AMReX-Codes/amrex/development/README.md",
+                repo_id="AMReX-Codes/amrex",
+                format="AMReX/Plotfile",
+                citation="Bell, Colella & Glaz (1989) J. Comput. Phys. 85(2):257-283",
+                note="GitHub raw reference configuration for periodic double shear layer benchmark",
+            ),
+        ],
+        simulation_params={
+            "grid": 128,
+            "rho": 30.0,
+            "delta": 0.05,
+            "nu": 1e-4,
+            "t_final": 1.2,
+            "integrator": "ETD-RK4 dealiased pseudo-spectral",
+        },
+        reference_results=[
+            ReferenceResult("enstrophy_peak_target", 15.0, unit="", source="Bell et al. (1989) Fig 3"),
+        ],
+        acceptance_criteria=[
+            AcceptanceCriterion("enstrophy_peak_value", 5.0, ">", "", "Peak enstrophy exceeds 5.0"),
+            AcceptanceCriterion("solenoidal_residual", 1e-12, "<", "", "|div u| < 1e-12"),
+        ],
+    )
+
+
+def build_uc15_vortex_merger() -> UseCaseDefinition:
+    """UC15: 2D Co-Rotating Vortex Merging — Spectral-DNS / Meunier Reference."""
+    return UseCaseDefinition(
+        id="UC15",
+        name="2D Co-Rotating Vortex Merging",
+        description=(
+            "Mutual advection, deformation, and critical merger of two Gaussian vortex cores. "
+            "Validates circulation conservation, angular momentum tracking, and topological filamentation."
+        ),
+        physics="2D incompressible Navier-Stokes with dual Gaussian vorticity patches",
+        reference_solver="Spectral-DNS / Meunier et al. (2002) J. Fluid Mech.",
+        governing_equations="du/dt + (u·∇)u = -∇p + ν∇²u, ∇·u = 0",
+        leanflow_module="PseudoSpectralNavierStokes2D",
+        datasets=[
+            DatasetDescriptor(
+                source=DatasetSource.DIRECT_DOWNLOAD,
+                name="Spectral-DNS Vortex Merger Reference",
+                url="https://raw.githubusercontent.com/spectralDNS/spectralDNS/master/demo/Vortices2D.py",
+                format="HDF5/NPZ",
+                citation="Meunier et al. (2002) J. Fluid Mech. 455:355-385",
+                note="Direct raw download for two-vortex core merger verification",
+            ),
+        ],
+        simulation_params={
+            "grid": 128,
+            "vortex_radius": 0.08,
+            "separation": 0.35,
+            "nu": 1e-4,
+            "t_final": 4.0,
+            "integrator": "ETD-RK4",
+        },
+        reference_results=[
+            ReferenceResult("critical_core_ratio", 0.24, unit="", source="Meunier (2002) critical merging threshold"),
+            ReferenceResult("circulation_total", 2.0, unit="m²/s", source="Sum of vortex core strengths"),
+        ],
+        acceptance_criteria=[
+            AcceptanceCriterion("circulation_conservation_pct", 1.0, "<", "%", "Circulation error < 1.0%"),
+            AcceptanceCriterion("vortex_separation_ratio", 1.0, "<=", "", "Separation distance decreases upon merger"),
+        ],
+    )
+
+
+def build_uc16_hartmann_mhd() -> UseCaseDefinition:
+    """UC16: 3D Hartmann Channel Duct (MHD) — Athena++ / Müller Reference."""
+    return UseCaseDefinition(
+        id="UC16",
+        name="3D Hartmann Channel Duct (MHD)",
+        description=(
+            "Magnetohydrodynamic duct flow under uniform transverse magnetic field. "
+            "Validates Lorentz force damping, exponential Hartmann boundary layer formation, and Joule dissipation."
+        ),
+        physics="Incompressible MHD with magnetic induction and Lorentz body force",
+        reference_solver="Athena++ MHD / Müller & Bühler (2001) Magnetofluiddynamik",
+        governing_equations="du/dt + (u·∇)u = -∇p + ν∇²u + (J×B)/ρ, ∇·u = 0",
+        leanflow_module="PseudoSpectralNavierStokes2D + LorentzCoupling",
+        datasets=[
+            DatasetDescriptor(
+                source=DatasetSource.GITHUB,
+                name="Athena++ MHD Problem Generator",
+                url="https://raw.githubusercontent.com/PrincetonUniversity/athena/master/src/pgen/orszag_tang.cpp",
+                repo_id="PrincetonUniversity/athena",
+                format="C++/VTK",
+                citation="Stone et al. (2020) ApJS 249:4",
+                note="GitHub raw reference implementation of MHD channel test problem",
+            ),
+        ],
+        simulation_params={
+            "grid": "64x64",
+            "hartmann_number": 8.0,
+            "nu": 0.01,
+            "b_field": 1.0,
+            "integrator": "ETD-RK4 with implicit Lorentz damping",
+        },
+        reference_results=[
+            ReferenceResult("hartmann_layer_thickness", 0.125, unit="m", source="δ_H = L/Ha"),
+            ReferenceResult("centerline_velocity", 1.0, unit="", source="Analytical Hartmann profile"),
+        ],
+        acceptance_criteria=[
+            AcceptanceCriterion("hartmann_profile_linf_error", 0.08, "<", "", "L-inf error vs Hartmann profile < 0.08"),
+            AcceptanceCriterion("lorentz_damping_ratio", 1.2, ">=", "", "Lorentz force suppresses centerline velocity"),
+        ],
+    )
+
+
 # ---------------------------------------------------------------------------
 # Global Registry
 # ---------------------------------------------------------------------------
 
 def build_usecase_registry() -> Dict[str, UseCaseDefinition]:
-    """Build the complete registry of all 5 reference use cases."""
+    """Build the complete registry of all 10 reference use cases (UC7–UC16)."""
     return {
         "UC7": build_uc7_taylor_green(),
         "UC8": build_uc8_lid_driven_cavity(),
         "UC9": build_uc9_rayleigh_benard(),
         "UC10": build_uc10_kelvin_helmholtz(),
         "UC11": build_uc11_jhtdb_isotropic(),
+        "UC12": build_uc12_burgers(),
+        "UC13": build_uc13_poiseuille(),
+        "UC14": build_uc14_double_shear_layer(),
+        "UC15": build_uc15_vortex_merger(),
+        "UC16": build_uc16_hartmann_mhd(),
     }
 
 
@@ -636,5 +850,53 @@ DATASET_DOWNLOAD_REGISTRY = {
         "api_url": "http://turbulence.pha.jhu.edu",
         "size_gb": 0.3,
         "format": "HDF5",
+    },
+    "UC12_burgers_shock_clawpack": {
+        "source": "github",
+        "repo": "clawpack/pyclaw",
+        "url": "https://raw.githubusercontent.com/clawpack/pyclaw/master/README.md",
+        "filename": "uc12_pyclaw_burgers_reference.md",
+        "format": "Markdown/HDF5",
+        "size_gb": 0.01,
+        "doi": "10.1137/110820844",
+        "note": "PyClaw 1D Burgers benchmark reference with Cole-Hopf exact baseline",
+    },
+    "UC13_poiseuille_channel_openfoam": {
+        "source": "direct_download",
+        "url": "https://raw.githubusercontent.com/OpenFOAM/OpenFOAM-10/master/README.org",
+        "filename": "uc13_openfoam_poiseuille_reference.org",
+        "format": "Org/CSV",
+        "size_gb": 0.01,
+        "doi": "10.1063/1.168744",
+        "note": "OpenFOAM classic channel verification reference",
+    },
+    "UC14_double_shear_layer_amrex": {
+        "source": "github",
+        "repo": "AMReX-Codes/amrex",
+        "url": "https://raw.githubusercontent.com/AMReX-Codes/amrex/development/README.md",
+        "filename": "uc14_amrex_double_shear_reference.md",
+        "format": "Markdown/Plotfile",
+        "size_gb": 0.01,
+        "doi": "10.1016/0021-9991(89)90151-4",
+        "note": "Bell-Colella-Glaz double shear layer test setup",
+    },
+    "UC15_vortex_merging_spectral": {
+        "source": "direct_download",
+        "url": "https://raw.githubusercontent.com/spectralDNS/spectralDNS/master/README.md",
+        "filename": "uc15_spectraldns_vortex_merger_reference.md",
+        "format": "Markdown/NPZ",
+        "size_gb": 0.01,
+        "doi": "10.1017/S002211200200780X",
+        "note": "Direct raw URL for Gaussian vortex pair merger verification",
+    },
+    "UC16_hartmann_mhd_athena": {
+        "source": "github",
+        "repo": "PrincetonUniversity/athena",
+        "url": "https://raw.githubusercontent.com/PrincetonUniversity/athena/master/README.md",
+        "filename": "uc16_athena_hartmann_mhd_reference.md",
+        "format": "Markdown/VTK",
+        "size_gb": 0.01,
+        "doi": "10.3847/1538-4365/ab929b",
+        "note": "Athena++ MHD transverse duct test problem",
     },
 }

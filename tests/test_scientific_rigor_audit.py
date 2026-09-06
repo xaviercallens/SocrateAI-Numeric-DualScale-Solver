@@ -134,3 +134,23 @@ def test_statistical_significance_guardrail():
     assert audit_spearman(n=8, rho=0.85, p_value=0.01) is False
     # Invalid sweep: n=30, p=0.12 (not statistically significant)
     assert audit_spearman(n=30, rho=0.52, p_value=0.12) is False
+
+
+def test_level2_reference_library_integrated():
+    """Verify that the Level 2 SocrateAI reference library is integrated into the DualScale solver."""
+    lakefile_path = Path("lean4/lakefile.lean")
+    usecases_path = Path("lean4/UseCases.lean")
+    
+    assert lakefile_path.exists(), "lakefile.lean not found"
+    assert usecases_path.exists(), "UseCases.lean not found"
+    
+    lakefile_content = lakefile_path.read_text()
+    assert 'require SocrateAI from "../../../SocrateAI-Lean-Lib"' in lakefile_content, (
+        "lakefile.lean must require the SocrateAI reference library."
+    )
+    
+    usecases_content = usecases_path.read_text()
+    assert "import SocrateAI.Core.ReferenceTheorems" in usecases_content, (
+        "UseCases.lean must import SocrateAI.Core.ReferenceTheorems to enforce Tier-A claims."
+    )
+

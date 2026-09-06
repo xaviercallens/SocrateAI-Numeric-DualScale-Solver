@@ -1,0 +1,6 @@
+# Reference Literature Stub: UC5
+Title: PolarQuant Telemetry
+DOI: 10.1109/LSP.2018.2882583
+
+Note: The full PDF is not freely available (paywalled or lacks direct arXiv link).
+This stub serves as a persistent reference for LeanFlowScratchDB.

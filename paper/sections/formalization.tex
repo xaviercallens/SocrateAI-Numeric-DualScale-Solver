@@ -1,0 +1,115 @@
+% =============================================================================
+% Section 3: Lean 4 Formal Specification Roadmaps
+% =============================================================================
+
+\section{Lean~4 Formalization}
+\label{sec:formalization}
+
+A distinguishing feature of LeanFlow is its architectural integration with the Lean~4 interactive theorem prover~\citep{moura2021lean4}. We construct \emph{formal specification roadmaps}---axiomatic encodings of the continuum PDE semantics that serve as target proof obligations for incremental verification.
+
+\begin{quote}
+\textbf{Epistemic status:} All theorems in this section contain \texttt{sorry} stubs and are designated as \emph{Formal Specification Roadmaps}, not verified proofs. Per the project's \texttt{AGENTS.md} protocol, modules with non-exempt \texttt{sorry} stubs are never described as ``Formal Verification'' or ``Verified.''
+\end{quote}
+
+\subsection{UC7: Incompressible Navier-Stokes Axiomatization}
+
+The following axioms encode the 2D incompressible flow state in Lean~4, corresponding to the Taylor-Green vortex benchmark validated against the PDEBench benchmark suite~\citep{takamoto2022pdebench}.
+
+\begin{axiom}[Solenoidal Constraint]
+\label{ax:solenoidal}
+For an incompressible flow state $s$ with velocity field $u : \mathcal{T} \to \mathcal{X} \to \mathbb{V}$, the divergence-free condition holds:
+\begin{equation}
+  \forall\, t \in \mathcal{T},\; x \in \mathcal{X}: \quad 
+  \nabla \cdot u(t, x) = 0
+\end{equation}
+\end{axiom}
+
+\noindent In Lean~4, this continuum constraint is formalized in \texttt{lean4/Scratch/UC7PDEBench.lean}:
+
+\begin{lstlisting}[caption={Solenoidal constraint formalization (\texttt{Scratch.UC7PDEBench})}]
+structure IncompressibleFlowState where
+  velocity : Time -> Space -> VectorField2D
+  pressure : Time -> Space -> Field2D
+  kinematic_viscosity : Real
+
+/-- Axiom: The velocity field is divergence-free (Solenoidal) -/
+axiom solenoidal_constraint (s : IncompressibleFlowState) :
+  forall (t : Time) (x : Space), div (s.velocity t x) = zero_field
+\end{lstlisting}
+
+\begin{theorem}[Energy Decay Bound]
+\label{thm:energy_decay}
+For an unforced incompressible flow with kinematic viscosity $\nu > 0$, the total kinetic energy $E(t) = \frac{1}{2}\int_\Omega |u|^2\,dx$ satisfies:
+\begin{equation}
+  \frac{dE}{dt} = -\nu \int_\Omega |\omega|^2\,dx \leq 0
+\end{equation}
+where $\omega = \nabla \times u$ is the scalar vorticity in 2D. Hence $E(t_2) \leq E(t_1)$ for all $t_2 \ge t_1$.
+\end{theorem}
+
+\begin{proof}[Proof obligation]
+Requires demonstrating that viscous dissipation $\varepsilon = \nu \|\omega\|_{L^2}^2$ is non-negative. This represents the primary \texttt{sorry} target in \texttt{UC7PDEBench.lean}.
+\end{proof}
+
+\subsection{UC9: Boussinesq Approximation}
+\label{sec:boussinesq}
+
+For Rayleigh-B\'enard convection validated against Dedalus~\citep{burns2020dedalus}, we axiomatize the coupled momentum-thermal system.
+
+\begin{definition}[Boussinesq Flow State]
+\label{def:boussinesq}
+A Boussinesq flow state consists of:
+\begin{itemize}
+  \item Velocity field $u : \mathcal{T} \to \mathcal{X} \to \mathbb{V}$
+  \item Temperature field $T : \mathcal{T} \to \mathcal{X} \to \mathbb{R}$
+  \item Rayleigh number $Ra \in \mathbb{R}_{>0}$
+  \item Prandtl number $Pr \in \mathbb{R}_{>0}$
+\end{itemize}
+satisfying $\nabla \cdot u = 0$ and the coupled balance equations:
+\begin{align}
+  \frac{\partial u}{\partial t} + (u \cdot \nabla)u &= -\nabla p + Pr\,\nabla^2 u + Ra\,Pr\,T\,\hat{e}_y \\
+  \frac{\partial T}{\partial t} + (u \cdot \nabla)T &= \nabla^2 T
+\end{align}
+\end{definition}
+
+\begin{theorem}[Nusselt Scaling Bound]
+\label{thm:nusselt}
+The time-averaged Nusselt number satisfies $Nu \leq C \cdot Ra^\beta$ for constants $C > 0$ and $\beta \approx 0.29$ consistent with the thermal convection scaling theory of \citet{grossmann2000scaling}.
+\end{theorem}
+
+\subsection{UC10: Inviscid Euler Limit}
+
+For the Kelvin-Helmholtz shear layer instability validated against Athena++~\citep{stone2020athena}:
+
+\begin{theorem}[Energy Conservation in Inviscid Limit]
+\label{thm:euler_energy}
+For an inviscid compressible Euler flow without shock discontinuities, the total energy:
+\begin{equation}
+  E(t) = \int_\Omega \left( \frac{1}{2}\rho |u|^2 + \frac{p}{\gamma - 1} \right) dx
+\end{equation}
+is exactly conserved: $E(t_1) = E(t_2)$ for all $t_1, t_2 \ge 0$, where $\gamma = C_p / C_v > 1$ denotes the adiabatic index ($\gamma = 1.4$ for a diatomic ideal gas).
+\end{theorem}
+
+\subsection{UC3: Dual-Scale Spectral Regularity}
+
+The core mathematical contribution of LeanFlow is the dual-scale spectral decomposition with a crossover wavenumber $k^*$.
+
+In Fourier spectral space, the total enstrophy $\Omega(t) = \frac{1}{2}\int_\Omega |\omega|^2\,dx = \int_0^\infty k^2 E(k,t)\,dk$ satisfies the spectral enstrophy budget:
+\begin{equation}
+  \label{eq:enstrophy_budget}
+  \frac{d\Omega}{dt} = \mathcal{T}_{\text{nl}}(t) - 2\nu \mathcal{P}(t)
+\end{equation}
+where $\mathcal{P}(t) = \int_0^\infty k^4 E(k,t)\,dk$ is the palinstrophy and $\mathcal{T}_{\text{nl}}(t)$ represents the net nonlinear inter-scale enstrophy transfer across Fourier modes (not to be confused with the temperature field $T$ defined in Section~\ref{sec:boussinesq}).
+
+\begin{axiom}[Dual-Scale UV Enstrophy Suppression]
+\label{ax:enstrophy_suppression}
+For a dual-scale spectral state with crossover wavenumber $k^*$, the linear viscous dissipation rate $2\nu k^2$ strictly dominates the nonlinear spectral transfer $\mathcal{T}_{\text{nl}}(k,t)$ for all wavenumbers $k > k^*$, bounding the high-wavenumber enstrophy:
+\begin{equation}
+  \int_{k^*}^{\infty} k^2 |\hat{u}(k,t)|^2\,dk \leq \varepsilon_{\text{bound}} \quad \forall\, t \ge 0.
+\end{equation}
+\end{axiom}
+
+This formalizes the physical mechanism by which sub-filter numerical dissipation arrests ultraviolet enstrophy accumulation and prevents finite-time singularity blow-up.
+
+\subsection{Compilation and Validation}
+
+All formal specification roadmaps compile cleanly under \texttt{lake build Scratch} (1935 jobs, exit code 0). The expected \texttt{sorry} warnings are reported for each theorem stub, verifying type correctness and syntactic coherence while honoring the epistemic prohibition against claiming premature mathematical verification.

@@ -68,6 +68,7 @@ figures/*.png
 !figures/.gitkeep
 logs/
 *.log
+data/datasets/datasets--*
 
 # ─── Credentials & Tokens (NEVER commit) ───────────────────────────────────
 *.token

@@ -1,0 +1,6 @@
+# Reference Literature Stub: UC1
+Title: High-Re Turbulent Cascade
+DOI: 10.1017/jfm.2015.421
+
+Note: The full PDF is not freely available (paywalled or lacks direct arXiv link).
+This stub serves as a persistent reference for LeanFlowScratchDB.

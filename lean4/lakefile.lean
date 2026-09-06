@@ -7,6 +7,8 @@ package «dualscale_solver» where
 require mathlib from git
   "https://github.com/leanprover-community/mathlib4.git"
 
+require SocrateAI from "../../../SocrateAI-Lean-Lib"
+
 -- W3 Fix: Register all four modules so `lake build` kernel-checks them
 @[default_target]
 lean_lib «DualScale» where
@@ -39,3 +41,8 @@ lean_lib «EnterpriseSpec» where
 lean_lib «EnterprisePhase2Spec» where
   -- Phase E2 Extensions: PyO3 Zero-Copy, IDA DAE Solenoidal Solver, PolarQuant Compression
 
+lean_lib «UseCases» where
+  -- Formal QA Use Cases Definition
+
+lean_lib «Scratch» where
+  -- Scientific Literature Formal Specification Roadmaps

@@ -1,0 +1,81 @@
+% =============================================================================
+% Section 2: Methodology
+% =============================================================================
+
+\section{Methodology}
+\label{sec:methodology}
+
+\subsection{Solver Architecture}
+
+LeanFlow employs a dual-scale numerical architecture combining Fourier pseudo-spectral spatial discretization with integrating factor and implicit time integration schemes~\citep{canuto2006spectral}.
+
+For periodic domains and turbulence transport (e.g., UC7, UC10, UC11, UC14, UC15), stiff linear viscous dissipation $\mathcal{L} u = \nu \nabla^2 u$ is integrated exactly via Fourier integrating factors, eliminating the parabolic CFL stability restriction $\Delta t = \mathcal{O}(\Delta x^2)$~\citep{lawson1967runge}. Nonlinear advection $\mathcal{N}(u) = -(u \cdot \nabla)u$ is evaluated in physical space with $2/3$-rule zero-padding dealiasing. Incompressibility is strictly enforced at each stage through the Fourier-space Leray-Helmholtz projection tensor:
+\begin{equation}
+  \mathbb{P}_{ij}(\mathbf{k}) = \delta_{ij} - \frac{k_i k_j}{|\mathbf{k}|^2}, \quad \mathbf{k} \neq \mathbf{0}
+\end{equation}
+which guarantees $\|\nabla \cdot u\|_\infty \le \varepsilon_{\text{mach}}$.
+
+Algorithm~\ref{alg:leanflow} formalizes the second-order Lawson Integrating Factor Runge-Kutta (IF-RK2) scheme with solenoidal projection utilized in the canonical pseudo-spectral solver~\citep{lawson1967runge}. While IF-RK2 serves as the primary solver architecture for canonical unbounded and periodic fluid domains (e.g., UC7, UC10, UC12, UC14, UC15), specific use cases demand tailored numerical methods. For instance, enclosed wall-bounded flows (e.g., UC8, UC9) employ a finite-difference Streamfunction-Vorticity formulation with explicit or implicit time-stepping to enforce no-slip boundaries, while spectral dyadic shell models (UC11) leverage ETD-RK4 to capture extreme scale cascades. We note an important algorithmic distinction: unlike true Exponential Time Differencing methods (ETD-RK2)~\citep{cox2002exponential,kassam2005fourth} which analytically integrate a polynomial interpolation of the nonlinear source term yielding coefficients containing the $\phi_1(z) = (e^z - 1)/z$ function, the Lawson integrating factor formulation applies the transformation $\hat{v}(t) = e^{-\mathcal{L}t}\hat{u}(t)$ and multiplies the nonlinear evaluations directly by the exact linear propagators ($E_{1/2} = e^{-\frac{1}{2}\nu |\mathbf{k}|^2 \Delta t}$ and $E_1 = e^{-\nu |\mathbf{k}|^2 \Delta t}$). This completely eliminates the need for complex contour integration or Pad\'e approximants near $z \to 0$ while preserving second-order temporal accuracy and machine-precision solenoidal projection.
+
+\begin{algorithm}[H]
+\caption{LeanFlow Lawson Integrating Factor RK2 (IF-RK2) Solenoidal Time-Step}
+\label{alg:leanflow}
+\begin{algorithmic}[1]
+\State \textbf{Input:} State $\hat{u}^n$ at step $n$, time step $\Delta t$, viscosity $\nu$
+\State Compute integrating factors: $E_1 = e^{-\nu |\mathbf{k}|^2 \Delta t}$, $E_{1/2} = e^{-\frac{1}{2}\nu |\mathbf{k}|^2 \Delta t}$
+\State Transform to physical space and evaluate nonlinear advection:
+       $\mathcal{N}^n = -\mathcal{F}\left[ (u^n \cdot \nabla) u^n \right]$
+\State Apply Leray projector to stage 1 advection: $\hat{\mathcal{N}}^n = \mathbb{P} \mathcal{N}^n$
+\State Compute intermediate predictor state:
+       $\hat{u}^* = E_{1/2} \hat{u}^n + \frac{\Delta t}{2} E_{1/2} \hat{\mathcal{N}}^n$
+\State Transform predictor to physical space and compute advection:
+       $\mathcal{N}^* = -\mathcal{F}\left[ (u^* \cdot \nabla) u^* \right]$
+\State Apply Leray projector to predictor advection: $\hat{\mathcal{N}}^* = \mathbb{P} \mathcal{N}^*$
+\State Advance solution to step $n+1$:
+       $\hat{u}^{n+1} = E_1 \hat{u}^n + \Delta t \, E_{1/2} \hat{\mathcal{N}}^*$
+\State \textbf{Output:} $\hat{u}^{n+1}$ satisfying $\mathbf{k} \cdot \hat{u}^{n+1} = 0$ to machine precision
+\end{algorithmic}
+\end{algorithm}
+
+For wall-bounded geometries and coupled multi-physics systems (UC8, UC9, UC13, UC16), the solver interfaces with variable-order Backward Differentiation Formulas (CVODE BDF) or boundary-conforming relaxed finite-difference discretizations.
+
+\subsection{Benchmark Protocol}
+
+Each use case follows a strict, reproducible verification protocol:
+
+\begin{enumerate}
+  \item \textbf{Data acquisition:} Reference datasets and configurations are fetched from official public endpoints (Hugging Face, Zenodo, GitHub raw repositories) with verified SHA-256 hashes.
+  \item \textbf{Solver execution:} The solver runs with deterministic random seeds (\texttt{seed = 42}) and reproducible FFT layouts.
+  \item \textbf{Metric extraction:} Key metrics ($L_2$ errors, centerline profiles, Nusselt numbers, spectral slopes) are computed externally in Python using NumPy and SciPy.
+  \item \textbf{Epistemic negative controls:} Hardness failure criteria are tracked; unphysical or under-resolved conditions intentionally trigger failed status to prevent algorithmic hallucinations.
+  \item \textbf{Certification:} Results are serialized to JSON and sealed with a SHA-256 rolling digest.
+  \item \textbf{Lean~4 validation:} Each use case maps to a formal specification roadmap in \texttt{lean4/Scratch/} encoding target continuum invariants.
+\end{enumerate}
+
+\subsection{Use Case Summary}
+
+Table~\ref{tab:usecases} summarizes the 10 canonical benchmark use cases (UC7--UC16).
+
+\begin{table}[H]
+\centering
+\caption{Summary of the 10 canonical benchmark use cases (UC7--UC16).}
+\label{tab:usecases}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllll}
+\toprule
+\textbf{ID} & \textbf{Benchmark Problem} & \textbf{Governing Physics} & \textbf{Reference Standard} & \textbf{Key Metric} \\
+\midrule
+UC7  & Taylor-Green 2D    & Incompressible NS         & \citet{takamoto2022pdebench} & $L_2$ velocity error \\
+UC8  & Lid-Driven Cavity  & Wall-bounded recirc. NS   & \citet{ghia1982high}         & Centerline $L_\infty$ error \\
+UC9  & Rayleigh-B\'enard  & Boussinesq thermal conv.  & \citet{burns2020dedalus}     & Mean Nusselt number $Nu$ \\
+UC10 & Kelvin-Helmholtz   & Shear layer instability   & \citet{stone2020athena}      & Peak enstrophy $\Omega_{\max}$ \\
+UC11 & 3D HIT Proxy       & 3D Forward Energy Cascade & \citet{li2008public}         & Inertial spectral slope \\
+UC12 & Burgers 1D Shock   & Non-linear shock decay    & \citet{ketcheson2012pyclaw}  & $L_2$ error (Gibbs check) \\
+UC13 & Poiseuille Channel & Laminar viscous channel   & \citet{weller1998tensorial}  & Centerline relative error \\
+UC14 & Double Shear Layer & Vortical roll-up          & \citet{bell1989second}       & Peak enstrophy $\Omega_{\max}$ \\
+UC15 & Vortex Merger      & Co-rotating vortex pair   & \citet{meunier2002experimental} & Circulation conservation \\
+UC16 & Hartmann MHD Duct  & Transverse field MHD      & \citet{muller2001magnetohydrodynamic} & Hartmann profile $L_\infty$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}

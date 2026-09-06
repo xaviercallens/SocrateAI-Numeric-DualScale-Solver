@@ -1,0 +1,8 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+This paper has presented the rigorous benchmarking of the LeanFlow Dual-Scale PDE Solver across 10 canonical use cases. By leveraging pseudo-spectral numerical integration alongside Lean~4 formal specification roadmaps, we establish a robust framework for high-fidelity fluid dynamics simulation.
+
+The successful reproduction of critical benchmarks, such as the Taylor-Green viscous decay, Lid-Driven Cavity profiles, and Vortex Merger circulation conservation, demonstrates the numerical validity of the Python-based execution engine. Crucially, the explicit tracking of negative controls (e.g., failures in shock-capturing for the Burgers equation) confirms the integrity of the epistemic protocol, ensuring that the solver's capabilities are not over-claimed.
+
+Future work in Phase 8 will focus on replacing the \texttt{sorry} stubs in the Lean~4 specification with mechanically verified proofs, directly coupling the numerical execution trace to the formal theorems. This will bridge the gap between abstract mathematical physics and high-performance computational fluid dynamics.

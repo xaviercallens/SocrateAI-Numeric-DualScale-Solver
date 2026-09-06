@@ -1,0 +1,6 @@
+# Reference Literature Stub: UC2
+Title: Zero-Alloc ETD-RK4
+DOI: 10.1016/j.jcp.2005.02.006
+
+Note: The full PDF is not freely available (paywalled or lacks direct arXiv link).
+This stub serves as a persistent reference for LeanFlowScratchDB.

@@ -1,0 +1,6 @@
+# Reference Literature Stub: UC13
+Title: OpenFOAM Weller et al 1998
+DOI: 10.1063/1.168744
+
+Note: The full PDF is not freely available (paywalled or lacks direct arXiv link).
+This stub serves as a persistent reference for LeanFlowScratchDB.

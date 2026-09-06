@@ -1,0 +1,12 @@
+import Scratch.UC1TurbulentCascade
+import Scratch.UC3DualScaleRegularity
+import Scratch.UC7PDEBench
+import Scratch.UC8Ghia
+import Scratch.UC9Dedalus
+import Scratch.UC10Athena
+import Scratch.UC11JHTDB
+import Scratch.UC12PyClaw
+import Scratch.UC13OpenFOAM
+import Scratch.UC14AMReX
+import Scratch.UC15VortexMerger
+import Scratch.UC16MHDDuct

@@ -184,6 +184,83 @@ def cmd_workflow12(args: argparse.Namespace) -> int:
         
     return 0 if cert["overall_status"] == "CERTIFIED" else 1
 
+
+from dualscale_solver.agents.enterprise_workflow_orchestrator import run_enterprise_workflow
+
+
+def cmd_enterprise_workflow(args: argparse.Namespace) -> int:
+    """Run Enterprise Edition Autonomous Multi-Agent Verification Pipeline (Phases E1–E4)."""
+    print("================================================================================")
+    print(" LeanFlow Enterprise Edition: Autonomous Multi-Agent Certification Pipeline")
+    print("================================================================================")
+    cert = run_enterprise_workflow()
+    print(f" Certificate ID : {cert['certificate_id']}")
+    print(f" Product Edition: {cert['product_edition']}")
+    print(f" Overall Status : {cert['overall_status']}")
+    print(f" Epistemic Tier : {cert['epistemic_tier']}")
+    print(f" SHA-256 Seal   : {cert['sha256_seal']}")
+    print(f" Invariants     : {len(cert['invariants_verified'])} Verified")
+    print(f" Negative Ctrls : {len(cert['negative_controls'])} Rejections Verified")
+    print(f" Saved File     : {cert['certificate_file']}")
+
+    if args.output:
+        out_path = Path(args.output)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(out_path, "w", encoding="utf-8") as f:
+            json.dump(cert, f, indent=2)
+        print(f" Mirrored copy  : {out_path.resolve()}")
+
+    return 0 if cert["overall_status"] == "CERTIFIED" else 1
+
+
+from dualscale_solver.agents.enterprise_dev_cycle import run_enterprise_dev_cycle
+
+
+def cmd_enterprise_dev_cycle(args: argparse.Namespace) -> int:
+    """Run Enterprise Edition Full Autonomous Dev Cycle (Spec, Dev, QA, Coverage Gate)."""
+    print("================================================================================")
+    print(" LeanFlow Enterprise: Full Autonomous Dev Cycle (Spec, Dev, QA, Coverage)")
+    print("================================================================================")
+    cert = run_enterprise_dev_cycle()
+    print(f" Certificate ID : {cert['certificate_id']}")
+    print(f" Product Edition: {cert['product_edition']}")
+    print(f" Overall Status : {cert['overall_status']}")
+    print(f" Epistemic Tier : {cert['epistemic_tier']}")
+    print(f" SHA-256 Seal   : {cert['sha256_seal']}")
+    print(f" Sequence IDs   : {len(cert['sequence_traceability_matrix'])} Verified")
+    print(f" Code Coverage  : {cert['coverage_metrics']['measured_coverage_pct']}% (Target: {cert['coverage_metrics']['coverage_target_pct']}%)")
+    print(f" Coverage Gate  : {'PASSED ✓' if cert['coverage_metrics']['gate_passed'] else 'FAILED ✗'}")
+    print(f" Saved File     : {cert['certificate_file']}")
+
+    if args.output:
+        out_path = Path(args.output)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(out_path, "w", encoding="utf-8") as f:
+            json.dump(cert, f, indent=2)
+        print(f" Mirrored copy  : {out_path.resolve()}")
+
+    return 0 if cert["overall_status"] == "CERTIFIED" else 1
+
+from dualscale_solver.agents.fusion_poc_workflow import run_fusion_poc_workflow
+
+def cmd_fusion_poc(args: argparse.Namespace) -> int:
+    """Run Fusion PoC Execution Pipeline."""
+    print("================================================================================")
+    print(" LeanFlow Enterprise Edition: Fusion PoC Execution Pipeline")
+    print("================================================================================")
+    cert = run_fusion_poc_workflow()
+    print(f" Certificate ID : {cert.get('certificate_id')}")
+    print(f" Overall Status : {cert.get('overall_status')}")
+    
+    if args.output and cert.get("overall_status") == "CERTIFIED":
+        out_path = Path(args.output)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(out_path, "w", encoding="utf-8") as f:
+            json.dump(cert, f, indent=2)
+        print(f" Mirrored copy  : {out_path.resolve()}")
+        
+    return 0 if cert.get("overall_status") == "CERTIFIED" else 1
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         prog="dualscale-solver",
@@ -219,6 +296,21 @@ def main() -> None:
     p_wf12 = subparsers.add_parser("workflow12", help="Run Phase 12 Autonomous Auto-Research Loop & Industrial Workflows")
     p_wf12.add_argument("--output", "-o", type=str, default="data/cert_phase12_workflow.json", help="Path to output certificate")
     p_wf12.set_defaults(func=cmd_workflow12)
+
+    # Subcommand: enterprise-workflow
+    p_ent = subparsers.add_parser("enterprise-workflow", help="Run Enterprise Edition Autonomous Multi-Agent Pipeline (Phases E1–E4)")
+    p_ent.add_argument("--output", "-o", type=str, default="certs/CERT-ENTERPRISE-V3.3.0.json", help="Path to output certificate")
+    p_ent.set_defaults(func=cmd_enterprise_workflow)
+
+    # Subcommand: enterprise-dev-cycle
+    p_dev = subparsers.add_parser("enterprise-dev-cycle", help="Run Enterprise Full Dev Cycle (Spec, Dev, QA, Coverage Gate)")
+    p_dev.add_argument("--output", "-o", type=str, default="certs/CERT-ENTERPRISE-DEV-CYCLE-V3.3.0.json", help="Path to output certificate")
+    p_dev.set_defaults(func=cmd_enterprise_dev_cycle)
+
+    # Subcommand: fusion-poc
+    p_poc = subparsers.add_parser("fusion-poc", help="Run Fusion PoC Execution Pipeline")
+    p_poc.add_argument("--output", "-o", type=str, default="certs/CERT-FUSION-POC-V1.0.json", help="Path to output certificate")
+    p_poc.set_defaults(func=cmd_fusion_poc)
 
     # Subcommand: dyadic
     p_dyadic = subparsers.add_parser("dyadic", help="Run dyadic shell cascade simulation")

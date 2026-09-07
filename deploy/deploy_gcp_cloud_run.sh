@@ -24,8 +24,9 @@ echo "==========================================================================
 
 echo ""
 echo "[1/3] Building container image via Google Cloud Build..."
-gcloud builds submit --project="${PROJECT_ID}" --tag="${IMAGE_NAME}" -f Dockerfile.agent .
-
+cp Dockerfile.agent Dockerfile
+gcloud builds submit --project="${PROJECT_ID}" --tag="${IMAGE_NAME}" .
+rm Dockerfile
 echo ""
 echo "[2/3] Deploying container to Cloud Run with Vertex AI permissions..."
 gcloud run deploy "${SERVICE_NAME}" \

@@ -82,3 +82,5 @@ secrets/
 HF_TOKEN
 JHTDB_AUTH_TOKEN
 *.code-workspace
+*.claude*
+.claude.json

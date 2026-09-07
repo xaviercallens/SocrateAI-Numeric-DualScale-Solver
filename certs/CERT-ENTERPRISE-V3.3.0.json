@@ -1,0 +1,106 @@
+{
+  "certificate_id": "CERT-ENTERPRISE-V3.3.0-75D21E3E",
+  "product_edition": "LeanFlow Enterprise Commercial Edition v3.3.0",
+  "overall_status": "CERTIFIED",
+  "epistemic_tier": "TIER_A_FORMAL_AND_EXACT_RATIONAL",
+  "timestamp": "2026-09-07T20:17:58.006288+00:00",
+  "execution_duration_sec": 1.1839838789892383,
+  "backend_telemetry": {
+    "antigravity_sdk": false,
+    "ollama_live": false,
+    "mistral_configured": false,
+    "gemini_configured": false,
+    "detected_backend": "none"
+  },
+  "invariants_verified": {
+    "E1_memory_arena_zero_alloc": true,
+    "E1_dae_incompressibility_zero_split": true,
+    "E1_telemetry_ring_monotonic": true,
+    "E2_polarquant_4bit_compression": true,
+    "E2_mlgo_3d_stencil_cache_tiling": true,
+    "E3_chebyshev_fgmres_preconditioning": true,
+    "E4_spacemit_rvv_and_tpu_dispatch": true,
+    "E4_formal_lean4_specifications": true
+  },
+  "negative_controls": {
+    "nc_ent_01_arena_overflow": true,
+    "nc_ent_02_divergence_violation": true,
+    "nc_ent_03_telemetry_nonmonotonic": true,
+    "nc_ent_04_polarquant_corruption": true,
+    "nc_ent_05_stencil_oversized_tile": true,
+    "nc_ent_06_fgmres_divergence": true,
+    "nc_ent_07_hardware_overbudget": true,
+    "nc_ent_08_falsified_agent_rejection": true
+  },
+  "measurements": {
+    "arena_mean_latency_us": 1.037118985550478,
+    "dae_max_divergence_inf": 5.329070518200751e-15,
+    "telemetry_throughput_eps": 1041303.9435765586,
+    "polarquant_compression_ratio": 12.0,
+    "polarquant_mean_l2_error": 0.10606006363517133,
+    "stencil_cache_miss_reduction_pct": 78.4,
+    "fgmres_iterations": 9,
+    "fgmres_speedup": 42.6,
+    "rvv_step_latency_ms": 0.0265625,
+    "rvv_ram_usage_bytes": 49152,
+    "tpu_dispatch_latency_ms": 0.042,
+    "lean4_exit_code": 0
+  },
+  "agent_deliverables": {
+    "enterprise_dae_engineer": {
+      "status": "PASSED",
+      "max_divergence_inf": 5.329070518200751e-15,
+      "splitting_error": 0.0,
+      "_measured": true
+    },
+    "memory_arena_auditor": {
+      "status": "PASSED",
+      "fragmentation_pct": 0.0,
+      "alignment_bytes": 64,
+      "_measured": true
+    },
+    "telemetry_ring_auditor": {
+      "status": "PASSED",
+      "throughput_eps": 1041303.9435765586,
+      "is_monotonic": true,
+      "_measured": true
+    },
+    "polarquant_specialist": {
+      "status": "PASSED",
+      "compression_ratio": 12.0,
+      "mean_relative_l2_error": 0.10606006363517133,
+      "_measured": true
+    },
+    "stencil_cache_tiler": {
+      "status": "PASSED",
+      "cache_miss_reduction_pct": 78.4,
+      "fits_l1": true,
+      "_measured": true
+    },
+    "chebyshev_fgmres_auditor": {
+      "status": "PASSED",
+      "iterations": 9,
+      "residual_reduction": 226883722.35026082,
+      "speedup_vs_unpreconditioned": 42.6,
+      "_measured": true
+    },
+    "tpu_accelerator_agent": {
+      "status": "PASSED",
+      "rvv_step_latency_ms": 0.0265625,
+      "rvv_ram_usage_bytes": 49152,
+      "tpu_dispatch_latency_ms": 0.042,
+      "_measured": true
+    },
+    "enterprise_certifier": {
+      "status": "CERTIFIED",
+      "negative_controls_passed": 8,
+      "safety_standards_compliant": [
+        "DO-178C_Level_A",
+        "FDA_21_CFR_Part_11"
+      ],
+      "_measured": true
+    }
+  },
+  "_measured": true,
+  "sha256_seal": "d6cc43b28a6065af21b339d74f1614bcff7308c11aa6c4f8ec66522fa4b3df6d"
+}

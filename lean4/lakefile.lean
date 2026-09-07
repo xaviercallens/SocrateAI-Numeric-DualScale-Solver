@@ -41,6 +41,12 @@ lean_lib «EnterpriseSpec» where
 lean_lib «EnterprisePhase2Spec» where
   -- Phase E2 Extensions: PyO3 Zero-Copy, IDA DAE Solenoidal Solver, PolarQuant Compression
 
+lean_lib «EnterpriseDevCycleSpec» where
+  -- Enterprise Full Dev Cycle Requirements (REQ-ENT-01 to REQ-ENT-16) & Formal Proofs
+
+lean_lib «FusionMhdSpec» where
+  -- Serverless Neuro-Symbolic MHD for ITER Plasma Disruption Control (FLAGNO, Neural-FGMRES, DEC)
+
 lean_lib «UseCases» where
   -- Formal QA Use Cases Definition
 

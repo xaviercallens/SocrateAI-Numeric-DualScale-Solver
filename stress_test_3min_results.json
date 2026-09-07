@@ -1,0 +1,8 @@
+{
+    "cycles_completed": 51559,
+    "total_gpu_ms": 921978.0379994608,
+    "max_gauge_div": 4.3999999999999996e-14,
+    "max_fp8_res": 0.0017305,
+    "avg_speedup": 1200.93,
+    "errors": 0
+}

@@ -8,6 +8,14 @@ from dualscale_solver.agents.leanflow_agent import (
     probe_runtime_engines_tool,
 )
 from dualscale_solver.agents.workflow_orchestrator import Phase1WorkflowOrchestrator
+from dualscale_solver.agents.enterprise_workflow_orchestrator import (
+    EnterpriseWorkflowOrchestrator,
+    run_enterprise_workflow,
+)
+from dualscale_solver.agents.enterprise_dev_cycle import (
+    EnterpriseDevCycleOrchestrator,
+    run_enterprise_dev_cycle,
+)
 
 __all__ = [
     "LEANFLOW_AGENT_TOOLS",
@@ -18,4 +26,8 @@ __all__ = [
     "audit_mathesis_ledger_tool",
     "probe_runtime_engines_tool",
     "Phase1WorkflowOrchestrator",
+    "EnterpriseWorkflowOrchestrator",
+    "run_enterprise_workflow",
+    "EnterpriseDevCycleOrchestrator",
+    "run_enterprise_dev_cycle",
 ]

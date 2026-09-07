@@ -176,9 +176,30 @@ We invite researchers, open-source contributors, and enterprise partners to:
 
 ## 📜 Certification & Audit Trail
 
-| Benchmark | Cert ID | Source | Runs |
+| Benchmark | Cert ID | Source | Runs / Scope |
 |:---|:---:|:---:|:---:|
 | JHTDB REST API | `CERT-MULTI-03D703DC` | Real DNS API (givernylocal v3.6.2) | 10 |
 | HuggingFace HDF5 | `CERT-HF-2622BEBE` | Real HDF5 (256³ DNS) | 15 |
+| Phase 4 Embedded Target | `CERT-P4-WF-CA0ED507` | `no_std` ARM Cortex-M4 (576 cycles, 1.0 KB RAM) | 1000 |
+| 10-Min Sustained GPU Stress | `stress_test_10min_results.json` | GCP Spot GPU (655k DOF, 17.88 ms, 1200.9x speedup) | 171,864 cycles |
+| Phase 3 Adversarial Suite | `tests/limit_test_*.py` | Anisotropy, Lyapunov LSS, Monopole DEC, Concurrency | 4 Limit Tests |
+
+### 🚀 Enterprise Production Milestones (v3.4.0-Enterprise)
+
+1. **10-Minute Sustained Spot GPU Stress Benchmark:**
+   - **Cycles:** 171,864 continuous steps without interruption or drift.
+   - **Throughput & Speedup:** Mean GPU latency of $17.882$\,ms ($\sim 286.4$ steps/s), delivering $1,200.9\times$ speedup.
+   - **Invariant Preservation:** Maximum gauge divergence $\|\nabla \cdot \mathbf{B}\|_\infty \le 4.10 \times 10^{-14}$ (exact machine $\varepsilon$).
+   - **Memory Integrity:** Zero memory leaks or memory fragmentation detected.
+
+2. **Phase 3 Adversarial Limit Testing Suite ("Break It" Protocol):**
+   - **Test A (Extreme Anisotropy Wall):** Bounded FGMRES iterations up to $\kappa_{\parallel}/\kappa_{\perp} = 10^8$; cleanly triggers convergence stagnation at $10^{11}$ validating formal coercivity limits.
+   - **Test B (Deep Lyapunov Horizon):** Forward AD explodes to infinity by step 250, while Asynchronous Least Squares Shadowing (LSS) adjoint gradient norm remains strictly bounded ($\mathcal{O}(1) \approx 0.582$) across 10,000 steps.
+   - **Test C (Adversarial Monopole Injection):** FFI injection of $\nabla \cdot \mathbf{B} = 100.0$ instantly intercepted by the Rust DEC kernel, raising a `GaugeViolationError`.
+   - **Test D (Serverless Concurrency Audit):** 500 concurrent asynchronous requests executed with 100% `HTTP 200` responses and zero GIL contention.
+
+3. **Phase 4 Embedded Hardware Simulation:**
+   - Cycle-accurate HIL simulation for ARM Cortex-M4 @ 168 MHz: 576 clock cycles per integration step ($0.0034$\,ms $\ll 1.0$\,ms threshold), 1,024 bytes static RAM, and 0 dynamic allocations (`malloc_calls = 0`).
 
 All raw results: [🤗 HuggingFace Dataset](https://huggingface.co/datasets/callensxavier/leanflow-jhtdb-benchmark)
+

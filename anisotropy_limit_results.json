@@ -1,0 +1,22 @@
+{
+  "10000.0": {
+    "fgmres_iterations": 8,
+    "status": "CONVERGED"
+  },
+  "1000000.0": {
+    "fgmres_iterations": 8,
+    "status": "CONVERGED"
+  },
+  "100000000.0": {
+    "fgmres_iterations": 8,
+    "status": "CONVERGED"
+  },
+  "100000000000.0": {
+    "status": "EXPECTED_FAILURE",
+    "error": "FGMRES Convergence Stagnation: Anisotropy 100000000000.0 exceeds FP8 coercivity bounds."
+  },
+  "1000000000000.0": {
+    "status": "EXPECTED_FAILURE",
+    "error": "FGMRES Convergence Stagnation: Anisotropy 1000000000000.0 exceeds FP8 coercivity bounds."
+  }
+}

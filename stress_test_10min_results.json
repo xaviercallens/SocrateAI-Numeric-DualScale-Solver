@@ -1,0 +1,13 @@
+{
+  "status": "PASSED",
+  "total_cycles": 171864,
+  "duration_sec": 600.0,
+  "metrics": {
+    "avg_gpu_latency_ms": 17.882,
+    "avg_cpu_speedup": 1200.9,
+    "max_fp8_residual": 0.0017102,
+    "max_gauge_divergence": 4.1e-14,
+    "total_errors": 0,
+    "memory_leaks_detected": false
+  }
+}

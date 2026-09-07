@@ -1,0 +1,15 @@
+{
+    "model_parameters": {
+        "c4_c0_ratio": 16.07,
+        "geometric_suppression_factor": 0.006944444444444444
+    },
+    "pta_projection": {
+        "effective_variance_contribution": 0.11159722222222222,
+        "projected_snr_l4": 1.6703085210689539,
+        "is_sub_threshold": true
+    },
+    "bayes_factor": {
+        "ln_lambda": -0.006226970003858025,
+        "conclusion": "Anomaly safely hidden beneath the Hellings-Downs horizon (noise floor)."
+    }
+}

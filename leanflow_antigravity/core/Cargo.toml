@@ -1,0 +1,11 @@
+[package]
+name = "antigravity_core"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tch = "0.14"
+ndarray = "0.15"
+
+[build-dependencies]
+bindgen = "0.69.4"

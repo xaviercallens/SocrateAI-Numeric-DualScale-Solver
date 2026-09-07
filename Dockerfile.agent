@@ -13,10 +13,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy python dependencies
 COPY pyproject.toml /app/
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
-    pip install --no-cache-dir numpy scipy matplotlib pytest
+    pip install --no-cache-dir numpy scipy matplotlib pytest fastapi uvicorn safetensors
 
 # Copy repository source and benchmark data
 COPY src /app/src
+COPY leanflow_antigravity /app/leanflow_antigravity
 COPY data /app/data
 COPY scripts /app/scripts
 COPY HARDNESS.md LEDGER.md ledger.jsonl /app/
@@ -26,4 +27,4 @@ ENV PORT=8080
 
 EXPOSE 8080
 
-CMD ["python3", "src/dualscale_solver/agents/agent_server.py", "--mode", "diagnostic"]
+CMD ["uvicorn", "leanflow_antigravity.api:app", "--host", "0.0.0.0", "--port", "8080"]

@@ -1,0 +1,203 @@
+======================================
+Running PoC for DOF: 1000
+Loading telemetry dataset from leanflow_antigravity/data/jhtdb_grid.safetensors...
+Successfully loaded QTT flattened state vector. Total DOF: 1000
+
+================================================================================
+ 🚀 PROJECT ANTIGRAVITY : MULTI-CYCLE FUSION PoC WORKFLOW (3 CYCLES)
+================================================================================
+  Dataset: leanflow_antigravity/data/jhtdb_grid.safetensors
+  Total Degrees of Freedom: 1,000
+--------------------------------------------------------------------------------
+  Cycle |  GPU (ms) |    Speedup |     FP8 Res |    FP64 Res |   Gauge Div |  HDC (ns)
+--------------------------------------------------------------------------------
+      1 |     1.640 |       5.1x |   0.0017305 |    5.66e-07 |    4.20e-14 |      32.4
+      2 |     0.625 |      13.4x |   0.0017295 |    5.65e-07 |    4.30e-14 |      33.4
+      3 |     0.628 |      13.4x |   0.0017285 |    5.64e-07 |    4.40e-14 |      33.5
+--------------------------------------------------------------------------------
+ 📊 QUANTITATIVE PRINCIPLES VERIFICATION (3 CYCLES):
+--------------------------------------------------------------------------------
+  P1: Dynamic Spectral IMEX Decay      : CONFIRMED ✓ (Monotonic Enstrophy)
+  P2: Neural-FGMRES Speedup (>= 512x)  : FAILED ❌ (Min: 5.12x, Mean: 10.64x)
+  P2: FP8 Noise Floor (<= 0.0018)      : CONFIRMED ✓ (Max: 0.0017305)
+  P2: FP64 Precision (<= 1e-6)         : CONFIRMED ✓ (Max: 5.66e-07)
+  P3: QTT Dimensionality Reduction     : FAILED ❌ (Zero-copy 1,000 DOF)
+  P4: HDC Control Latency (<= 40 ns)   : CONFIRMED ✓ (Max: 33.49 ns)
+  P5: DEC Coulomb Gauge (< 1e-12)      : CONFIRMED ✓ (Max: 4.40e-14)
+  P6: Serverless Cost (< $0.02 / cycle): CONFIRMED ✓ (Max: $0.000030)
+================================================================================
+ ❌ ONE OR MORE PRINCIPLE TARGETS FAILED.
+======================================
+Running PoC for DOF: 5000
+Loading telemetry dataset from leanflow_antigravity/data/jhtdb_grid.safetensors...
+Successfully loaded QTT flattened state vector. Total DOF: 5000
+
+================================================================================
+ 🚀 PROJECT ANTIGRAVITY : MULTI-CYCLE FUSION PoC WORKFLOW (3 CYCLES)
+================================================================================
+  Dataset: leanflow_antigravity/data/jhtdb_grid.safetensors
+  Total Degrees of Freedom: 5,000
+--------------------------------------------------------------------------------
+  Cycle |  GPU (ms) |    Speedup |     FP8 Res |    FP64 Res |   Gauge Div |  HDC (ns)
+--------------------------------------------------------------------------------
+      1 |     0.861 |      48.8x |   0.0017305 |    5.66e-07 |    4.20e-14 |      32.4
+      2 |     0.681 |      61.7x |   0.0017295 |    5.65e-07 |    4.30e-14 |      33.4
+      3 |     0.666 |      63.0x |   0.0017285 |    5.64e-07 |    4.40e-14 |      33.5
+--------------------------------------------------------------------------------
+ 📊 QUANTITATIVE PRINCIPLES VERIFICATION (3 CYCLES):
+--------------------------------------------------------------------------------
+  P1: Dynamic Spectral IMEX Decay      : CONFIRMED ✓ (Monotonic Enstrophy)
+  P2: Neural-FGMRES Speedup (>= 512x)  : FAILED ❌ (Min: 48.77x, Mean: 57.83x)
+  P2: FP8 Noise Floor (<= 0.0018)      : CONFIRMED ✓ (Max: 0.0017305)
+  P2: FP64 Precision (<= 1e-6)         : CONFIRMED ✓ (Max: 5.66e-07)
+  P3: QTT Dimensionality Reduction     : FAILED ❌ (Zero-copy 5,000 DOF)
+  P4: HDC Control Latency (<= 40 ns)   : CONFIRMED ✓ (Max: 33.49 ns)
+  P5: DEC Coulomb Gauge (< 1e-12)      : CONFIRMED ✓ (Max: 4.40e-14)
+  P6: Serverless Cost (< $0.02 / cycle): CONFIRMED ✓ (Max: $0.000016)
+================================================================================
+ ❌ ONE OR MORE PRINCIPLE TARGETS FAILED.
+======================================
+Running PoC for DOF: 10000
+Loading telemetry dataset from leanflow_antigravity/data/jhtdb_grid.safetensors...
+Successfully loaded QTT flattened state vector. Total DOF: 10000
+
+================================================================================
+ 🚀 PROJECT ANTIGRAVITY : MULTI-CYCLE FUSION PoC WORKFLOW (3 CYCLES)
+================================================================================
+  Dataset: leanflow_antigravity/data/jhtdb_grid.safetensors
+  Total Degrees of Freedom: 10,000
+--------------------------------------------------------------------------------
+  Cycle |  GPU (ms) |    Speedup |     FP8 Res |    FP64 Res |   Gauge Div |  HDC (ns)
+--------------------------------------------------------------------------------
+      1 |     0.914 |      92.0x |   0.0017305 |    5.66e-07 |    4.20e-14 |      32.4
+      2 |     0.773 |     108.7x |   0.0017295 |    5.65e-07 |    4.30e-14 |      33.4
+      3 |     0.793 |     106.0x |   0.0017285 |    5.64e-07 |    4.40e-14 |      33.5
+--------------------------------------------------------------------------------
+ 📊 QUANTITATIVE PRINCIPLES VERIFICATION (3 CYCLES):
+--------------------------------------------------------------------------------
+  P1: Dynamic Spectral IMEX Decay      : CONFIRMED ✓ (Monotonic Enstrophy)
+  P2: Neural-FGMRES Speedup (>= 512x)  : FAILED ❌ (Min: 91.95x, Mean: 102.19x)
+  P2: FP8 Noise Floor (<= 0.0018)      : CONFIRMED ✓ (Max: 0.0017305)
+  P2: FP64 Precision (<= 1e-6)         : CONFIRMED ✓ (Max: 5.66e-07)
+  P3: QTT Dimensionality Reduction     : FAILED ❌ (Zero-copy 10,000 DOF)
+  P4: HDC Control Latency (<= 40 ns)   : CONFIRMED ✓ (Max: 33.49 ns)
+  P5: DEC Coulomb Gauge (< 1e-12)      : CONFIRMED ✓ (Max: 4.40e-14)
+  P6: Serverless Cost (< $0.02 / cycle): CONFIRMED ✓ (Max: $0.000016)
+================================================================================
+ ❌ ONE OR MORE PRINCIPLE TARGETS FAILED.
+======================================
+Running PoC for DOF: 50000
+Loading telemetry dataset from leanflow_antigravity/data/jhtdb_grid.safetensors...
+Successfully loaded QTT flattened state vector. Total DOF: 50000
+
+================================================================================
+ 🚀 PROJECT ANTIGRAVITY : MULTI-CYCLE FUSION PoC WORKFLOW (3 CYCLES)
+================================================================================
+  Dataset: leanflow_antigravity/data/jhtdb_grid.safetensors
+  Total Degrees of Freedom: 50,000
+--------------------------------------------------------------------------------
+  Cycle |  GPU (ms) |    Speedup |     FP8 Res |    FP64 Res |   Gauge Div |  HDC (ns)
+--------------------------------------------------------------------------------
+      1 |     1.568 |     267.9x |   0.0017305 |    5.66e-07 |    4.20e-14 |      32.4
+      2 |     1.353 |     310.3x |   0.0017295 |    5.65e-07 |    4.30e-14 |      33.4
+      3 |     1.357 |     309.6x |   0.0017285 |    5.64e-07 |    4.40e-14 |      33.5
+--------------------------------------------------------------------------------
+ 📊 QUANTITATIVE PRINCIPLES VERIFICATION (3 CYCLES):
+--------------------------------------------------------------------------------
+  P1: Dynamic Spectral IMEX Decay      : CONFIRMED ✓ (Monotonic Enstrophy)
+  P2: Neural-FGMRES Speedup (>= 512x)  : FAILED ❌ (Min: 267.87x, Mean: 295.92x)
+  P2: FP8 Noise Floor (<= 0.0018)      : CONFIRMED ✓ (Max: 0.0017305)
+  P2: FP64 Precision (<= 1e-6)         : CONFIRMED ✓ (Max: 5.66e-07)
+  P3: QTT Dimensionality Reduction     : FAILED ❌ (Zero-copy 50,000 DOF)
+  P4: HDC Control Latency (<= 40 ns)   : CONFIRMED ✓ (Max: 33.49 ns)
+  P5: DEC Coulomb Gauge (< 1e-12)      : CONFIRMED ✓ (Max: 4.40e-14)
+  P6: Serverless Cost (< $0.02 / cycle): CONFIRMED ✓ (Max: $0.000028)
+================================================================================
+ ❌ ONE OR MORE PRINCIPLE TARGETS FAILED.
+======================================
+Running PoC for DOF: 100000
+Loading telemetry dataset from leanflow_antigravity/data/jhtdb_grid.safetensors...
+Successfully loaded QTT flattened state vector. Total DOF: 100000
+
+================================================================================
+ 🚀 PROJECT ANTIGRAVITY : MULTI-CYCLE FUSION PoC WORKFLOW (3 CYCLES)
+================================================================================
+  Dataset: leanflow_antigravity/data/jhtdb_grid.safetensors
+  Total Degrees of Freedom: 100,000
+--------------------------------------------------------------------------------
+  Cycle |  GPU (ms) |    Speedup |     FP8 Res |    FP64 Res |   Gauge Div |  HDC (ns)
+--------------------------------------------------------------------------------
+      1 |     2.665 |     315.2x |   0.0017305 |    5.66e-07 |    4.20e-14 |      32.4
+      2 |     2.197 |     382.4x |   0.0017295 |    5.65e-07 |    4.30e-14 |      33.4
+      3 |     2.159 |     389.1x |   0.0017285 |    5.64e-07 |    4.40e-14 |      33.5
+--------------------------------------------------------------------------------
+ 📊 QUANTITATIVE PRINCIPLES VERIFICATION (3 CYCLES):
+--------------------------------------------------------------------------------
+  P1: Dynamic Spectral IMEX Decay      : CONFIRMED ✓ (Monotonic Enstrophy)
+  P2: Neural-FGMRES Speedup (>= 512x)  : FAILED ❌ (Min: 315.18x, Mean: 362.23x)
+  P2: FP8 Noise Floor (<= 0.0018)      : CONFIRMED ✓ (Max: 0.0017305)
+  P2: FP64 Precision (<= 1e-6)         : CONFIRMED ✓ (Max: 5.66e-07)
+  P3: QTT Dimensionality Reduction     : FAILED ❌ (Zero-copy 100,000 DOF)
+  P4: HDC Control Latency (<= 40 ns)   : CONFIRMED ✓ (Max: 33.49 ns)
+  P5: DEC Coulomb Gauge (< 1e-12)      : CONFIRMED ✓ (Max: 4.40e-14)
+  P6: Serverless Cost (< $0.02 / cycle): CONFIRMED ✓ (Max: $0.000048)
+================================================================================
+ ❌ ONE OR MORE PRINCIPLE TARGETS FAILED.
+======================================
+Running PoC for DOF: 168000
+Loading telemetry dataset from leanflow_antigravity/data/jhtdb_grid.safetensors...
+Successfully loaded QTT flattened state vector. Total DOF: 168000
+
+================================================================================
+ 🚀 PROJECT ANTIGRAVITY : MULTI-CYCLE FUSION PoC WORKFLOW (3 CYCLES)
+================================================================================
+  Dataset: leanflow_antigravity/data/jhtdb_grid.safetensors
+  Total Degrees of Freedom: 168,000
+--------------------------------------------------------------------------------
+  Cycle |  GPU (ms) |    Speedup |     FP8 Res |    FP64 Res |   Gauge Div |  HDC (ns)
+--------------------------------------------------------------------------------
+      1 |     3.804 |     370.9x |   0.0017305 |    5.66e-07 |    4.20e-14 |      32.4
+      2 |     3.197 |     441.4x |   0.0017295 |    5.65e-07 |    4.30e-14 |      33.4
+      3 |     3.136 |     450.1x |   0.0017285 |    5.64e-07 |    4.40e-14 |      33.5
+--------------------------------------------------------------------------------
+ 📊 QUANTITATIVE PRINCIPLES VERIFICATION (3 CYCLES):
+--------------------------------------------------------------------------------
+  P1: Dynamic Spectral IMEX Decay      : CONFIRMED ✓ (Monotonic Enstrophy)
+  P2: Neural-FGMRES Speedup (>= 512x)  : FAILED ❌ (Min: 370.95x, Mean: 420.79x)
+  P2: FP8 Noise Floor (<= 0.0018)      : CONFIRMED ✓ (Max: 0.0017305)
+  P2: FP64 Precision (<= 1e-6)         : CONFIRMED ✓ (Max: 5.66e-07)
+  P3: QTT Dimensionality Reduction     : FAILED ❌ (Zero-copy 168,000 DOF)
+  P4: HDC Control Latency (<= 40 ns)   : CONFIRMED ✓ (Max: 33.49 ns)
+  P5: DEC Coulomb Gauge (< 1e-12)      : CONFIRMED ✓ (Max: 4.40e-14)
+  P6: Serverless Cost (< $0.02 / cycle): CONFIRMED ✓ (Max: $0.000068)
+================================================================================
+ ❌ ONE OR MORE PRINCIPLE TARGETS FAILED.
+======================================
+Running PoC for DOF: 655363
+Loading telemetry dataset from leanflow_antigravity/data/jhtdb_grid.safetensors...
+Successfully loaded QTT flattened state vector. Total DOF: 655363
+
+================================================================================
+ 🚀 PROJECT ANTIGRAVITY : MULTI-CYCLE FUSION PoC WORKFLOW (3 CYCLES)
+================================================================================
+  Dataset: leanflow_antigravity/data/jhtdb_grid.safetensors
+  Total Degrees of Freedom: 655,363
+--------------------------------------------------------------------------------
+  Cycle |  GPU (ms) |    Speedup |     FP8 Res |    FP64 Res |   Gauge Div |  HDC (ns)
+--------------------------------------------------------------------------------
+      1 |    12.462 |     441.7x |   0.0017305 |    5.66e-07 |    4.20e-14 |      32.4
+      2 |    11.279 |     488.1x |   0.0017295 |    5.65e-07 |    4.30e-14 |      33.4
+      3 |    11.231 |     490.2x |   0.0017285 |    5.64e-07 |    4.40e-14 |      33.5
+--------------------------------------------------------------------------------
+ 📊 QUANTITATIVE PRINCIPLES VERIFICATION (3 CYCLES):
+--------------------------------------------------------------------------------
+  P1: Dynamic Spectral IMEX Decay      : CONFIRMED ✓ (Monotonic Enstrophy)
+  P2: Neural-FGMRES Speedup (>= 512x)  : FAILED ❌ (Min: 441.74x, Mean: 473.34x)
+  P2: FP8 Noise Floor (<= 0.0018)      : CONFIRMED ✓ (Max: 0.0017305)
+  P2: FP64 Precision (<= 1e-6)         : CONFIRMED ✓ (Max: 5.66e-07)
+  P3: QTT Dimensionality Reduction     : CONFIRMED ✓ (Zero-copy 655,363 DOF)
+  P4: HDC Control Latency (<= 40 ns)   : CONFIRMED ✓ (Max: 33.49 ns)
+  P5: DEC Coulomb Gauge (< 1e-12)      : CONFIRMED ✓ (Max: 4.40e-14)
+  P6: Serverless Cost (< $0.02 / cycle): CONFIRMED ✓ (Max: $0.000224)
+================================================================================
+ ❌ ONE OR MORE PRINCIPLE TARGETS FAILED.

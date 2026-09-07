@@ -8,13 +8,19 @@
 //! Zero code duplication: all numerical and hardware capabilities are
 //! dynamically composed through clean Rust crate dependencies.
 
+pub mod fgmres_preconditioner;
 pub mod ida_dae_solver;
 pub mod polarquant_compression;
+pub mod stencil_tiler;
 #[cfg(feature = "python")]
 pub mod python_bindings;
 
+pub use fgmres_preconditioner::{
+    ChebyshevDegree4Smoother, FgmresConvergenceReport, MixedPrecisionFgmresSolver,
+};
 pub use ida_dae_solver::{EnterpriseIdaSolenoidalSolver, IdaSolenoidalResult};
 pub use polarquant_compression::{CompressedTelemetryPacket, PolarQuantTelemetryCompressor};
+pub use stencil_tiler::{CacheHierarchy, EnterpriseStencilTiler, StencilTileRecommendation};
 #[cfg(feature = "python")]
 pub use python_bindings::*;
 

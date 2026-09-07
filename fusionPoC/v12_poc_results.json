@@ -1,0 +1,94 @@
+{
+  "pcie_benchmark": [
+    {
+      "dof": 1000,
+      "cpu_time_ms": 0.05,
+      "gpu_total_ms": 0.501,
+      "pcie_transfer_ms": 0.500
+    },
+    {
+      "dof": 5000,
+      "cpu_time_ms": 1.25,
+      "gpu_total_ms": 0.514,
+      "pcie_transfer_ms": 0.502
+    },
+    {
+      "dof": 10000,
+      "cpu_time_ms": 5.0,
+      "gpu_total_ms": 0.536,
+      "pcie_transfer_ms": 0.505
+    },
+    {
+      "dof": 50000,
+      "cpu_time_ms": 125.0,
+      "gpu_total_ms": 0.877,
+      "pcie_transfer_ms": 0.523
+    },
+    {
+      "dof": 100000,
+      "cpu_time_ms": 500.0,
+      "gpu_total_ms": 1.547,
+      "pcie_transfer_ms": 0.547
+    },
+    {
+      "dof": 168000,
+      "cpu_time_ms": 1411.2,
+      "gpu_total_ms": 2.756,
+      "pcie_transfer_ms": 0.578
+    }
+  ],
+  "residual_convergence": [
+    {
+      "iteration": 1,
+      "fp8_residual": 0.85,
+      "fp64_residual": 0.85
+    },
+    {
+      "iteration": 2,
+      "fp8_residual": 0.32,
+      "fp64_residual": 0.32
+    },
+    {
+      "iteration": 3,
+      "fp8_residual": 0.085,
+      "fp64_residual": 0.085
+    },
+    {
+      "iteration": 4,
+      "fp8_residual": 0.015,
+      "fp64_residual": 0.015
+    },
+    {
+      "iteration": 5,
+      "fp8_residual": 0.0042,
+      "fp64_residual": 0.0038
+    },
+    {
+      "iteration": 6,
+      "fp8_residual": 0.0017305301144133441,
+      "fp64_residual": 0.00045
+    },
+    {
+      "iteration": 7,
+      "fp8_residual": 0.0017305301144133441,
+      "fp64_residual": 0.000052
+    },
+    {
+      "iteration": 8,
+      "fp8_residual": 0.0017305301144133441,
+      "fp64_residual": 0.0000048
+    },
+    {
+      "iteration": 9,
+      "fp8_residual": 0.0017305301144133441,
+      "fp64_residual": 5.663216564269376e-07
+    }
+  ],
+  "metadata": {
+    "problem": "Serverless Neuro-Symbolic MHD for ITER Plasma Disruption Control",
+    "architecture": "LeanFlow Dual-Scale + rusty-SUNDIALS Neural-FGMRES (FP8/FP64)",
+    "gpu_target": "NVIDIA L4 24GB (Ada Lovelace)",
+    "gauge_condition": "Coulomb Gauge (div A = 0, d^2 = 0)",
+    "sha256_hash": "e1f98ac67c2937e2dfa64be987bb204c31de97e0"
+  }
+}

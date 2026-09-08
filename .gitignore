@@ -64,6 +64,8 @@ Cargo.lock
 *.aux
 *.out
 *.toc
+*.bbl
+*.blg
 
 # Certificates and Output Artifacts
 data/output/

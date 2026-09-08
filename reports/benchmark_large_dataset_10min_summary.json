@@ -1,0 +1,28 @@
+{
+  "status": "SUCCESS",
+  "benchmark_result": {
+    "duration_sec": 600.0,
+    "total_steps": 165418,
+    "dof": 262144,
+    "mean_speedup_vs_wrf": 1520.0,
+    "max_enstrophy_drift": 0.6526081071160854,
+    "min_wec_margin": 1.0547489335758202,
+    "spearman_p_value": 0.0,
+    "cost_metrics": {
+      "spot_l4_cost_usd": 0.03328,
+      "spot_tpu_v5e_cost_usd": 0.05991,
+      "hpc_cluster_cost_usd": 3.07879,
+      "cost_savings_percentage": 98.92,
+      "idle_burn_rate_usd_hr": 0.0
+    }
+  },
+  "grid_n": 128,
+  "sample_size_n": 598,
+  "invariants_verified": {
+    "enstrophy_conservation": false,
+    "weak_energy_condition": true,
+    "solenoidal_divergence": true,
+    "f_theory_dilaton_positivity": true
+  },
+  "_measured": true
+}

@@ -44,6 +44,7 @@ To validate sustained production-grade numerical stability beyond transient inte
 \end{itemize}
 
 \subsection{Phase 3 Adversarial Limit Testing and Falsification}
+\label{subsec:phase3_adversarial}
 In accordance with the epistemic falsification protocol, four adversarial limit stress tests were conducted to delineate exact mathematical failure boundaries:
 \begin{enumerate}
   \item \textbf{Extreme Anisotropy Wall:} Sweeping the thermal diffusivity ratio $\kappa_{\parallel}/\kappa_{\perp}$ from $10^4$ to $10^{12}$ demonstrated that FGMRES iterations remain strictly bounded ($\le 10$) up to $\kappa_{\parallel}/\kappa_{\perp} = 10^8$. At $10^{11}$, the FP8 coercivity bound was breached, causing the solver to cleanly trigger an expected convergence stagnation failure rather than producing unphysical numerical artifacts.
@@ -51,6 +52,9 @@ In accordance with the epistemic falsification protocol, four adversarial limit 
   \item \textbf{Adversarial Monopole Injection:} Injecting an artificial divergence anomaly ($\nabla \cdot \mathbf{B} = 100.0$) directly into the FFI array triggered an immediate \texttt{GaugeViolationError} in the Rust Discrete Exterior Calculus (DEC) kernel, verifying the mathematical firewall at the interface.
   \item \textbf{Serverless Concurrency \& GIL Audit:} Under $500$ concurrent asynchronous HTTP simulation requests, the PyO3 zero-copy bridge maintained $100\%$ uptime (500/500 \texttt{HTTP 200} responses) with zero segmentation faults, verifying thread isolation and clean GIL release.
 \end{enumerate}
+
+% §4.6.5 -- Euler Counter-Detonation (T-Dual UV-Wall Singularity Neutralization)
+\input{sections/adversarial_counterdetonation}
 
 \subsection{Embedded Hardware and Edge Silicon Telemetry}
 Local cycle-accurate simulation targeting the ARM Cortex-M4 architecture (@ $168$\,MHz) for an $N=4\times4$ micro-kernel confirmed real-time execution bounds:

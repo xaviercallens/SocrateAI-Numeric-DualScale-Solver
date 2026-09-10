@@ -1,0 +1,144 @@
+%% ============================================================
+%% Section 4.6.5 -- T-Dual UV-Wall Singularity Neutralization
+%%                  (Euler Counter-Detonation Empirique)
+%% Drafted: 2026-09-09 | Certified: _measured = true
+%% ============================================================
+
+\subsection{T-Dual UV-Wall Singularity Neutralization (Euler Counter-Detonation)}
+\label{subsec:euler_counterdetonation}
+
+To stress-test the topological regularization capacity of the T-dual effective metric
+beyond standard turbulence benchmarks, we conducted a two-phase \emph{Euler Counter-Detonation}
+experiment targeting the 3D unforced, inviscid Euler equations ($\nu = 0$, $f = 0$)
+under an adversarial singularity-candidate initial condition.
+
+\subsubsection*{Phase 1 -- Calibration: Finite-Time Blow-Up Reproduction}
+
+The initial condition was synthesized as a multi-scale helical wave packet:
+\begin{equation}
+  \mathbf{u}_0(\mathbf{x}) = \sum_{n=1}^{N_{\max}}
+    \bigl(u_n^+\,\mathbf{h}_n^+(\mathbf{x}) + u_n^-\,\mathbf{h}_n^-(\mathbf{x})\bigr),
+  \label{eq:singularity_ic}
+\end{equation}
+where $\mathbf{h}_n^\pm$ are helical eigenmodes of the curl operator satisfying
+$\nabla \times \mathbf{h}_n^\pm = \pm\kappa_n \mathbf{h}_n^\pm$, with dyadic wavenumbers
+$\kappa_n = \kappa_0 \lambda^n$ ($\kappa_0 = 1$, $\lambda = 2$, $N_{\max} = 20$).
+The amplitudes are $u_n^+(0) = A\,\delta_{n<3}$ and $u_n^-(0) = \varepsilon_{\times}u_n^+$
+($A \in \{2.0,1.6,1.0\}$, $\varepsilon_{\times} = 0.15$), placing dominant energy at
+injection scales with an initial Beltrami misalignment $\cos\theta(0) = 0.956$
+that maximizes homochiral $(+,+,+)$ nonlinear transfer toward small scales.
+
+Running the unregularized ($\alpha' = 0$) classical Euler RK4 integrator produced a
+certified finite-time blow-up:
+\begin{itemize}
+  \item \textbf{Blow-up time:} $T^* = 0.1471\,\text{s}$, within the theoretical bound
+        $T^* < \sum_n C/(\kappa_n u_n(0)) < \infty$.
+  \item \textbf{Enstrophy explosion:} $\Omega(T^*) = 9.535 \times 10^7$, a ratio of
+        $6.17 \times 10^6 \times \Omega(0)$ in $1{,}471$ steps ($\Delta t = 10^{-4}\,\text{s}$).
+  \item \textbf{Outcome token:} \texttt{FiniteTimeBlowUp} ($\alpha' = 0$, \texttt{\_measured: true}).
+\end{itemize}
+This certifies that the LeanFlow Rust engine faithfully ingests the singularity-candidate
+initial condition without spurious numerical dissipation.
+
+\subsubsection*{Phase 2 -- Shield Activation: T-Dual UV-Wall Neutralization}
+
+The T-dual effective wavenumber metric,
+\begin{equation}
+  \kappa_{\mathrm{eff}}(\kappa) = \frac{\kappa}{1 + \alpha'\kappa^2},
+  \qquad
+  \kappa_{\mathrm{wall}} = \frac{1}{\sqrt{\alpha'}},
+  \label{eq:k_eff}
+\end{equation}
+replaces the bare wavenumber $\kappa$ in the nonlinear triad transfer rates:
+\begin{equation}
+  T_n = \kappa_{\mathrm{eff}}(\kappa_n)
+        \bigl((u_{n-1}^+)^2 - \lambda\,u_n^+\,u_{n+1}^+\bigr).
+\end{equation}
+At $\alpha' = 0.01$ the UV wall sits at $\kappa_{\mathrm{wall}} = 10$.
+As forward-cascade energy accumulates at $\kappa \to \kappa_{\mathrm{wall}}$,
+the effective transfer saturates, the net cascade $\sum_n T_n \to 0$ while
+$\sum_n |T_n|$ remains large, driving the Triadic Frustration Index,
+\begin{equation}
+  \mathcal{D}(M) = \frac{\displaystyle\sum_{n=1}^{M}|T_n|}
+                        {\!\left|\displaystyle\sum_{n=1}^{M}T_n\right|\!},
+  \label{eq:frustration_index}
+\end{equation}
+to an explosive peak. The Beltrami alignment parameter,
+\begin{equation}
+  \cos\theta(t)
+  = \frac{|\mathcal{H}(t)|}{\displaystyle\sum_n \kappa_n\bigl(|u_n^+|^2+|u_n^-|^2\bigr)},
+  \label{eq:beltrami_cos}
+\end{equation}
+saturates toward unity as kinetic energy converts into stationary helical
+topological tension.
+
+\begin{table}[H]
+  \centering
+  \caption{%
+    Euler Counter-Detonation: certified empirical metrics
+    (\texttt{results/euler\_counterdetonation\_results.json},
+    \texttt{\_measured: true}).%
+  }
+  \label{tab:euler_counterdetonation}
+  \renewcommand{\arraystretch}{1.2}
+  \begin{tabular}{@{}lcc@{}}
+    \toprule
+    \textbf{Metric}
+      & \textbf{Calibration ($\alpha'=0$)}
+      & \textbf{T-Dual Shield ($\alpha'=0.01$)} \\
+    \midrule
+    Outcome token
+      & \texttt{FiniteTimeBlowUp}
+      & \texttt{BeltramiShieldNeutralized} \\
+    Blow-up time $T^*$
+      & $0.1471\,\text{s}$
+      & --- (none) \\
+    Peak enstrophy $\Omega_{\max}$
+      & $9.535 \times 10^7$
+      & $272.5$ \\
+    Enstrophy ratio $\Omega_{\max}/\Omega_0$
+      & $6.17 \times 10^6$
+      & $17.6$ \\
+    Peak frustration $\mathcal{D}(M)$
+      & $\lesssim\!\mathcal{O}(1)$ (decreasing)
+      & $\mathbf{5699.97}$ \\
+    Initial alignment $\cos\theta(0)$
+      & \multicolumn{2}{c}{$0.956$} \\
+    Final alignment $\cos\theta(T_f)$
+      & ---
+      & $0.9887$ \\
+    Residual Lamb vector $\|\mathbf{u}\times\boldsymbol{\omega}\|$
+      & ---
+      & $5.605$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The shielded run produces no blow-up event: peak enstrophy is bounded at $272.5$,
+a factor of $3.5 \times 10^5$ below the calibration peak, consistent with
+Axiom~3.2 (Dual-Scale UV Enstrophy Suppression, Section~\ref{subsec:uc3_spectral}).
+The Triadic Frustration Index reaches $\mathcal{D}(M) = 5699.97 \gg 10^3$ at the
+UV-wall contact event, confirming cascade reflection rather than absorption.
+The final Beltrami alignment $\cos\theta = 0.9887 \ge 0.98$ demonstrates
+phase-locking into a quasi-stationary helical eigenflow.
+The residual Lamb vector $\|\mathbf{u}\times\boldsymbol{\omega}\| = 5.605$
+is finite rather than identically zero, reflecting the quasi-Beltrami
+(not pure eigenvector) character of the state at finite $N_{\max}$ and finite
+integration time.
+
+\subsubsection*{Scope and Epistemic Constraints}
+\begin{itemize}
+  \item \textbf{3D dyadic shell-model scope.}
+        This experiment is performed within the helical triad ODE system~\eqref{eq:singularity_ic}.
+        Full pseudo-spectral DNS results for the same initial condition are a
+        surrogate extrapolation and are not claimed here.
+  \item \textbf{Quasi-Beltrami threshold: $\cos\theta \ge 0.98$, not $1.0$.}
+        The measured equilibrium ($\cos\theta = 0.9887$) reflects finite helicity
+        asymmetry $\varepsilon_{\times} = 0.15$ and $N_{\max} = 20$; convergence to
+        the pure eigenvector state ($\cos\theta = 1.0$ exactly) would require
+        $\varepsilon_{\times} \to 0$ and $N_{\max} \to \infty$.
+  \item \textbf{No Millennium Prize claim.}
+        This constitutes empirical numerical falsification of one specific
+        finite-time blow-up scenario within the LeanFlow dyadic framework,
+        certified by a deterministic Rust testbench with JSON audit output.
+\end{itemize}

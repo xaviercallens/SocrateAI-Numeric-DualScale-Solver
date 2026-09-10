@@ -24,6 +24,17 @@ pub fn dualscale_dissipation_rate(nu: f64, k_sq: f64, alpha: Option<f64>) -> f64
     }
 }
 
+/// Dual-Scale effective wavenumber metric: k_eff(k) = k / (1.0 + alpha_prime * k^2)
+/// Under T-duality, k_eff is bounded from above by 1 / (2 * sqrt(alpha_prime)) at the UV wall.
+#[inline]
+pub fn k_eff(k: f64, alpha_prime: f64) -> f64 {
+    if alpha_prime <= 0.0 {
+        k
+    } else {
+        k / (1.0 + alpha_prime * k * k)
+    }
+}
+
 /// 3D Wavevector index
 pub type Wavevector3D = [i32; 3];
 

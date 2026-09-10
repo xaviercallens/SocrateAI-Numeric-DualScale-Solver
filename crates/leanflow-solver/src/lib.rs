@@ -5,10 +5,16 @@
 
 pub mod cvode_dyadic;
 pub mod embedded;
+pub mod euler_counterdetonation;
+pub mod ns_forced_counterdetonation;
 pub mod ffi_telemetry;
 
 pub use cvode_dyadic::{CvodeCascadeResult, CvodeDyadicCascade};
 pub use embedded::EmbeddedDyadicState;
+pub use euler_counterdetonation::{
+    CounterDetonationOutcome, CounterDetonationRunResult, EulerCounterDetonationSolver,
+    HelicalState3D, OpenAiBlowupSeriesConfig, OpenAiBlowupSeriesGenerator, TelemetryStep,
+};
 pub use ffi_telemetry::*;
 use leanflow_core::dualscale_dissipation_rate;
 use serde::{Deserialize, Serialize};

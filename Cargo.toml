@@ -4,7 +4,14 @@ members = [
     "crates/leanflow-core",
     "crates/leanflow-solver",
     "crates/leanflow-ai",
-    "crates/leanflow-enterprise",
+    # crates/leanflow-enterprise is NOT a workspace member: its Cargo.toml depends on a third
+    # sibling repo, rust-linux-mini-kernel, whose ai_bridge crate is itself named `ai_runtime` --
+    # the same package name as runux-ai-runtime's own top-level crate, also a dependency here.
+    # Two distinct packages sharing one name in the same dependency graph is a hard Cargo
+    # resolution failure ("package collision in the lockfile"), not a path problem, and fixing it
+    # needs a rename on one side of an upstream repo this workspace does not own. Build it
+    # separately with `cargo build --manifest-path crates/leanflow-enterprise/Cargo.toml` once
+    # that is resolved.
 ]
 
 [workspace.package]
